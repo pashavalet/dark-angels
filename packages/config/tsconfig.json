@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@dark-angels/types": ["../types/src"],
+      "@dark-angels/shared": ["../shared/src"]
+    }
+  },
+  "include": ["../types/src", "../shared/src"]
+}

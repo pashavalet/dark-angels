@@ -1,0 +1,13 @@
+{
+  "name": "@dark-angels/config",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tsconfig": "./tsconfig.json"
+  },
+  "scripts": {
+    "lint": "echo ok",
+    "clean": "echo ok"
+  }
+}
