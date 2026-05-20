@@ -1,0 +1,30 @@
+import { z } from 'zod';
+import process from 'node:process';
+
+const envSchema = z.object({
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  PORT: z.coerce.number().int().positive().default(3000),
+  HOST: z.string().default('0.0.0.0'),
+  SUPABASE_URL: z.string().url(),
+  SUPABASE_ANON_KEY: z.string().min(1),
+  SUPABASE_SERVICE_KEY: z.string().min(1),
+  JWT_SECRET: z.string().min(32),
+  JWT_EXPIRES_IN: z.string().default('15m'),
+  REFRESH_TOKEN_EXPIRES_IN: z.string().default('7d'),
+  BCRYPT_ROUNDS: z.coerce.number().int().positive().default(12),
+  RATE_LIMIT_MAX: z.coerce.number().int().positive().default(100),
+  RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60_000),
+  LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
+  SENTRY_DSN: z.string().url().optional(),
+});
+
+export type EnvConfig = z.infer<typeof envSchema>;
+
+export function loadEnv(): EnvConfig {
+  const result = envSchema.safeParse(process.env);
+  if (!result.success) {
+    console.error('Invalid environment variables:', result.error.flatten().fieldErrors);
+    process.exit(1);
+  }
+  return result.data;
+}

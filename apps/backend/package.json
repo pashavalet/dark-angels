@@ -1,0 +1,28 @@
+{
+  "name": "@dark-angels/backend",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@dark-angels/shared": "workspace:*",
+    "@dark-angels/types": "workspace:*",
+    "@fastify/cors": "^10.0.0",
+    "@fastify/error": "^4.0.0",
+    "@fastify/rate-limit": "^10.0.0",
+    "fastify": "^5.0.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.5.0"
+  }
+}
