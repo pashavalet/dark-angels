@@ -11,6 +11,7 @@ import BlogDetailPage from './pages/Blog/BlogDetailPage.js';
 import ContactsPage from './pages/Contacts/ContactsPage.js';
 import LoginPage from './pages/Admin/LoginPage.js';
 import DashboardPage from './pages/Admin/DashboardPage.js';
+import CollectionsPage from './pages/Admin/CollectionsPage.js';
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ export default function App() {
             <Route path="contacts" element={<ContactsPage />} />
             <Route path="admin/login" element={<LoginPage />} />
             <Route path="admin" element={<DashboardPage />} />
+            <Route path="admin/collections" element={<CollectionsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

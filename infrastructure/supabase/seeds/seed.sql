@@ -72,3 +72,6 @@ SELECT 'featured_tours', id, 'tour', sort_order, true FROM tours LIMIT 2;
 
 INSERT INTO homepage_collections (section, item_id, item_type, sort_order, is_pinned)
 SELECT 'featured_services', id, 'service', sort_order, true FROM services LIMIT 2;
+
+INSERT INTO homepage_collections (section, item_id, item_type, sort_order, is_pinned)
+SELECT 'featured_blog', id, 'blog', sort_order, true FROM blog_articles LIMIT 2;

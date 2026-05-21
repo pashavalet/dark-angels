@@ -64,6 +64,7 @@ Bottom tab bar with 5 tabs: Home → Tours → Blog → Services → Contacts.
 
 ## Changelog
 
+- **2026-05-22** — Homepage carousels: `HorizontalCarousel` (horizontal scroll + snap, framer-motion stagger, skeleton loading), `HomePage` rewrite with 3 sections (tours/services/blog), API hooks in `api/homepage.ts`; Admin DnD: `CollectionsPage` with @dnd-kit sortable list, pin/remove controls, `SortableList` reusable component; i18n keys added for homepage + collections
 - **2026-05-22** — Blog pages: `BlogPage` (list w/ search, tag filter, pagination), `BlogDetailPage` (markdown rendering via react-markdown + remark-gfm + rehype-highlight), `BlogCard` w/ access-level badge, `MarkdownRenderer` component, API hooks in `api/blogs.ts`
 - **2026-05-21** — Full routing (7 routes), BottomNav (44px+ targets), Framer Motion transitions, i18n (ru/en), Zustand stores, axios API client with refresh interceptor, admin login page
 - **2026-05-21** — Vite + React + TailwindCSS v4 scaffold; `useTelegram()` hook; dark theme tokens
