@@ -1,0 +1,57 @@
+# Architecture
+
+Monorepo architecture and technology stack decisions for the Dark Angels Telegram Mini App.
+
+---
+
+## Repository Structure
+
+```
+dark-angels/
+├── apps/
+│   ├── frontend/          # Vite + React SPA (Telegram Mini App)
+│   └── backend/           # Fastify API server (Node.js 20+)
+├── packages/
+│   ├── types/             # TypeScript interfaces (Tour, Service, Blog, Auth)
+│   ├── shared/            # Zod schemas + AppError + utilities
+│   └── config/            # Shared tsconfig, ESLint
+├── infrastructure/
+│   └── supabase/          # Migrations + seeds
+└── docs/
+    └── knowledge/         # AI-maintained knowledge base
+```
+
+## Dependency Graph
+
+```
+apps/frontend  →  packages/shared  →  packages/types
+apps/backend   →  packages/shared  →  packages/types
+                                   →  packages/config
+```
+
+## Technology Choices
+
+| Layer | Technology | Rationale |
+|---|---|---|
+| Package manager | pnpm 9+ | Fast, disk-efficient, strict |
+| Node linker | isolated | Clean separation per package |
+| Frontend build | Vite 6 | Fast HMR, simple config |
+| UI framework | React 19 | SPA model for Telegram Mini App |
+| CSS | TailwindCSS v4 | Utility-first, dark theme via `@theme` |
+| Backend server | Fastify 5 | Performance, plugin encapsulation |
+| Validation | Zod 3.24 | Shared between frontend/backend |
+| Database | Supabase PostgreSQL | Managed, migrations, storage |
+| API protocol | REST /api/v1 | Simplified over tRPC for this CMS scale |
+| Auth | JWT + refresh tokens | Stateless with refresh rotation |
+
+## Key Decisions
+
+- **JSONB for i18n**: `{ru, en}` instead of `*_ru/*_en` columns — flexible, no DB migration for new languages
+- **No tRPC**: REST chosen for simplicity; CMS has infrequent content updates
+- **No SSR**: Vite SPA is sufficient for Telegram Mini App (runs inside Telegram WebView)
+
+---
+
+## Changelog
+
+- **2026-05-21** — Monorepo scaffolded with pnpm workspace; isolated linker; 5 packages

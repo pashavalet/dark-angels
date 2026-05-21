@@ -1,8 +1,12 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import cookie from '@fastify/cookie';
+import jwt from '@fastify/jwt';
 import rateLimit from '@fastify/rate-limit';
 import { loadEnv } from './config/env.js';
 import supabasePlugin from './plugins/supabase.js';
+import authPlugin from './plugins/auth.js';
+import authRoutes from './routes/auth/routes.js';
 
 const env = loadEnv();
 
@@ -17,12 +21,24 @@ await app.register(cors, {
   credentials: true,
 });
 
+await app.register(cookie, {
+  secret: env.JWT_SECRET,
+});
+
+await app.register(jwt, {
+  secret: env.JWT_SECRET,
+  sign: { expiresIn: env.JWT_EXPIRES_IN },
+  cookie: { cookieName: 'refresh_token', signed: false },
+});
+
 await app.register(rateLimit, {
   max: env.RATE_LIMIT_MAX,
   timeWindow: env.RATE_LIMIT_WINDOW_MS,
 });
 
 await app.register(supabasePlugin);
+await app.register(authPlugin);
+await app.register(authRoutes, { prefix: '/api/v1/auth' });
 
 app.get('/health', async () => {
   const { error } = await app.supabase.from('tours').select('id').limit(1);
