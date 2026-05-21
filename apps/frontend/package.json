@@ -14,9 +14,15 @@
   "dependencies": {
     "@dark-angels/shared": "workspace:*",
     "@dark-angels/types": "workspace:*",
+    "@tanstack/react-query": "^5.60.0",
+    "axios": "^1.7.0",
     "clsx": "^2.1.0",
+    "framer-motion": "^11.0.0",
+    "i18next": "^24.0.0",
+    "i18next-browser-languagedetector": "^8.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-i18next": "^15.0.0",
     "react-router-dom": "^7.0.0",
     "zustand": "^5.0.0"
   },

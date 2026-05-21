@@ -1,35 +1,32 @@
-import { useState } from 'react';
-import { useTelegram } from './lib/telegram.js';
-import { cn } from './lib/cn.js';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import AppLayout from './components/layout/AppLayout.js';
+import HomePage from './pages/Home/HomePage.js';
+import ToursPage from './pages/Tours/ToursPage.js';
+import ServicesPage from './pages/Services/ServicesPage.js';
+import BlogPage from './pages/Blog/BlogPage.js';
+import ContactsPage from './pages/Contacts/ContactsPage.js';
+import LoginPage from './pages/Admin/LoginPage.js';
+import DashboardPage from './pages/Admin/DashboardPage.js';
+
+const queryClient = new QueryClient();
 
 export default function App() {
-  const { user, expand, ready } = useTelegram();
-  const [count, setCount] = useState(0);
-
-  useState(() => {
-    ready();
-    expand();
-  });
-
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center gap-6 p-4">
-      <h1 className="text-2xl font-bold text-accent">Dark Angels</h1>
-
-      {user && (
-        <p className="text-text-secondary">
-          Welcome, {user.first_name}
-        </p>
-      )}
-
-      <button
-        onClick={() => setCount((c) => c + 1)}
-        className={cn(
-          'rounded-lg bg-accent px-6 py-3 text-bg-primary font-semibold',
-          'transition-opacity hover:opacity-90 active:opacity-80',
-        )}
-      >
-        Count: {count}
-      </button>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="tours" element={<ToursPage />} />
+            <Route path="services" element={<ServicesPage />} />
+            <Route path="blog" element={<BlogPage />} />
+            <Route path="contacts" element={<ContactsPage />} />
+            <Route path="admin/login" element={<LoginPage />} />
+            <Route path="admin" element={<DashboardPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
