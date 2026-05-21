@@ -8,6 +8,7 @@ import supabasePlugin from './plugins/supabase.js';
 import authPlugin from './plugins/auth.js';
 import authRoutes from './routes/auth/routes.js';
 import tourRoutes from './routes/tours/routes.js';
+import serviceRoutes from './routes/services/routes.js';
 
 const env = loadEnv();
 
@@ -41,6 +42,7 @@ await app.register(supabasePlugin);
 await app.register(authPlugin);
 await app.register(authRoutes, { prefix: '/api/v1/auth' });
 await app.register(tourRoutes, { prefix: '/api/v1/tours' });
+await app.register(serviceRoutes, { prefix: '/api/v1/services' });
 
 app.get('/health', async () => {
   const { error } = await app.supabase.from('tours').select('id').limit(1);

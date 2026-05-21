@@ -5,6 +5,7 @@ import HomePage from './pages/Home/HomePage.js';
 import ToursPage from './pages/Tours/ToursPage.js';
 import TourDetailPage from './pages/Tours/TourDetailPage.js';
 import ServicesPage from './pages/Services/ServicesPage.js';
+import ServiceDetailPage from './pages/Services/ServiceDetailPage.js';
 import BlogPage from './pages/Blog/BlogPage.js';
 import ContactsPage from './pages/Contacts/ContactsPage.js';
 import LoginPage from './pages/Admin/LoginPage.js';
@@ -22,6 +23,7 @@ export default function App() {
             <Route path="tours" element={<ToursPage />} />
             <Route path="tours/:id" element={<TourDetailPage />} />
             <Route path="services" element={<ServicesPage />} />
+            <Route path="services/:id" element={<ServiceDetailPage />} />
             <Route path="blog" element={<BlogPage />} />
             <Route path="contacts" element={<ContactsPage />} />
             <Route path="admin/login" element={<LoginPage />} />

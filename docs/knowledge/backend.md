@@ -59,6 +59,7 @@ Validated via Zod at startup. Required: PORT, HOST, SUPABASE_URL, SUPABASE_SERVI
 
 ## Changelog
 
+- **2026-05-21** — Services CRUD routes: public GET (paginated, filterable by tags/search), admin POST/PUT/DELETE/PATCH
 - **2026-05-21** — Tours CRUD routes: public GET (paginated, filterable), admin POST/PUT/DELETE/PATCH
 - **2026-05-21** — Auth routes: login/refresh/logout, JWT + bcrypt + httpOnly cookies, lockout after 5 failures
 - **2026-05-21** — Fastify app skeleton: CORS, rate-limit, Supabase plugin, `/health` with DB check
