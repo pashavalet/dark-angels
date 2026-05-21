@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AppLayout from './components/layout/AppLayout.js';
 import HomePage from './pages/Home/HomePage.js';
 import ToursPage from './pages/Tours/ToursPage.js';
+import TourDetailPage from './pages/Tours/TourDetailPage.js';
 import ServicesPage from './pages/Services/ServicesPage.js';
 import BlogPage from './pages/Blog/BlogPage.js';
 import ContactsPage from './pages/Contacts/ContactsPage.js';
@@ -19,6 +20,7 @@ export default function App() {
           <Route element={<AppLayout />}>
             <Route index element={<HomePage />} />
             <Route path="tours" element={<ToursPage />} />
+            <Route path="tours/:id" element={<TourDetailPage />} />
             <Route path="services" element={<ServicesPage />} />
             <Route path="blog" element={<BlogPage />} />
             <Route path="contacts" element={<ContactsPage />} />
