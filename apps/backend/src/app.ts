@@ -2,6 +2,7 @@ import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import { loadEnv } from './config/env.js';
+import supabasePlugin from './plugins/supabase.js';
 
 const env = loadEnv();
 
@@ -21,9 +22,15 @@ await app.register(rateLimit, {
   timeWindow: env.RATE_LIMIT_WINDOW_MS,
 });
 
-app.get('/health', async () => ({
-  status: 'ok',
-  timestamp: new Date().toISOString(),
-}));
+await app.register(supabasePlugin);
+
+app.get('/health', async () => {
+  const { error } = await app.supabase.from('tours').select('id').limit(1);
+  return {
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    database: error ? 'error' : 'ok',
+  };
+});
 
 export { app, env };

@@ -14,7 +14,7 @@
   "dependencies": {
     "@dark-angels/shared": "workspace:*",
     "@dark-angels/types": "workspace:*",
-    "@twa.js/sdk": "^5.0.0",
+    "clsx": "^2.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.0.0",

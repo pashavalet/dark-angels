@@ -1,3 +1,12 @@
+interface TelegramUser {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  language_code?: string;
+  is_premium?: boolean;
+}
+
 interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
@@ -25,11 +34,7 @@ interface TelegramWebApp {
   };
   themeParams: Record<string, string>;
   initDataUnsafe: {
-    user?: {
-      id: number;
-      first_name: string;
-      language_code?: string;
-    };
+    user?: TelegramUser;
     query_id?: string;
   };
   colorScheme: 'light' | 'dark';

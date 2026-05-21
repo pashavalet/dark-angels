@@ -59,7 +59,7 @@ Specializations:
 
 ### Frontend
 - **React 18** + **Vite 5** + **TypeScript 5.4**
-- **Telegram SDK** (`@twa/sdk`)
+- **Telegram SDK** (`@telegram-apps/sdk`)
 - **State**: Zustand (client) + React Query (server)
 - **Routing**: React Router v6
 - **Styling**: TailwindCSS + shadcn/ui
@@ -1283,6 +1283,12 @@ VITE_SENTRY_TRACES_SAMPLE_RATE=0.1
 ---
 
 ## Changelog
+
+### v2.1 (2026-05-21)
+- Monorepo scaffolded: pnpm workspace, types/shared/config packages, backend/frontend skeletons
+- Supabase initial migration: all 6 tables + indexes + updated_at triggers
+- Supabase client integration: Fastify plugin with service key, health check includes DB status
+- Seed data: test admin, sample tours/services/blog articles + homepage collections
 
 ### v2.0 (2026-05-18)
 - JSON-based localization replacing `*_ru/*_en` fields
