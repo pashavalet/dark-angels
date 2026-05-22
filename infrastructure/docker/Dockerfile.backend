@@ -1,0 +1,27 @@
+FROM node:20-alpine AS base
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@9 --activate
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.base.json .npmrc ./
+COPY packages/types/package.json packages/types/
+COPY packages/shared/package.json packages/shared/
+COPY packages/config/package.json packages/config/
+COPY apps/backend/package.json apps/backend/
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
+
+FROM base AS build
+RUN pnpm install --frozen-lockfile
+COPY packages/ packages/
+COPY apps/backend/ apps/backend/
+RUN pnpm --filter @dark-angels/backend build
+
+FROM node:20-alpine AS runtime
+WORKDIR /app
+RUN addgroup -g 1001 app && adduser -u 1001 -G app -D app
+COPY --from=build /app/apps/backend/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/packages ./packages
+COPY --from=build /app/package.json ./
+USER app
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:3000/health || exit 1
+CMD ["node", "dist/server.js"]
