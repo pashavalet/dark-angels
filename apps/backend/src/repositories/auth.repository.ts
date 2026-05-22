@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { hashPassword, verifyPassword, verifyTokenHash } from '../services/auth.service.js';
+import { hashPassword, verifyPassword, verifyTokenHash, hashToken } from '../services/auth.service.js';
 
 export function createAuthRepository(app: FastifyInstance) {
   const db = app.supabase;
@@ -64,6 +64,49 @@ export function createAuthRepository(app: FastifyInstance) {
 
     async deleteAllRefreshTokens(adminId: string) {
       await db.from('refresh_tokens').delete().eq('admin_id', adminId);
+    },
+
+    async getTotpSecret(adminId: string): Promise<string | null> {
+      const { data } = await db.from('admins').select('totp_secret').eq('id', adminId).single();
+      return data?.totp_secret ?? null;
+    },
+
+    async enableTotp(adminId: string, secret: string): Promise<void> {
+      await db.from('admins').update({ totp_secret: secret }).eq('id', adminId);
+    },
+
+    async confirmTotp(adminId: string): Promise<void> {
+      await db.from('admins').update({ totp_enabled: true }).eq('id', adminId);
+    },
+
+    async disableTotp(adminId: string): Promise<void> {
+      await db.from('admins').update({ totp_secret: null, totp_enabled: false, recovery_codes_hash: null }).eq('id', adminId);
+    },
+
+    async storeRecoveryCodes(adminId: string, hashes: string[]): Promise<void> {
+      await db.from('admins').update({ recovery_codes_hash: JSON.stringify(hashes) }).eq('id', adminId);
+    },
+
+    async getRecoveryCodes(adminId: string): Promise<string[] | null> {
+      const { data } = await db.from('admins').select('recovery_codes_hash').eq('id', adminId).single();
+      if (!data?.recovery_codes_hash) return null;
+      return JSON.parse(data.recovery_codes_hash);
+    },
+
+    async consumeRecoveryCode(adminId: string, codeIndex: number): Promise<void> {
+      const codes = await this.getRecoveryCodes(adminId);
+      if (!codes) return;
+      codes.splice(codeIndex, 1);
+      if (codes.length === 0) {
+        await db.from('admins').update({ recovery_codes_hash: null }).eq('id', adminId);
+      } else {
+        await db.from('admins').update({ recovery_codes_hash: JSON.stringify(codes) }).eq('id', adminId);
+      }
+    },
+
+    async isTotpEnabled(adminId: string): Promise<boolean> {
+      const { data } = await db.from('admins').select('totp_enabled').eq('id', adminId).single();
+      return data?.totp_enabled === true;
     },
   };
 }

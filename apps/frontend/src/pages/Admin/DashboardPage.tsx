@@ -18,26 +18,38 @@ export default function AdminDashboard() {
     navigate('/admin/login');
   }
 
+  const cards = [
+    { label: t('tours'), path: '/admin' },
+    { label: t('services'), path: '/admin' },
+    { label: t('blog'), path: '/admin' },
+    { label: t('home'), path: '/admin' },
+    { label: t('two_factor_auth'), path: '/admin/two-factor' },
+    { label: t('settings'), path: '/admin' },
+  ];
+
   return (
     <div className="flex flex-col gap-6 px-4 py-8">
       <div className="flex items-center justify-between">
         <h1 className="font-serif text-3xl font-bold text-accent">{t('admin')}</h1>
         <button
           onClick={handleLogout}
-          className="rounded-lg border border-border px-4 py-2 text-sm text-text-secondary transition-colors hover:bg-bg-elevated active:opacity-80 min-h-[44px]"
+          className="rounded-lg border border-border px-4 py-2 text-sm text-text-secondary transition-colors hover:bg-bg-elevated active:opacity-80"
+          style={{ minHeight: '44px' }}
         >
-          Logout
+          {t('logout')}
         </button>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {['Tours', 'Services', 'Blog', 'Homepage', 'Settings'].map((item) => (
-          <div
-            key={item}
-            className="rounded-xl border border-border bg-bg-card p-6 text-center font-medium text-text-secondary"
+        {cards.map((item) => (
+          <button
+            key={item.label}
+            onClick={() => item.path !== '/admin' && navigate(item.path)}
+            className="rounded-xl border border-border bg-bg-card p-6 text-center font-medium text-text-secondary transition-colors hover:border-accent hover:text-text-primary"
+            style={{ minHeight: '64px' }}
           >
-            {item} — coming soon
-          </div>
+            {item.label}{item.path === '/admin' ? ` — ${t('coming_soon')}` : ''}
+          </button>
         ))}
       </div>
     </div>

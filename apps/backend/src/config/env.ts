@@ -19,6 +19,7 @@ const envSchema = z.object({
   SUPABASE_STORAGE_BUCKET: z.string().default('images'),
   MAX_FILE_SIZE_MB: z.coerce.number().positive().default(5),
   ALLOWED_IMAGE_TYPES: z.string().default('image/jpeg,image/png,image/webp'),
+  OTPLIB_ISSUER: z.string().default('DarkAngels'),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

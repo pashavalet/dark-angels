@@ -64,6 +64,7 @@ Bottom tab bar with 5 tabs: Home → Tours → Blog → Services → Contacts.
 
 ## Changelog
 
+- **2026-05-22** — 2FA pages: TwoFactorPage (QR + codes), LoginPage 2FA step, recovery flow
 - **2026-05-22** — ImageUploader: drag-drop component with browser-image-compression, Supabase Storage integration via `api/upload.ts`
 - **2026-05-22** — VIP gating: VipBadge reusable component (vip/premium/invite), auth store extended with isPremium/accessLevel/setAccess, HomePage blur overlay for restricted content when not authenticated
 - **2026-05-22** — Homepage carousels: `HorizontalCarousel` (horizontal scroll + snap, framer-motion stagger, skeleton loading), `HomePage` rewrite with 3 sections (tours/services/blog), API hooks in `api/homepage.ts`; Admin DnD: `CollectionsPage` with @dnd-kit sortable list, pin/remove controls, `SortableList` reusable component; i18n keys added for homepage + collections

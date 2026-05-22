@@ -1,6 +1,10 @@
 import bcrypt from 'bcrypt';
 import type { FastifyInstance } from 'fastify';
 import { randomBytes } from 'node:crypto';
+import { authenticator } from 'otplib';
+import QRCode from 'qrcode';
+
+authenticator.options = { window: 1 };
 
 const BCRYPT_ROUNDS = 12;
 const REFRESH_TOKEN_BYTES = 48;
@@ -36,4 +40,36 @@ export function getRefreshTokenExpiry(expiresIn: string): Date {
   const unit = match[2]!;
   const ms = { s: 1000, m: 60000, h: 3600000, d: 86400000 }[unit]! * value;
   return new Date(Date.now() + ms);
+}
+
+export function generateTotpSecret(): string {
+  return authenticator.generateSecret();
+}
+
+export function generateTotpUri(email: string, secret: string, issuer: string): string {
+  return authenticator.keyuri(email, issuer, secret);
+}
+
+export async function generateQrCode(uri: string): Promise<string> {
+  return QRCode.toDataURL(uri, {
+    errorCorrectionLevel: 'M',
+    type: 'image/png',
+    margin: 2,
+    color: { dark: '#c9a86b', light: '#0a0a0b' },
+  });
+}
+
+export function verifyTotpToken(secret: string, token: string): boolean {
+  try {
+    return authenticator.verify({ token, secret });
+  } catch {
+    return false;
+  }
+}
+
+export function generateRecoveryCodes(): string[] {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  return Array.from({ length: 10 }, () =>
+    Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join(''),
+  );
 }
