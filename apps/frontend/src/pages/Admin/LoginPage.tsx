@@ -113,6 +113,7 @@ export default function LoginPage() {
                 onKeyDown={(e) => handleCodeKeyDown(i, e)}
                 className="w-11 h-11 rounded-lg border border-border bg-bg-card text-center text-lg text-text-primary focus:border-accent focus:outline-none"
                 style={{ minWidth: '44px', minHeight: '44px' }}
+                aria-label={t('digit_n', 'Digit {{n}}').replace('{{n}}', String(i + 1))}
               />
             ))}
           </div>
@@ -120,7 +121,7 @@ export default function LoginPage() {
           <button
             onClick={handle2FAVerify}
             disabled={loading || code.join('').length !== 6}
-            className="w-full rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50"
+            className="w-full rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{ minHeight: '44px' }}
           >
             {loading ? t('loading') : t('verify_2fa')}
@@ -128,7 +129,7 @@ export default function LoginPage() {
 
           <button
             onClick={() => { setStep('recovery'); setError(''); }}
-            className="w-full text-center text-sm text-text-muted hover:text-text-secondary transition-colors"
+            className="w-full text-center text-sm text-text-muted hover:text-text-secondary transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{ minHeight: '44px' }}
           >
             {t('lost_access')}
@@ -136,7 +137,7 @@ export default function LoginPage() {
 
           <button
             onClick={() => { setStep('login'); setError(''); }}
-            className="w-full text-center text-sm text-text-muted hover:text-text-secondary transition-colors"
+            className="w-full text-center text-sm text-text-muted hover:text-text-secondary transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{ minHeight: '44px' }}
           >
             {t('back')}
@@ -182,7 +183,7 @@ export default function LoginPage() {
           <button
             onClick={handleRecovery}
             disabled={loading || !recoveryCode}
-            className="w-full rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50"
+            className="w-full rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{ minHeight: '44px' }}
           >
             {loading ? t('loading') : t('recover_account')}
@@ -190,7 +191,7 @@ export default function LoginPage() {
 
           <button
             onClick={() => { setStep('2fa'); setError(''); }}
-            className="w-full text-center text-sm text-text-muted hover:text-text-secondary transition-colors"
+            className="w-full text-center text-sm text-text-muted hover:text-text-secondary transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{ minHeight: '44px' }}
           >
             {t('back')}
@@ -237,7 +238,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50"
+          className="w-full rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
           style={{ minHeight: '44px' }}
         >
           {loading ? t('loading') : t('submit')}

@@ -25,6 +25,7 @@ export default function BottomNav() {
               cn(
                 'flex min-w-[44px] flex-col items-center gap-1 px-2 py-3 text-xs font-medium transition-colors',
                 'min-h-[60px] justify-center',
+                'focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2',
                 isActive ? 'text-accent' : 'text-text-muted hover:text-text-secondary',
               )
             }

@@ -117,13 +117,14 @@ export default function TwoFactorPage() {
               onKeyDown={(e) => handleCodeKeyDown(i, e)}
               className="w-11 h-11 rounded-lg border border-border bg-bg-card text-center text-lg text-text-primary focus:border-accent focus:outline-none"
               style={{ minWidth: '44px', minHeight: '44px' }}
+              aria-label={t('digit_n', 'Digit {{n}}').replace('{{n}}', String(i + 1))}
             />
           ))}
         </div>
         <button
           onClick={handleVerify}
           disabled={loading || code.join('').length !== 6}
-          className="w-full max-w-sm rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50"
+          className="w-full max-w-sm rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
           style={{ minHeight: '44px' }}
         >
           {loading ? t('loading') : t('verify_2fa')}
@@ -150,14 +151,14 @@ export default function TwoFactorPage() {
         <div className="flex gap-3 w-full max-w-sm">
           <button
             onClick={handleCopyCodes}
-            className="flex-1 rounded-lg border border-border py-3 text-sm text-text-secondary transition-colors hover:bg-bg-elevated active:opacity-80"
+            className="flex-1 rounded-lg border border-border py-3 text-sm text-text-secondary transition-colors hover:bg-bg-elevated active:opacity-80 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{ minHeight: '44px' }}
           >
             {copied ? t('copied') : t('copy')}
           </button>
           <button
             onClick={handleDone}
-            className="flex-1 rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80"
+            className="flex-1 rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{ minHeight: '44px' }}
           >
             {t('done')}
@@ -188,13 +189,14 @@ export default function TwoFactorPage() {
               onKeyDown={(e) => handleCodeKeyDown(i, e)}
               className="w-11 h-11 rounded-lg border border-border bg-bg-card text-center text-lg text-text-primary focus:border-accent focus:outline-none"
               style={{ minWidth: '44px', minHeight: '44px' }}
+              aria-label={t('digit_n', 'Digit {{n}}').replace('{{n}}', String(i + 1))}
             />
           ))}
         </div>
         <div className="flex gap-3 w-full max-w-sm">
           <button
             onClick={() => { setStep('idle'); setCode(Array(6).fill('')); setError(''); }}
-            className="flex-1 rounded-lg border border-border py-3 text-sm text-text-secondary transition-colors hover:bg-bg-elevated active:opacity-80"
+            className="flex-1 rounded-lg border border-border py-3 text-sm text-text-secondary transition-colors hover:bg-bg-elevated active:opacity-80 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{ minHeight: '44px' }}
           >
             {t('back')}
@@ -224,14 +226,14 @@ export default function TwoFactorPage() {
         <button
           onClick={handleSetup}
           disabled={loading}
-          className="w-full rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50"
+          className="w-full rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
           style={{ minHeight: '44px' }}
         >
           {loading ? t('loading') : t('enable_2fa')}
         </button>
         <button
           onClick={() => { setStep('disable'); setCode(Array(6).fill('')); setError(''); }}
-          className="w-full rounded-lg border border-border py-3 text-sm text-text-secondary transition-colors hover:bg-bg-elevated active:opacity-80"
+          className="w-full rounded-lg border border-border py-3 text-sm text-text-secondary transition-colors hover:bg-bg-elevated active:opacity-80 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
           style={{ minHeight: '44px' }}
         >
           {t('disable_2fa')}

@@ -33,7 +33,7 @@ export default function TourDetailPage() {
         <p className="text-text-muted">{t('no_tours_found', 'No tours found')}</p>
         <button
           onClick={() => navigate('/tours')}
-          className="mt-4 min-h-[44px] rounded-lg border border-border px-6 text-text-primary transition-colors hover:border-accent/30"
+          className="mt-4 min-h-[44px] rounded-lg border border-border px-6 text-text-primary transition-colors hover:border-accent/30 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
         >
           {t('back')}
         </button>
@@ -68,7 +68,7 @@ export default function TourDetailPage() {
 
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-4 left-4 z-10 flex min-h-[44px] min-w-[44px] items-center gap-1.5 rounded-lg border border-white/20 bg-black/40 px-4 text-sm text-white backdrop-blur-sm transition-colors hover:bg-black/60"
+          className="absolute top-4 left-4 z-10 flex min-h-[44px] min-w-[44px] items-center gap-1.5 rounded-lg border border-white/20 bg-black/40 px-4 text-sm text-white backdrop-blur-sm transition-colors hover:bg-black/60 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
           aria-label={t('back')}
         >
           <svg

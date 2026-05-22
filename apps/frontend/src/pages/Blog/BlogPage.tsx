@@ -71,6 +71,7 @@ export default function BlogPage() {
           }}
           placeholder={t('search', 'Search')}
           className="w-full rounded-xl border border-border bg-bg-card py-3 pl-12 pr-4 text-text-primary placeholder:text-text-muted outline-none transition-colors focus:border-accent/50 min-h-[44px]"
+          aria-label={t('search', 'Search')}
         />
       </div>
 
@@ -82,7 +83,7 @@ export default function BlogPage() {
               setPage(1);
             }}
             className={cn(
-              'shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors min-h-[44px] flex items-center',
+              'shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors min-h-[44px] flex items-center focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2',
               selectedTag === null
                 ? 'border-accent bg-accent/10 text-accent'
                 : 'border-border text-text-muted hover:border-text-muted',
@@ -98,7 +99,7 @@ export default function BlogPage() {
                 setPage(1);
               }}
               className={cn(
-                'shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors min-h-[44px] flex items-center',
+                'shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors min-h-[44px] flex items-center focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2',
                 selectedTag === tag
                   ? 'border-accent bg-accent/10 text-accent'
                   : 'border-border text-text-muted hover:border-text-muted',
@@ -134,7 +135,7 @@ export default function BlogPage() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-border text-text-primary transition-colors hover:border-accent/30 disabled:opacity-30"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-border text-text-primary transition-colors hover:border-accent/30 disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             aria-label={t('previous', 'Previous')}
           >
             <svg
@@ -154,7 +155,7 @@ export default function BlogPage() {
           <button
             onClick={() => setPage((p) => Math.min(meta.totalPages, p + 1))}
             disabled={page >= meta.totalPages}
-            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-border text-text-primary transition-colors hover:border-accent/30 disabled:opacity-30"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-border text-text-primary transition-colors hover:border-accent/30 disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             aria-label={t('next', 'Next')}
           >
             <svg

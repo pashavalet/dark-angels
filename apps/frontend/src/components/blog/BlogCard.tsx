@@ -12,20 +12,24 @@ interface BlogCardProps {
 export default function BlogCard({ article, onClick }: BlogCardProps) {
   const { t } = useTranslation('common');
   const title = useLocalized(article.title);
+  const isInteractive = !!onClick;
 
   return (
     <div
       onClick={onClick}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' && onClick) onClick();
+        if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+          e.preventDefault();
+          onClick();
+        }
       }}
-      role="button"
-      tabIndex={0}
+      role={isInteractive ? 'button' : 'article'}
+      tabIndex={isInteractive ? 0 : undefined}
       className={cn(
         'group rounded-xl border border-border bg-bg-card overflow-hidden',
         'hover:border-accent/30 transition-all duration-200',
-        'active:scale-[0.98]',
-        'cursor-pointer',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+        isInteractive && 'cursor-pointer active:scale-[0.98]',
       )}
     >
       <div className="relative aspect-video overflow-hidden">
@@ -55,7 +59,7 @@ export default function BlogCard({ article, onClick }: BlogCardProps) {
             {article.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-border px-2 py-0.5 text-xs text-text-muted"
+                className="rounded-full border border-border px-2 py-0.5 text-xs text-text-secondary"
               >
                 {tag}
               </span>

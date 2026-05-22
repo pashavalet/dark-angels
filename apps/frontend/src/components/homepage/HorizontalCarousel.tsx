@@ -64,6 +64,7 @@ export default function HorizontalCarousel({
                 'bg-bg-card/80 backdrop-blur-sm border border-border',
                 'text-accent hover:text-accent hover:border-accent/50',
                 'transition-colors active:scale-95',
+                'focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2',
               )}
               aria-label={t('scroll_left')}
             >
@@ -78,6 +79,7 @@ export default function HorizontalCarousel({
                 'bg-bg-card/80 backdrop-blur-sm border border-border',
                 'text-accent hover:text-accent hover:border-accent/50',
                 'transition-colors active:scale-95',
+                'focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2',
               )}
               aria-label={t('scroll_right')}
             >

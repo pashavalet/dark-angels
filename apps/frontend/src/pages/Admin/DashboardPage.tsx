@@ -33,7 +33,7 @@ export default function AdminDashboard() {
         <h1 className="font-serif text-3xl font-bold text-accent">{t('admin')}</h1>
         <button
           onClick={handleLogout}
-          className="rounded-lg border border-border px-4 py-2 text-sm text-text-secondary transition-colors hover:bg-bg-elevated active:opacity-80"
+          className="rounded-lg border border-border px-4 py-2 text-sm text-text-secondary transition-colors hover:bg-bg-elevated active:opacity-80 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
           style={{ minHeight: '44px' }}
         >
           {t('logout')}
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
           <button
             key={item.label}
             onClick={() => item.path !== '/admin' && navigate(item.path)}
-            className="rounded-xl border border-border bg-bg-card p-6 text-center font-medium text-text-secondary transition-colors hover:border-accent hover:text-text-primary"
+            className="rounded-xl border border-border bg-bg-card p-6 text-center font-medium text-text-secondary transition-colors hover:border-accent hover:text-text-primary focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{ minHeight: '64px' }}
           >
             {item.label}{item.path === '/admin' ? ` — ${t('coming_soon')}` : ''}

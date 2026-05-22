@@ -97,12 +97,14 @@ export default function ImageUploader({ value, onChange, disabled }: ImageUpload
       className={cn(
         'flex flex-col items-center gap-4 rounded-xl border-2 border-dashed p-8 transition-colors',
         isDragging ? 'border-accent bg-accent/5' : 'border-border bg-bg-card',
+        'focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2',
         (disabled || uploading) && 'opacity-50 pointer-events-none',
         !disabled && !uploading && 'cursor-pointer',
       )}
       role="button"
       tabIndex={disabled ? -1 : 0}
-      onKeyDown={(e) => { if (e.key === 'Enter') handleClick(); }}
+      aria-label={t('upload_image', 'Upload image')}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } }}
     >
       <input
         ref={fileInputRef}
@@ -127,14 +129,14 @@ export default function ImageUploader({ value, onChange, disabled }: ImageUpload
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); handleClick(); }}
-              className="min-h-[44px] min-w-[44px] rounded-lg border border-border px-4 text-sm text-text-primary transition-colors hover:border-accent/30"
+              className="min-h-[44px] min-w-[44px] rounded-lg border border-border px-4 text-sm text-text-primary transition-colors hover:border-accent/30 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             >
               {t('change_image', 'Change')}
             </button>
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); handleRemove(); }}
-              className="min-h-[44px] min-w-[44px] rounded-lg border border-danger/30 px-4 text-sm text-danger transition-colors hover:bg-danger/10"
+              className="min-h-[44px] min-w-[44px] rounded-lg border border-red-500/40 px-4 text-sm text-red-400 transition-colors hover:bg-red-500/10 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             >
               {t('remove_image', 'Remove')}
             </button>

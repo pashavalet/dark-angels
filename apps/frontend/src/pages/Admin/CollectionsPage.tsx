@@ -69,7 +69,7 @@ export default function CollectionsPage() {
           <button
             key={key}
             onClick={() => setSection(key)}
-            className={`shrink-0 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors min-h-[44px] min-w-[44px] ${
+            className={`shrink-0 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors min-h-[44px] min-w-[44px] focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${
               section === key
                 ? 'bg-accent text-bg-primary'
                 : 'border border-border bg-bg-card text-text-secondary hover:border-accent/30'
@@ -135,7 +135,7 @@ function CollectionRow({
 
       <button
         onClick={(e) => { e.stopPropagation(); onTogglePin(); }}
-        className={`flex items-center justify-center w-[44px] h-[44px] rounded-lg transition-colors ${
+        className={`flex items-center justify-center w-[44px] h-[44px] rounded-lg transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${
           item.is_pinned ? 'text-accent' : 'text-text-muted hover:text-accent'
         }`}
         aria-label={item.is_pinned ? t('unpin') : t('pin')}
@@ -147,7 +147,7 @@ function CollectionRow({
 
       <button
         onClick={(e) => { e.stopPropagation(); onRemove(); }}
-        className="flex items-center justify-center w-[44px] h-[44px] rounded-lg text-text-muted hover:text-danger transition-colors"
+        className="flex items-center justify-center w-[44px] h-[44px] rounded-lg text-text-muted hover:text-danger transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
         aria-label={t('remove')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5">
