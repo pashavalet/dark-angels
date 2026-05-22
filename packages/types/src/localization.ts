@@ -7,5 +7,6 @@ export interface LocalizedString {
 }
 
 export function getLocalizedValue(obj: LocalizedString, locale: SupportedLocale): string {
+  if (!obj) return '';
   return obj[locale] ?? obj['en'] ?? Object.values(obj)[0] ?? '';
 }
