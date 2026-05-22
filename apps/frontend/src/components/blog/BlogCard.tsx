@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useLocalized } from '../../hooks/useLocalized.js';
 import { cn } from '../../lib/cn.js';
 import VipBadge from '../ui/VipBadge.js';
@@ -9,6 +10,7 @@ interface BlogCardProps {
 }
 
 export default function BlogCard({ article, onClick }: BlogCardProps) {
+  const { t } = useTranslation('common');
   const title = useLocalized(article.title);
 
   return (
@@ -46,9 +48,7 @@ export default function BlogCard({ article, onClick }: BlogCardProps) {
       <div className="p-4">
         <h3 className="font-semibold text-text-primary line-clamp-2">{title}</h3>
 
-        <p className="mt-2 text-sm text-accent group-hover:underline">
-          {/* Read more → rendered by parent via i18n */}
-        </p>
+        <p className="mt-2 text-sm font-medium text-accent">{t('read_more')} →</p>
 
         {article.tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">

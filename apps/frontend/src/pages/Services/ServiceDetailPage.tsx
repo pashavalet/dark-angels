@@ -33,7 +33,7 @@ export default function ServiceDetailPage() {
   if (isError || !data?.data) {
     return (
       <div className="flex flex-col items-center justify-center px-4 py-16">
-        <p className="text-text-muted">{t('no_services_found', 'Service not found')}</p>
+        <p className="text-text-muted">{t('no_services_found')}</p>
         <button
           onClick={() => navigate('/services')}
           className="mt-4 min-h-[44px] rounded-lg border border-border px-6 text-text-primary transition-colors hover:border-accent/30"

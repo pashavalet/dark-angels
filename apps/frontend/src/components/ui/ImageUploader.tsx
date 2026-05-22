@@ -52,7 +52,7 @@ export default function ImageUploader({ value, onChange, disabled }: ImageUpload
       onChange(result.url);
       setPreview(result.url);
     } catch {
-      setError(t('upload_error', 'Upload failed. Please try again.'));
+      setError(t('upload_error'));
       URL.revokeObjectURL(previewUrl);
       setPreview(null);
     } finally {
@@ -120,7 +120,7 @@ export default function ImageUploader({ value, onChange, disabled }: ImageUpload
         <div className="relative w-full">
           <img
             src={displayedImage}
-            alt="Preview"
+            alt={t('preview_alt')}
             className="mx-auto max-h-64 rounded-lg object-contain"
           />
           <div className="mt-4 flex justify-center gap-3">

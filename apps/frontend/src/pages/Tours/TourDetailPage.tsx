@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useTour } from '../../api/tours.js';
 import { useLocalized } from '../../hooks/useLocalized.js';
+import VipBadge from '../../components/ui/VipBadge.js';
 
 export default function TourDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -94,17 +95,7 @@ export default function TourDetailPage() {
             )}
 
             {tour.is_vip && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-accent/90 px-2.5 py-0.5 text-xs font-medium text-bg-primary">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="h-3 w-3"
-                >
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-                VIP
-              </span>
+              <VipBadge level="vip" />
             )}
           </div>
         </div>

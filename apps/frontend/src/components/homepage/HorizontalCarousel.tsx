@@ -1,4 +1,5 @@
 import { useRef, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { cn } from '../../lib/cn.js';
 
@@ -41,6 +42,7 @@ export default function HorizontalCarousel({
   emptyMessage,
   isLoading,
 }: HorizontalCarouselProps) {
+  const { t } = useTranslation('common');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   function scroll(dir: 'left' | 'right') {
@@ -63,7 +65,7 @@ export default function HorizontalCarousel({
                 'text-accent hover:text-accent hover:border-accent/50',
                 'transition-colors active:scale-95',
               )}
-              aria-label="Scroll left"
+              aria-label={t('scroll_left')}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -77,7 +79,7 @@ export default function HorizontalCarousel({
                 'text-accent hover:text-accent hover:border-accent/50',
                 'transition-colors active:scale-95',
               )}
-              aria-label="Scroll right"
+              aria-label={t('scroll_right')}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

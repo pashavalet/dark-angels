@@ -39,7 +39,7 @@ export default function TwoFactorPage() {
       setSecret(data.secret);
       setStep('setup');
     } catch (err: any) {
-      setError(err.response?.data?.error?.message ?? 'Setup failed');
+      setError(err.response?.data?.error?.message ?? t('error_setup_failed'));
     } finally {
       setLoading(false);
     }
@@ -55,7 +55,7 @@ export default function TwoFactorPage() {
       setRecoveryCodes(data.recovery_codes);
       setStep('codes');
     } catch (err: any) {
-      setError(err.response?.data?.error?.message ?? 'Verification failed');
+      setError(err.response?.data?.error?.message ?? t('error_verification_failed'));
     } finally {
       setLoading(false);
     }
@@ -71,7 +71,7 @@ export default function TwoFactorPage() {
       setStep('idle');
       setCode(Array(6).fill(''));
     } catch (err: any) {
-      setError(err.response?.data?.error?.message ?? 'Disable failed');
+      setError(err.response?.data?.error?.message ?? t('error_disable_failed'));
     } finally {
       setLoading(false);
     }
@@ -96,7 +96,7 @@ export default function TwoFactorPage() {
         <h1 className="font-serif text-2xl font-bold text-accent">{t('two_factor_auth')}</h1>
         <p className="text-sm text-text-secondary">{t('scan_qr_code')}</p>
         <div className="rounded-xl bg-white p-4">
-          <img src={qrCode} alt="QR Code" className="size-52" />
+          <img src={qrCode} alt={t('qr_code_alt')} className="size-52" />
         </div>
         {secret && (
           <p className="font-mono text-xs text-text-muted break-all">{secret}</p>
@@ -126,7 +126,7 @@ export default function TwoFactorPage() {
           className="w-full max-w-sm rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50"
           style={{ minHeight: '44px' }}
         >
-          {loading ? '...' : t('verify_2fa')}
+          {loading ? t('loading') : t('verify_2fa')}
         </button>
       </div>
     );
@@ -153,14 +153,14 @@ export default function TwoFactorPage() {
             className="flex-1 rounded-lg border border-border py-3 text-sm text-text-secondary transition-colors hover:bg-bg-elevated active:opacity-80"
             style={{ minHeight: '44px' }}
           >
-            {copied ? 'Copied!' : 'Copy'}
+            {copied ? t('copied') : t('copy')}
           </button>
           <button
             onClick={handleDone}
             className="flex-1 rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80"
             style={{ minHeight: '44px' }}
           >
-            Done
+            {t('done')}
           </button>
         </div>
       </div>
@@ -205,7 +205,7 @@ export default function TwoFactorPage() {
             className="flex-1 rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50"
             style={{ minHeight: '44px' }}
           >
-            {loading ? '...' : t('disable_2fa')}
+            {loading ? t('loading') : t('disable_2fa')}
           </button>
         </div>
       </div>
@@ -227,7 +227,7 @@ export default function TwoFactorPage() {
           className="w-full rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50"
           style={{ minHeight: '44px' }}
         >
-          {loading ? '...' : t('enable_2fa')}
+          {loading ? t('loading') : t('enable_2fa')}
         </button>
         <button
           onClick={() => { setStep('disable'); setCode(Array(6).fill('')); setError(''); }}

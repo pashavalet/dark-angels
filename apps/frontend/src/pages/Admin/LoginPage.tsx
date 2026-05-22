@@ -51,7 +51,7 @@ export default function LoginPage() {
         navigate('/admin');
       }
     } catch (err: any) {
-      setError(err.response?.data?.error?.message ?? 'Login failed');
+      setError(err.response?.data?.error?.message ?? t('error_login_failed'));
     } finally {
       setLoading(false);
     }
@@ -67,7 +67,7 @@ export default function LoginPage() {
       auth.login(data.access_token, data.admin);
       navigate('/admin');
     } catch (err: any) {
-      setError(err.response?.data?.error?.message ?? 'Verification failed');
+      setError(err.response?.data?.error?.message ?? t('error_verification_failed'));
     } finally {
       setLoading(false);
     }
@@ -82,7 +82,7 @@ export default function LoginPage() {
       auth.login(data.access_token, data.admin);
       navigate('/admin');
     } catch (err: any) {
-      setError(err.response?.data?.error?.message ?? 'Recovery failed');
+      setError(err.response?.data?.error?.message ?? t('error_recovery_failed'));
     } finally {
       setLoading(false);
     }
@@ -123,7 +123,7 @@ export default function LoginPage() {
             className="w-full rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50"
             style={{ minHeight: '44px' }}
           >
-            {loading ? '...' : t('verify_2fa')}
+            {loading ? t('loading') : t('verify_2fa')}
           </button>
 
           <button
@@ -185,7 +185,7 @@ export default function LoginPage() {
             className="w-full rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50"
             style={{ minHeight: '44px' }}
           >
-            {loading ? '...' : t('recover_account')}
+            {loading ? t('loading') : t('recover_account')}
           </button>
 
           <button
@@ -240,7 +240,7 @@ export default function LoginPage() {
           className="w-full rounded-lg bg-accent py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 active:opacity-80 disabled:opacity-50"
           style={{ minHeight: '44px' }}
         >
-          {loading ? '...' : t('submit')}
+          {loading ? t('loading') : t('submit')}
         </button>
       </form>
     </div>
