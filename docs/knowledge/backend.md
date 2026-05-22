@@ -59,6 +59,8 @@ Validated via Zod at startup. Required: PORT, HOST, SUPABASE_URL, SUPABASE_SERVI
 
 ## Changelog
 
+- **2026-05-22** — Image upload: POST/DELETE /api/v1/upload with @fastify/multipart + Supabase Storage
+- **2026-05-22** — VIP access filtering: public routes hide hidden_vip tours and non-public blog posts
 - **2026-05-21** — Services CRUD routes: public GET (paginated, filterable by tags/search), admin POST/PUT/DELETE/PATCH
 - **2026-05-21** — Tours CRUD routes: public GET (paginated, filterable), admin POST/PUT/DELETE/PATCH
 - **2026-05-21** — Auth routes: login/refresh/logout, JWT + bcrypt + httpOnly cookies, lockout after 5 failures

@@ -24,7 +24,7 @@ export function createHomepageRepository(app: FastifyInstance) {
   const db = app.supabase;
 
   return {
-    async getCollections(): Promise<Record<string, HomepageCollectionItem[]>> {
+    async getCollections(publicOnly?: boolean): Promise<Record<string, HomepageCollectionItem[]>> {
       const { data: collections, error } = await db
         .from('homepage_collections')
         .select('*')
@@ -89,6 +89,12 @@ export function createHomepageRepository(app: FastifyInstance) {
       for (const row of rows) {
         const content = contentMap.get(row.item_id);
         if (!content) continue;
+
+        if (publicOnly) {
+          if (row.item_type === 'tour' && content.hidden_vip === true) continue;
+          if (row.item_type === 'blog' && content.access_level !== 'public') continue;
+        }
+
         const list = result[row.section];
         if (list) {
           list.push({ ...content, collection_id: row.id, is_pinned: row.is_pinned });

@@ -13,6 +13,7 @@ export function createTourService(app: FastifyInstance) {
       tags?: string[];
       is_vip?: boolean;
       search?: string;
+      hideVip?: boolean;
     }) {
       const result = await repo.findAll(options);
       return {
@@ -30,8 +31,8 @@ export function createTourService(app: FastifyInstance) {
       return repo.findById(id);
     },
 
-    async findFeatured() {
-      return repo.findFeatured();
+    async findFeatured(hideVip?: boolean) {
+      return repo.findFeatured(hideVip);
     },
 
     async create(data: CreateTourInput) {

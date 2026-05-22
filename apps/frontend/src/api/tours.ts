@@ -7,6 +7,7 @@ interface ToursParams {
   limit?: number;
   tags?: string;
   search?: string;
+  is_vip?: boolean;
 }
 
 interface PaginatedResponse {

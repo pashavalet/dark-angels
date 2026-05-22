@@ -16,6 +16,9 @@ const envSchema = z.object({
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(60_000),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   SENTRY_DSN: z.string().url().optional(),
+  SUPABASE_STORAGE_BUCKET: z.string().default('images'),
+  MAX_FILE_SIZE_MB: z.coerce.number().positive().default(5),
+  ALLOWED_IMAGE_TYPES: z.string().default('image/jpeg,image/png,image/webp'),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

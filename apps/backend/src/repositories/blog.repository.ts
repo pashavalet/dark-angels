@@ -11,8 +11,9 @@ export function createBlogRepository(app: FastifyInstance) {
       tags?: string[];
       access_level?: string;
       search?: string;
+      publicOnly?: boolean;
     }) {
-      const { page, limit, sort_order = 'asc', tags, access_level, search } = options;
+      const { page, limit, sort_order = 'asc', tags, access_level, search, publicOnly } = options;
       const offset = (page - 1) * limit;
 
       let query = db.from('blog_articles').select('*', { count: 'exact' });
@@ -28,6 +29,10 @@ export function createBlogRepository(app: FastifyInstance) {
 
       if (access_level) {
         query = query.eq('access_level', access_level);
+      }
+
+      if (publicOnly) {
+        query = query.eq('access_level', 'public');
       }
 
       query = query
@@ -49,12 +54,19 @@ export function createBlogRepository(app: FastifyInstance) {
       return data;
     },
 
-    async findFeatured() {
-      const { data, error } = await db
+    async findFeatured(publicOnly?: boolean) {
+      let query = db
         .from('blog_articles')
         .select('*')
-        .eq('is_published', true)
-        .order('sort_order', { ascending: true });
+        .eq('is_published', true);
+
+      if (publicOnly) {
+        query = query.eq('access_level', 'public');
+      }
+
+      query = query.order('sort_order', { ascending: true });
+
+      const { data, error } = await query;
       if (error) throw error;
       return data ?? [];
     },

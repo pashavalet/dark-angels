@@ -5,8 +5,8 @@ export function createHomepageService(app: FastifyInstance) {
   const repo = createHomepageRepository(app);
 
   return {
-    async getCollections() {
-      return repo.getCollections();
+    async getCollections(publicOnly?: boolean) {
+      return repo.getCollections(publicOnly);
     },
 
     async getCollectionIds(section: string) {

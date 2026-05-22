@@ -11,8 +11,9 @@ export function createTourRepository(app: FastifyInstance) {
       tags?: string[];
       is_vip?: boolean;
       search?: string;
+      hideVip?: boolean;
     }) {
-      const { page, limit, sort_order = 'asc', tags, is_vip, search } = options;
+      const { page, limit, sort_order = 'asc', tags, is_vip, search, hideVip } = options;
       const offset = (page - 1) * limit;
 
       let query = db.from('tours').select('*', { count: 'exact' });
@@ -28,6 +29,10 @@ export function createTourRepository(app: FastifyInstance) {
 
       if (is_vip !== undefined) {
         query = query.eq('is_vip', is_vip);
+      }
+
+      if (hideVip) {
+        query = query.eq('hidden_vip', false);
       }
 
       query = query
@@ -49,12 +54,19 @@ export function createTourRepository(app: FastifyInstance) {
       return data;
     },
 
-    async findFeatured() {
-      const { data, error } = await db
+    async findFeatured(hideVip?: boolean) {
+      let query = db
         .from('tours')
         .select('*')
-        .eq('is_published', true)
-        .order('sort_order', { ascending: true });
+        .eq('is_published', true);
+
+      if (hideVip) {
+        query = query.eq('hidden_vip', false);
+      }
+
+      query = query.order('sort_order', { ascending: true });
+
+      const { data, error } = await query;
       if (error) throw error;
       return data ?? [];
     },

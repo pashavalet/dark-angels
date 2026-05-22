@@ -13,6 +13,7 @@ export function createBlogService(app: FastifyInstance) {
       tags?: string[];
       access_level?: string;
       search?: string;
+      publicOnly?: boolean;
     }) {
       const result = await repo.findAll(options);
       return {
@@ -30,8 +31,8 @@ export function createBlogService(app: FastifyInstance) {
       return repo.findById(id);
     },
 
-    async findFeatured() {
-      return repo.findFeatured();
+    async findFeatured(publicOnly?: boolean) {
+      return repo.findFeatured(publicOnly);
     },
 
     async create(data: CreateBlogInput) {

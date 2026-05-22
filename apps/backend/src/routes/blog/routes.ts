@@ -22,6 +22,9 @@ export default async function blogRoutes(app: FastifyInstance) {
   const service = createBlogService(app);
 
   app.get('/', async (request) => {
+    let isAdmin = false;
+    try { await request.jwtVerify(); isAdmin = true; } catch { /* no auth */ }
+
     const query = blogQuerySchema.parse(request.query);
     const tags = query.tags
       ? query.tags.split(',').map((t) => t.trim()).filter(Boolean)
@@ -34,13 +37,17 @@ export default async function blogRoutes(app: FastifyInstance) {
       tags,
       access_level: query.access_level,
       search: query.search,
+      publicOnly: !isAdmin,
     });
 
     return { success: true, data: result.data, meta: result.meta };
   });
 
-  app.get('/featured', async () => {
-    const data = await service.findFeatured();
+  app.get('/featured', async (request) => {
+    let isAdmin = false;
+    try { await request.jwtVerify(); isAdmin = true; } catch { /* no auth */ }
+
+    const data = await service.findFeatured(!isAdmin);
     return { success: true, data };
   });
 

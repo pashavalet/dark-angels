@@ -22,6 +22,10 @@ export default async function tourRoutes(app: FastifyInstance) {
   const service = createTourService(app);
 
   app.get('/', async (request) => {
+    let isAdmin = false;
+    try { await request.jwtVerify(); isAdmin = true; } catch { /* no auth */ }
+    const hideVip = !isAdmin;
+
     const query = tourQuerySchema.parse(request.query);
     const tags = query.tags
       ? query.tags.split(',').map((t) => t.trim()).filter(Boolean)
@@ -34,13 +38,18 @@ export default async function tourRoutes(app: FastifyInstance) {
       tags,
       is_vip: query.is_vip,
       search: query.search,
+      hideVip,
     });
 
     return { success: true, data: result.data, meta: result.meta };
   });
 
-  app.get('/featured', async () => {
-    const data = await service.findFeatured();
+  app.get('/featured', async (request) => {
+    let isAdmin = false;
+    try { await request.jwtVerify(); isAdmin = true; } catch { /* no auth */ }
+    const hideVip = !isAdmin;
+
+    const data = await service.findFeatured(hideVip);
     return { success: true, data };
   });
 

@@ -27,8 +27,11 @@ const reorderSchema = z.object({
 export default async function homepageRoutes(app: FastifyInstance) {
   const service = createHomepageService(app);
 
-  app.get('/', async () => {
-    const data = await service.getCollections();
+  app.get('/', async (request) => {
+    let isAdmin = false;
+    try { await request.jwtVerify(); isAdmin = true; } catch { /* no auth */ }
+
+    const data = await service.getCollections(!isAdmin);
     return { success: true, data };
   });
 
