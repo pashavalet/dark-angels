@@ -19,10 +19,10 @@ export default function AdminDashboard() {
   }
 
   const cards = [
-    { label: t('tours'), path: '/admin' },
-    { label: t('services'), path: '/admin' },
-    { label: t('blog'), path: '/admin' },
-    { label: t('home'), path: '/admin' },
+    { label: t('tours'), path: '/admin/tours' },
+    { label: t('services'), path: '/admin/services' },
+    { label: t('blog'), path: '/admin/blog' },
+    { label: t('collections'), path: '/admin/collections' },
     { label: t('two_factor_auth'), path: '/admin/two-factor' },
     { label: t('settings'), path: '/admin' },
   ];
