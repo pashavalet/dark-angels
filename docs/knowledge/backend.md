@@ -28,6 +28,15 @@ app.ts
 └── (future) auth.ts    — JWT auth + 2FA
 ```
 
+## Mock Mode
+
+Set `MOCK_MODE=true` in `.env` to run without Supabase:
+- In-memory DB with seed data (3 tours, 3 services, 3 blog articles, homepage collections, 2 admin users)
+- Chainable mock Supabase client via Proxy: `select/eq/in/or/contains/order/range/insert/update/delete/single`
+- `verifyPassword` bypassed — any password ≥12 chars accepted
+- `dotenv` loads `.env` at startup; environment validated via Zod (PORT, HOST, JWT_SECRET=32, ...)
+- BCrypt rounds: 4 in mock mode, 12 in production
+
 ## Route Structure (future)
 
 ```
@@ -54,15 +63,11 @@ const ValidationError = createError('VALIDATION_ERROR', '%s', 400);
 ## Environment Variables
 
 Validated via Zod at startup. Required: PORT, HOST, SUPABASE_URL, SUPABASE_SERVICE_KEY, JWT_SECRET (≥32 chars).
+Optional: MOCK_MODE (bool), MOCK_BCRYPT_ROUNDS (int, default 4).
 
 ---
 
 ## Changelog
 
-- **2026-05-22** — 2FA: TOTP setup (QR), verify, challenge (login), disable, recovery codes via otplib
-- **2026-05-22** — Image upload: POST/DELETE /api/v1/upload with @fastify/multipart + Supabase Storage
-- **2026-05-22** — VIP access filtering: public routes hide hidden_vip tours and non-public blog posts
-- **2026-05-21** — Services CRUD routes: public GET (paginated, filterable by tags/search), admin POST/PUT/DELETE/PATCH
-- **2026-05-21** — Tours CRUD routes: public GET (paginated, filterable), admin POST/PUT/DELETE/PATCH
-- **2026-05-21** — Auth routes: login/refresh/logout, JWT + bcrypt + httpOnly cookies, lockout after 5 failures
-- **2026-05-21** — Fastify app skeleton: CORS, rate-limit, Supabase plugin, `/health` with DB check
+- **2026-05-23** — Functional E2E tests: API login/tokens, all public routes return 200 with data from in-memory mock DB
+- **2026-05-23** — Mock mode: in-memory DB + chainable mock Supabase client + dotenv + mock-data.ts seed file (3 entities each + collections)

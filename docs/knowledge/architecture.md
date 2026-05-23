@@ -54,4 +54,7 @@ apps/backend   →  packages/shared  →  packages/types
 
 ## Changelog
 
+- **2026-05-23** — CI/CD: GitHub Actions pipeline (lint→typecheck→test→build), Docker multi-stage (backend Alpine + frontend Nginx), docker-compose
+- **2026-05-23** — Testing: Vitest unit tests (24 passing), Playwright E2E config (playwright.config.ts at root), functional test suite (39/39)
+- **2026-05-23** — Mock mode: in-memory DB bypasses Supabase for dev/demo without external services
 - **2026-05-21** — Monorepo scaffolded with pnpm workspace; isolated linker; 5 packages
