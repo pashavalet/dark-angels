@@ -64,7 +64,8 @@ Bottom tab bar with 5 tabs: Home → Tours → Blog → Services → Contacts.
 
 ## Changelog
 
-- **2026-05-23** — Functional E2E tests: 39/39 passing (Playwright Python), homepage carousels, CRUD detail pages, admin login+2FA+DnD
+- **2026-05-23** — Admin CRUD: 6 pages (Tour/Service/Blog edit forms + admin list pages), AdminFormLayout, LocalizedField (ru/en tabbed JSONB input), Dashboard un-stubbed (5/6 cards real), 40 i18n keys
+- **2026-05-23** — Functional E2E tests: 43/43 passing (Playwright Python), homepage carousels, CRUD detail pages, admin login+2FA+DnD+CRUD lists
 - **2026-05-23** — WCAG 2.2 AA: focus-visible on 30+ elements, contrast fix (450/700 vs 500/700), reduced-motion skip/whitelist, Space key actionable cards
 - **2026-05-23** — i18n hardcoded strings replaced: 27→`t()`, 18 new keys added, upload_error/menu fixed, admin breadcrumbs localized
 - **2026-05-23** — Mock mode: frontend supports running against mock backend (no Supabase needed), login bypass in dev

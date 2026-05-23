@@ -30,6 +30,7 @@ Telegram Mini App CMS platform for escort agency with multilingual content manag
 
 ## Changelog
 
+- **2026-05-23** — Admin CRUD: Tour/Service/Blog edit forms + admin list pages, Dashboard un-stubbed, 40 i18n keys, 43/43 E2E tests
 - **2026-05-23** — Mock mode enabled: in-memory DB + seed data, no Supabase needed for local dev; functional tests 39/39 passing
 - **2026-05-23** — CI/CD + Docker setup; Vitest + Playwright testing frameworks configured; WCAG 2.2 AA audit complete
 - **2026-05-21** — Restructured into topic-based knowledge files per AGENTS.md
