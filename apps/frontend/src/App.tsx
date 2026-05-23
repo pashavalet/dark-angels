@@ -13,6 +13,7 @@ import LoginPage from './pages/Admin/LoginPage.js';
 import DashboardPage from './pages/Admin/DashboardPage.js';
 import TwoFactorPage from './pages/Admin/TwoFactorPage.js';
 import CollectionsPage from './pages/Admin/CollectionsPage.js';
+import SettingsPage from './pages/Admin/SettingsPage.js';
 import TourAdminListPage from './pages/Admin/TourAdminListPage.js';
 import TourEditPage from './pages/Admin/TourEditPage.js';
 import ServiceAdminListPage from './pages/Admin/ServiceAdminListPage.js';
@@ -40,6 +41,7 @@ export default function App() {
             <Route path="admin" element={<DashboardPage />} />
             <Route path="admin/two-factor" element={<TwoFactorPage />} />
             <Route path="admin/collections" element={<CollectionsPage />} />
+            <Route path="admin/settings" element={<SettingsPage />} />
             <Route path="admin/tours" element={<TourAdminListPage />} />
             <Route path="admin/tours/new" element={<TourEditPage />} />
             <Route path="admin/tours/:id" element={<TourEditPage />} />

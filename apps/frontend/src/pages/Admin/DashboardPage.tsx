@@ -24,7 +24,7 @@ export default function AdminDashboard() {
     { label: t('blog'), path: '/admin/blog' },
     { label: t('collections'), path: '/admin/collections' },
     { label: t('two_factor_auth'), path: '/admin/two-factor' },
-    { label: t('settings'), path: '/admin' },
+    { label: t('settings'), path: '/admin/settings' },
   ];
 
   return (
@@ -44,11 +44,11 @@ export default function AdminDashboard() {
         {cards.map((item) => (
           <button
             key={item.label}
-            onClick={() => item.path !== '/admin' && navigate(item.path)}
+            onClick={() => navigate(item.path)}
             className="rounded-xl border border-border bg-bg-card p-6 text-center font-medium text-text-secondary transition-colors hover:border-accent hover:text-text-primary focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             style={{ minHeight: '64px' }}
           >
-            {item.label}{item.path === '/admin' ? ` — ${t('coming_soon')}` : ''}
+            {item.label}{item.path === '/admin/settings' ? '' : item.path === '/admin' ? ` — ${t('coming_soon')}` : ''}
           </button>
         ))}
       </div>

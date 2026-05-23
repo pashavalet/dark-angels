@@ -5,6 +5,6 @@ export { createServiceSchema, updateServiceSchema } from './schemas/service.js';
 export type { CreateServiceInput, UpdateServiceInput } from './schemas/service.js';
 export { createBlogSchema, updateBlogSchema } from './schemas/blog.js';
 export type { CreateBlogInput, UpdateBlogInput } from './schemas/blog.js';
-export { loginSchema, refreshSchema } from './schemas/auth.js';
+export { loginSchema, refreshSchema, updateEmailSchema, changePasswordSchema } from './schemas/auth.js';
 export { AppError, errorCodes } from './utils/errors.js';
 export type { ErrorCode } from './utils/errors.js';

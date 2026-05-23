@@ -9,6 +9,7 @@ interface AuthState {
   login: (token: string, admin: { id: string; email: string }) => void;
   logout: () => void;
   setAccess: (level: string, premium: boolean) => void;
+  updateEmail: (email: string) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -31,4 +32,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   setAccess: (level, premium) => {
     set({ accessLevel: level, isPremium: premium });
   },
+
+  updateEmail: (email) => set((state) => ({
+    admin: state.admin ? { ...state.admin, email } : null,
+  })),
 }));

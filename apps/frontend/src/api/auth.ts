@@ -39,3 +39,18 @@ export async function recover2FA(email: string, code: string) {
   const { data } = await apiClient.post('/auth/recovery', { email, recovery_code: code });
   return data.data;
 }
+
+export async function getProfile() {
+  const { data } = await apiClient.get('/auth/profile');
+  return data.data;
+}
+
+export async function updateEmail(newEmail: string, password: string) {
+  const { data } = await apiClient.put('/auth/profile/email', { new_email: newEmail, password });
+  return data.data;
+}
+
+export async function changePassword(currentPassword: string, newPassword: string) {
+  const { data } = await apiClient.put('/auth/profile/password', { current_password: currentPassword, new_password: newPassword });
+  return data;
+}

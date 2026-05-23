@@ -1,7 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-import { loginSchema, refreshSchema } from '@dark-angels/shared';
+import { loginSchema, refreshSchema, updateEmailSchema, changePasswordSchema } from '@dark-angels/shared';
 import {
   verifyPassword,
+  hashPassword,
   signAccessToken,
   generateRefreshToken,
   hashToken,
@@ -285,5 +286,71 @@ export default async function authRoutes(app: FastifyInstance) {
         admin: { id: admin.id, email: admin.email },
       },
     };
+  });
+
+  // GET /profile
+  app.get('/profile', { onRequest: [app.authenticate] }, async (request, reply) => {
+    const adminId = request.user.sub;
+    const admin = await repo.findFullById(adminId);
+    if (!admin) {
+      return reply.code(404).send({ success: false, error: { code: 'NOT_FOUND', message: 'Admin not found' } });
+    }
+    return {
+      success: true,
+      data: {
+        id: admin.id,
+        email: admin.email,
+        totp_enabled: admin.totp_enabled,
+        last_login: admin.last_login,
+        created_at: admin.created_at,
+      },
+    };
+  });
+
+  // PUT /profile/email
+  app.put('/profile/email', { onRequest: [app.authenticate] }, async (request, reply) => {
+    const adminId = request.user.sub;
+    const body = updateEmailSchema.parse(request.body);
+
+    const admin = await repo.findFullById(adminId);
+    if (!admin) {
+      return reply.code(404).send({ success: false, error: { code: 'NOT_FOUND', message: 'Admin not found' } });
+    }
+
+    const valid = await verifyPassword(body.password, admin.password_hash);
+    if (!valid) {
+      return reply.code(401).send({ success: false, error: { code: 'UNAUTHORIZED', message: 'Incorrect password' } });
+    }
+
+    const existing = await repo.findByEmail(body.new_email);
+    if (existing && existing.id !== adminId) {
+      return reply.code(409).send({ success: false, error: { code: 'CONFLICT', message: 'Email already in use' } });
+    }
+
+    await repo.updateEmail(adminId, body.new_email);
+    return { success: true, data: { email: body.new_email } };
+  });
+
+  // PUT /profile/password
+  app.put('/profile/password', { onRequest: [app.authenticate] }, async (request, reply) => {
+    const adminId = request.user.sub;
+    const body = changePasswordSchema.parse(request.body);
+
+    const admin = await repo.findFullById(adminId);
+    if (!admin) {
+      return reply.code(404).send({ success: false, error: { code: 'NOT_FOUND', message: 'Admin not found' } });
+    }
+
+    const valid = await verifyPassword(body.current_password, admin.password_hash);
+    if (!valid) {
+      return reply.code(401).send({ success: false, error: { code: 'UNAUTHORIZED', message: 'Incorrect current password' } });
+    }
+
+    const newHash = await hashPassword(body.new_password);
+    await repo.updatePasswordHash(adminId, newHash);
+
+    await repo.deleteAllRefreshTokens(adminId);
+
+    return { success: true, data: { message: 'Password changed' } };
   });
 }

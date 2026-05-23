@@ -108,6 +108,23 @@ export function createAuthRepository(app: FastifyInstance) {
       const { data } = await db.from('admins').select('totp_enabled').eq('id', adminId).single();
       return data?.totp_enabled === true;
     },
+
+    async findFullById(id: string) {
+      const { data } = await db
+        .from('admins')
+        .select('*')
+        .eq('id', id)
+        .single();
+      return data;
+    },
+
+    async updateEmail(id: string, email: string) {
+      await db.from('admins').update({ email, updated_at: new Date().toISOString() }).eq('id', id);
+    },
+
+    async updatePasswordHash(id: string, passwordHash: string) {
+      await db.from('admins').update({ password_hash: passwordHash, updated_at: new Date().toISOString() }).eq('id', id);
+    },
   };
 }
 
