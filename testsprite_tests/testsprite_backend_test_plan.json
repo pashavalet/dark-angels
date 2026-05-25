@@ -1,0 +1,7 @@
+[
+  {
+    "id": "TC001",
+    "title": "get_tours_list",
+    "description": "Verify the GET /api/v1/tours endpoint returns a list of tours with correct filtering and pagination support."
+  }
+]

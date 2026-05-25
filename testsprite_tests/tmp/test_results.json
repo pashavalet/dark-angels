@@ -1,0 +1,16 @@
+[
+  {
+    "projectId": "22fa85c6-99bf-412e-b1f6-99ae8e463b4e",
+    "testId": "c3dc76c0-abab-431e-8bd7-1a0936e72534",
+    "userId": "e45814b8-3011-70a1-bf65-f34ecad16f5d",
+    "title": "TC001-get_tours_list",
+    "description": "Verify the GET /api/v1/tours endpoint returns a list of tours with correct filtering and pagination support.",
+    "code": "import requests\n\nBASE_URL = \"https://institute-duo-bob-newspapers.trycloudflare.com/api/v1\"\nTIMEOUT = 30\n\ndef test_get_tours_list():\n    url = f\"{BASE_URL}/tours\"\n    headers = {\n        \"Accept\": \"application/json\"\n    }\n    # Example filters and pagination parameters for the test\n    params = {\n        \"page\": 1,\n        \"limit\": 5,\n        \"search\": \"luxury\",\n        \"tags\": \"vip\",  # assuming 'tags' filter supported\n        # add other filters as applicable\n    }\n    try:\n        response = requests.get(url, headers=headers, params=params, timeout=TIMEOUT)\n        assert response.status_code == 200, f\"Expected status 200 but got {response.status_code}\"\n        data = response.json()\n        # Assert that 'data' is a dict and contains a list of tours\n        assert isinstance(data, dict), \"Response data should be a JSON object\"\n        assert \"tours\" in data or \"items\" in data or \"data\" in data, \"Response JSON should contain a tours list\"\n        # Determine the key for tours list\n        tours_list_key = None\n        for key in [\"tours\", \"items\", \"data\"]:\n            if key in data and isinstance(data[key], list):\n                tours_list_key = key\n                break\n        assert tours_list_key is not None, \"No tours list found in response keys\"\n        tours = data[tours_list_key]\n        assert isinstance(tours, list), \"Tours list should be a list\"\n        # Check pagination keys if present\n        if \"page\" in data:\n            assert isinstance(data[\"page\"], int), \"Page should be an integer\"\n        if \"limit\" in data:\n            assert isinstance(data[\"limit\"], int), \"Limit should be an integer\"\n        if \"total\" in data:\n            assert isinstance(data[\"total\"], int), \"Total should be an integer\"\n        # Validate each tour item structure minimally\n        if len(tours) > 0:\n            tour = tours[0]\n            assert isinstance(tour, dict), \"Each tour should be a dict\"\n            # Common expected keys in a tour item\n            expected_keys = [\"id\", \"title\", \"description\", \"country\", \"city\"]\n            for key in expected_keys:\n                assert key in tour, f\"Tour item missing expected key: {key}\"\n    except requests.Timeout:\n        assert False, \"Request timed out\"\n    except requests.RequestException as e:\n        assert False, f\"Request failed: {e}\"\n\ntest_get_tours_list()",
+    "testStatus": "PASSED",
+    "testError": "",
+    "testType": "BACKEND",
+    "createFrom": "mcp",
+    "created": "2026-05-24T00:54:56.329Z",
+    "modified": "2026-05-24T00:55:05.476Z"
+  }
+]

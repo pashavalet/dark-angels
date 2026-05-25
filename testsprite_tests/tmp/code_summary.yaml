@@ -1,0 +1,294 @@
+version: "2"
+type: frontend
+tech_stack:
+  - TypeScript
+  - React 19
+  - Vite 6
+  - TailwindCSS v4
+  - React Router v7
+  - Zustand
+  - react-i18next
+  - framer-motion
+  - "@tanstack/react-query"
+  - fastify (backend)
+routes:
+  - path: /
+    file: src/pages/Home/HomePage.tsx
+    auth_required: false
+    description: Homepage with featured carousels
+  - path: /tours
+    file: src/pages/Tours/ToursPage.tsx
+    auth_required: false
+    description: Tour listing
+  - path: /tours/:id
+    file: src/pages/Tours/TourDetailPage.tsx
+    auth_required: false
+    description: Tour detail page
+  - path: /services
+    file: src/pages/Services/ServicesPage.tsx
+    auth_required: false
+    description: Service listing
+  - path: /services/:id
+    file: src/pages/Services/ServiceDetailPage.tsx
+    auth_required: false
+    description: Service detail page
+  - path: /blog
+    file: src/pages/Blog/BlogPage.tsx
+    auth_required: false
+    description: Blog listing
+  - path: /blog/:id
+    file: src/pages/Blog/BlogDetailPage.tsx
+    auth_required: false
+    description: Blog detail with markdown
+  - path: /contacts
+    file: src/pages/Contacts/ContactsPage.tsx
+    auth_required: false
+    description: Contacts page
+  - path: /admin/login
+    file: src/pages/Admin/LoginPage.tsx
+    auth_required: false
+    description: Admin login
+  - path: /admin
+    file: src/pages/Admin/DashboardPage.tsx
+    auth_required: true
+    description: Admin dashboard
+  - path: /admin/two-factor
+    file: src/pages/Admin/TwoFactorPage.tsx
+    auth_required: true
+    description: TOTP 2FA setup
+  - path: /admin/collections
+    file: src/pages/Admin/CollectionsPage.tsx
+    auth_required: true
+    description: Homepage collections DnD
+  - path: /admin/tours
+    file: src/pages/Admin/TourAdminListPage.tsx
+    auth_required: true
+    description: Admin tour list
+  - path: /admin/tours/new
+    file: src/pages/Admin/TourEditPage.tsx
+    auth_required: true
+    description: Create tour form
+  - path: /admin/tours/:id
+    file: src/pages/Admin/TourEditPage.tsx
+    auth_required: true
+    description: Edit tour form
+  - path: /admin/services
+    file: src/pages/Admin/ServiceAdminListPage.tsx
+    auth_required: true
+    description: Admin service list
+  - path: /admin/services/new
+    file: src/pages/Admin/ServiceEditPage.tsx
+    auth_required: true
+    description: Create service form
+  - path: /admin/services/:id
+    file: src/pages/Admin/ServiceEditPage.tsx
+    auth_required: true
+    description: Edit service form
+  - path: /admin/blog
+    file: src/pages/Admin/BlogAdminListPage.tsx
+    auth_required: true
+    description: Admin blog list
+  - path: /admin/blog/new
+    file: src/pages/Admin/BlogEditPage.tsx
+    auth_required: true
+    description: Create blog article
+  - path: /admin/blog/:id
+    file: src/pages/Admin/BlogEditPage.tsx
+    auth_required: true
+    description: Edit blog article
+  - path: /admin/settings
+    file: src/pages/Admin/SettingsPage.tsx
+    auth_required: true
+    description: Admin profile settings
+features:
+  - name: Public Tour Browsing
+    description: Browse tours with search, filter, pagination, detail view
+    files: [src/pages/Tours/ToursPage.tsx, src/pages/Tours/TourDetailPage.tsx, src/api/tours.ts]
+    entry_route: /tours
+    user_interactions:
+      - Click tag filter pills
+      - Type search text
+      - Click card to detail
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/tours
+      - method: GET
+        endpoint: /api/v1/tours/:id
+    auth_required: false
+  - name: Public Service Browsing
+    description: Browse services with search, filter, pagination, detail view
+    files: [src/pages/Services/ServicesPage.tsx, src/pages/Services/ServiceDetailPage.tsx, src/api/services.ts]
+    entry_route: /services
+    user_interactions:
+      - Click tag filter pills
+      - Search services
+      - Click card to detail
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/services
+      - method: GET
+        endpoint: /api/v1/services/:id
+    auth_required: false
+  - name: Public Blog Reading
+    description: Browse blog articles with search, filter, markdown rendering
+    files: [src/pages/Blog/BlogPage.tsx, src/pages/Blog/BlogDetailPage.tsx, src/api/blogs.ts]
+    entry_route: /blog
+    user_interactions:
+      - Click tag filter pills
+      - Search articles
+      - Click card to markdown detail
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/blog
+      - method: GET
+        endpoint: /api/v1/blog/:id
+    auth_required: false
+  - name: Homepage Carousels
+    description: Featured tours/services/blog carousels with scroll-snap
+    files: [src/pages/Home/HomePage.tsx, src/components/ui/HorizontalCarousel.tsx, src/api/homepage.ts]
+    entry_route: /
+    user_interactions:
+      - Scroll carousels horizontally
+      - Click arrow buttons
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/homepage
+    auth_required: false
+  - name: Admin Login and Auth
+    description: Email/password login, JWT tokens, httpOnly cookies, account lockout
+    files: [src/pages/Admin/LoginPage.tsx, src/api/auth.ts, src/api/client.ts, src/stores/auth.ts]
+    entry_route: /admin/login
+    user_interactions:
+      - Fill email and password
+      - Submit form
+      - See error on bad credentials
+    api_calls:
+      - method: POST
+        endpoint: /api/v1/auth/login
+      - method: POST
+        endpoint: /api/v1/auth/refresh
+      - method: POST
+        endpoint: /api/v1/auth/logout
+    auth_required: false
+  - name: Admin TOTP 2FA
+    description: QR code setup, 6-digit verify, disable, recovery codes
+    files: [src/pages/Admin/TwoFactorPage.tsx, src/api/auth.ts]
+    entry_route: /admin/two-factor
+    user_interactions:
+      - View QR code
+      - Enter 6-digit code
+      - Copy recovery codes
+    api_calls:
+      - method: POST
+        endpoint: /api/v1/auth/2fa/setup
+      - method: POST
+        endpoint: /api/v1/auth/2fa/verify
+      - method: POST
+        endpoint: /api/v1/auth/2fa/disable
+      - method: POST
+        endpoint: /api/v1/auth/recovery
+    auth_required: true
+  - name: Admin Tour CRUD
+    description: Create, edit, delete tours with localized fields, image upload
+    files: [src/pages/Admin/TourEditPage.tsx, src/pages/Admin/TourAdminListPage.tsx, src/api/tours.ts]
+    entry_route: /admin/tours
+    user_interactions:
+      - Click Create New button
+      - Fill RU/EN title, description, country, city
+      - Upload image via drag-drop
+      - Toggle VIP checkboxes
+      - Click Save
+      - Click Delete with confirm
+      - Toggle publish/unpublish
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/tours
+      - method: POST
+        endpoint: /api/v1/tours
+      - method: PUT
+        endpoint: /api/v1/tours/:id
+      - method: DELETE
+        endpoint: /api/v1/tours/:id
+    auth_required: true
+  - name: Admin Service CRUD
+    description: Create, edit, delete services with localized fields, image upload
+    files: [src/pages/Admin/ServiceEditPage.tsx, src/pages/Admin/ServiceAdminListPage.tsx, src/api/services.ts]
+    entry_route: /admin/services
+    user_interactions:
+      - Create/edit service form
+      - Fill RU/EN title, description
+      - Set price and contacts
+      - Toggle publish
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/services
+      - method: POST
+        endpoint: /api/v1/services
+      - method: PUT
+        endpoint: /api/v1/services/:id
+      - method: DELETE
+        endpoint: /api/v1/services/:id
+    auth_required: true
+  - name: Admin Blog CRUD
+    description: Create, edit, delete blog articles with markdown, access levels
+    files: [src/pages/Admin/BlogEditPage.tsx, src/pages/Admin/BlogAdminListPage.tsx, src/api/blogs.ts]
+    entry_route: /admin/blog
+    user_interactions:
+      - Create/edit article with markdown content
+      - Select access level dropdown
+      - Toggle hidden VIP
+      - Toggle publish
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/blog
+      - method: POST
+        endpoint: /api/v1/blog
+      - method: PUT
+        endpoint: /api/v1/blog/:id
+      - method: DELETE
+        endpoint: /api/v1/blog/:id
+    auth_required: true
+  - name: Admin Collections DnD
+    description: Drag-and-drop reorder homepage items, pin/unpin
+    files: [src/pages/Admin/CollectionsPage.tsx, src/components/admin/SortableList.tsx, src/api/homepage.ts]
+    entry_route: /admin/collections
+    user_interactions:
+      - Switch section tabs
+      - Drag items to reorder
+      - Click pin/unpin
+      - Click remove
+    api_calls:
+      - method: PUT
+        endpoint: /api/v1/homepage
+    auth_required: true
+  - name: Admin Settings
+    description: View profile, change email, change password
+    files: [src/pages/Admin/SettingsPage.tsx, src/api/auth.ts, src/stores/auth.ts]
+    entry_route: /admin/settings
+    user_interactions:
+      - View email, 2FA status, dates
+      - Change email with password verification
+      - Change password with current password
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/auth/profile
+      - method: PUT
+        endpoint: /api/v1/auth/profile/email
+      - method: PUT
+        endpoint: /api/v1/auth/profile/password
+    auth_required: true
+  - name: Bottom Navigation
+    description: 5-tab bottom nav with animated transitions
+    files: [src/components/layout/BottomNav.tsx, src/components/layout/AppLayout.tsx]
+    entry_route: /
+    user_interactions:
+      - Click nav tabs to switch pages
+    api_calls: []
+    auth_required: false
+known_limitations:
+  - issue: Mock mode with in-memory DB, data resets on restart
+    location: apps/backend/src/config/mock-data.ts
+    impact: No data persistence between restarts
+  - issue: Image upload unavailable in mock mode
+    location: apps/backend/src/routes/upload/routes.ts
+    impact: Upload returns errors without real Supabase

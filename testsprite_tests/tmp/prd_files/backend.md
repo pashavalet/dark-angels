@@ -1,0 +1,73 @@
+# Backend
+
+Fastify API server patterns and implementation details for the Dark Angels Telegram Mini App.
+
+---
+
+## Server Stack
+
+| Component | Technology |
+|---|---|
+| Runtime | Node.js 20 LTS |
+| Framework | Fastify 5 |
+| Language | TypeScript 5.5 (strict) |
+| Dev runner | tsx watch |
+| Validation | Zod 3.24 |
+| Database | `@supabase/supabase-js` via service key |
+| Auth | JWT (access 15m) + refresh tokens (7d) + bcrypt (cost 12) |
+
+## Plugin Architecture
+
+Fastify plugins use encapsulation (per AGENTS.md rules). Shared plugins use `fastify-plugin`:
+
+```
+app.ts
+├── @fastify/cors       — CORS with credentials
+├── @fastify/rate-limit — configurable window/max
+├── supabase.ts         — SupabaseClient decorator (fastify-plugin)
+└── (future) auth.ts    — JWT auth + 2FA
+```
+
+## Mock Mode
+
+Set `MOCK_MODE=true` in `.env` to run without Supabase:
+- In-memory DB with seed data (3 tours, 3 services, 3 blog articles, homepage collections, 2 admin users)
+- Chainable mock Supabase client via Proxy: `select/eq/in/or/contains/order/range/insert/update/delete/single`
+- `verifyPassword` bypassed — any password ≥12 chars accepted
+- `dotenv` loads `.env` at startup; environment validated via Zod (PORT, HOST, JWT_SECRET=32, ...)
+- BCrypt rounds: 4 in mock mode, 12 in production
+
+## Route Structure (future)
+
+```
+/api/v1/
+├── auth/       login, logout, refresh, 2fa/*
+├── tours/      public GET, admin CRUD
+├── services/   public GET, admin CRUD
+├── blog/       public GET, admin CRUD
+├── homepage/   collections management
+└── upload/     image upload pipeline
+```
+
+## Error Handling
+
+Uses `@fastify/error` with typed errors:
+
+```ts
+const NotFoundError = createError('NOT_FOUND', '%s not found', 404);
+const UnauthorizedError = createError('UNAUTHORIZED', 'Authentication required', 401);
+const ForbiddenError = createError('FORBIDDEN', 'Access denied: %s', 403);
+const ValidationError = createError('VALIDATION_ERROR', '%s', 400);
+```
+
+## Environment Variables
+
+Validated via Zod at startup. Required: PORT, HOST, SUPABASE_URL, SUPABASE_SERVICE_KEY, JWT_SECRET (≥32 chars).
+Optional: MOCK_MODE (bool), MOCK_BCRYPT_ROUNDS (int, default 4).
+
+---
+
+## Changelog
+
+- **2026-05-23** — Functional E2E tests: API login/tokens, all public routes return 200 with data from in-memory mock DB
+- **2026-05-23** — Mock mode: in-memory DB + chainable mock Supabase client + dotenv + mock-data.ts seed file (3 entities each + collections)

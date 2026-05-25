@@ -1,0 +1,1578 @@
+[
+  {
+    "id": "TC001",
+    "title": "Access the admin dashboard after signing in",
+    "description": "This test verifies that an admin can sign in and land on the authenticated dashboard.",
+    "category": "Admin login/auth gating",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the admin dashboard is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Create a tour and see it in the admin list",
+    "description": "This test verifies that an admin can create a new tour with localized details, save it, and see it appear in the tours list.",
+    "category": "Admin Tour CRUD",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the tours admin section"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new tour"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the localized tour title fields"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the localized tour description fields"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the tour location fields"
+      },
+      {
+        "type": "action",
+        "description": "Toggle the VIP options for the tour"
+      },
+      {
+        "type": "action",
+        "description": "Save the tour"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new tour appears in the admin tour list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Sign in to the admin dashboard",
+    "description": "This test verifies that an administrator can sign in through the admin login page and reach the protected dashboard.",
+    "category": "Admin Login and Auth",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the admin dashboard is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Open a featured tour from the homepage",
+    "description": "This test verifies that a visitor can browse the homepage featured content and open a tour detail page from a featured card.",
+    "category": "Homepage featured carousels",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify featured content is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click a featured tour card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tour detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Create a blog article and see it in the list",
+    "description": "An admin can create a new blog article with markdown and access settings, save it, and see it appear in the blog list.",
+    "category": "Admin Blog CRUD",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the admin username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the admin password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the blog management section"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new article"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the article title field with Winter Escape in the Alps"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the article content field with valid markdown content"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid access level"
+      },
+      {
+        "type": "action",
+        "description": "Toggle hidden VIP status if available"
+      },
+      {
+        "type": "action",
+        "description": "Save the article"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new article appears in the blog list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the article is available with the selected access settings"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Browse featured content from the homepage",
+    "description": "This test verifies that a public visitor can open the homepage, see featured carousels, and reach a featured item detail page.",
+    "category": "Homepage Carousels",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll through the featured content carousels"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify featured content sections are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Open a featured item from a carousel"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a detail page for the selected item is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Open a featured blog article from the homepage",
+    "description": "This test verifies that a public visitor can browse the homepage featured content and open a featured blog article detail page.",
+    "category": "Bottom Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify featured content is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click a featured blog card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the blog article detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "View the admin login and reach the dashboard",
+    "description": "An admin can sign in through the login page and land on the dashboard after submitting valid credentials.",
+    "category": "Admin Blog CRUD",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the admin username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the admin password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the admin dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is authenticated in the admin area"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Browse public sections with bottom navigation",
+    "description": "This test verifies that a visitor can use the bottom navigation to move between the public content sections and reach the contacts page.",
+    "category": "Bottom navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the navigation link to view tours"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tours listing page is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click the navigation link to view services"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the services listing page is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click the navigation link to view blog posts"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the blog listing page is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click the navigation link to view contacts"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the contacts page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Browse tours and open a tour detail from the list",
+    "description": "This test verifies that a shopper can view the tour catalog and open a tour card to its detail page.",
+    "category": "Public Tour Browsing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tours"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify tour cards are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Open a tour card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected tour detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "Create a service and see it in the admin list",
+    "description": "This test verifies that an admin can create a new service, save it, and see it appear in the admin service list.",
+    "category": "Admin Service Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the service creation page"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the localized title field with a unique service name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the localized description field with a service description"
+      },
+      {
+        "type": "action",
+        "description": "Save the service"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new service appears in the admin service list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "Switch from the homepage to tours and services using bottom navigation",
+    "description": "This test verifies that a public visitor can use the bottom navigation to move between core public sections and land on the correct pages.",
+    "category": "Bottom Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Click the tours navigation tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tours listing page is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click the services navigation tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the services listing page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "Edit and republish a tour from the admin list",
+    "description": "This test verifies that an admin can open an existing tour, update its localized content and publish status, save the changes, and see the updated record in the list.",
+    "category": "Admin Tour CRUD",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the tours admin section"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing tour from the list"
+      },
+      {
+        "type": "action",
+        "description": "Update the localized tour fields"
+      },
+      {
+        "type": "action",
+        "description": "Change the tour publish status"
+      },
+      {
+        "type": "action",
+        "description": "Save the tour"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated tour appears in the admin tour list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "Delete a tour from the admin list",
+    "description": "This test verifies that an admin can delete an existing tour and see it removed from the list.",
+    "category": "Admin Tour CRUD",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the tours admin section"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing tour from the list"
+      },
+      {
+        "type": "action",
+        "description": "Delete the tour"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the deletion"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tour is removed from the admin tour list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC015",
+    "title": "Browse services and open a service detail from the list",
+    "description": "This test verifies that a shopper can view the service catalog and open a service card to its detail page.",
+    "category": "Public Service Browsing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /services"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify service cards are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Open a service card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected service detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC016",
+    "title": "Block access to admin pages before sign in",
+    "description": "This test verifies that a public visitor who opens a protected admin page is redirected to the admin login screen.",
+    "category": "Admin Login and Auth",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the admin login page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC017",
+    "title": "Open a featured service from the homepage",
+    "description": "This test verifies that a visitor can browse the homepage featured content and open a service detail page from a featured card.",
+    "category": "Homepage featured carousels",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify featured content is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click a featured service card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the service detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC018",
+    "title": "Edit a blog article and update its publish state",
+    "description": "An admin can open an existing blog article, modify its markdown content and publish status, save the changes, and see the updated article in the list.",
+    "category": "Admin Blog CRUD",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the admin username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the admin password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the blog management section"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing article"
+      },
+      {
+        "type": "action",
+        "description": "Edit the article content field with updated markdown content"
+      },
+      {
+        "type": "action",
+        "description": "Toggle publish status"
+      },
+      {
+        "type": "action",
+        "description": "Save the article"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated article appears in the blog list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the publish state is reflected in the list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC019",
+    "title": "Use bottom navigation to move across public pages",
+    "description": "This test verifies that a visitor can use the app navigation to move between public sections and land on the expected pages.",
+    "category": "Bottom Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Use the bottom navigation to open the tours page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tours page is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Use the bottom navigation to open the services page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the services page is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Use the bottom navigation to open the blog page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the blog page is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Use the bottom navigation to open the contacts page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the contacts page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC020",
+    "title": "Browse homepage featured content and open a featured item",
+    "description": "A public visitor can open the homepage featured carousels and navigate from a featured card to a detail page.",
+    "category": "Admin Blog CRUD",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Scroll to the featured content area"
+      },
+      {
+        "type": "action",
+        "description": "Open a featured content card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a detail page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the featured item content is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC021",
+    "title": "Create a blog post and see it in the admin list",
+    "description": "This test verifies that an admin can create a new blog post, save it, and see it appear in the admin blog list.",
+    "category": "Admin Blog Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the blog post creation page"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the localized title field with a unique article title"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the localized body field with article content"
+      },
+      {
+        "type": "action",
+        "description": "Save the blog post"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new blog post appears in the admin blog list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC022",
+    "title": "Move through homepage carousels to find more featured items",
+    "description": "This test verifies that a visitor can use carousel navigation controls on the homepage to see additional featured items and open one of them.",
+    "category": "Homepage Carousels",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Use the carousel navigation controls to move to the next items"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify additional featured items are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Open one of the newly revealed featured items"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected item detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC023",
+    "title": "Use bottom navigation to browse public content sections",
+    "description": "A public visitor can move between the main public sections using bottom navigation and open a content item from the listing.",
+    "category": "Admin Blog CRUD",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Use the bottom navigation to open the tours section"
+      },
+      {
+        "type": "action",
+        "description": "Use the bottom navigation to open the services section"
+      },
+      {
+        "type": "action",
+        "description": "Use the bottom navigation to open the blog section"
+      },
+      {
+        "type": "action",
+        "description": "Use the bottom navigation to open the contacts section"
+      },
+      {
+        "type": "action",
+        "description": "Open a content item from one of the listing pages"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected detail page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the content item information is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC024",
+    "title": "Edit and publish an existing tour",
+    "description": "This test verifies that an admin can open an existing tour, update its content, publish it, and keep it visible in the tour list.",
+    "category": "Admin Tour Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the admin tour list"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing tour for editing"
+      },
+      {
+        "type": "action",
+        "description": "Update the localized title field"
+      },
+      {
+        "type": "action",
+        "description": "Toggle the tour to published"
+      },
+      {
+        "type": "action",
+        "description": "Save the tour"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated tour remains visible in the admin tour list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC025",
+    "title": "Switch between public sections from a listing page",
+    "description": "This test verifies that a public visitor can use bottom navigation from within a section page to move to another public section.",
+    "category": "Bottom Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tours"
+      },
+      {
+        "type": "action",
+        "description": "Click the blog navigation tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the blog listing page is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click the contacts navigation tab"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the contacts page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC026",
+    "title": "Open a blog post from the blog list",
+    "description": "This test verifies that a reader can browse the blog listing and open a specific blog post detail page.",
+    "category": "Blog browsing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /blog"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify blog posts are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click a blog post card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the blog detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC027",
+    "title": "Delete a blog article from the admin list",
+    "description": "An admin can delete an existing blog article after confirming the action and see it removed from the list.",
+    "category": "Admin Blog CRUD",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the admin username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the admin password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the blog management section"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing article"
+      },
+      {
+        "type": "action",
+        "description": "Delete the article"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the deletion"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the article is removed from the blog list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the list no longer shows the deleted article"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC028",
+    "title": "Search and filter tours before opening a result",
+    "description": "This test verifies that a shopper can search and filter the tour list and then open a matching tour detail page.",
+    "category": "Public Tour Browsing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tours"
+      },
+      {
+        "type": "action",
+        "description": "Type a search term into the tour search field"
+      },
+      {
+        "type": "action",
+        "description": "Select a tag filter for tours"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tour list is filtered"
+      },
+      {
+        "type": "action",
+        "description": "Open a matching tour card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected tour detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC029",
+    "title": "Enable two-factor security for the admin account",
+    "description": "This test verifies that an admin can start two-factor setup, complete verification, and see security enabled in the admin area.",
+    "category": "Admin Security",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the two-factor security page"
+      },
+      {
+        "type": "action",
+        "description": "Start two-factor setup"
+      },
+      {
+        "type": "action",
+        "description": "Complete the verification step with a valid one-time code"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify two-factor security is enabled"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC030",
+    "title": "Find a tour with search and filters",
+    "description": "This test verifies that a shopper can search and filter tours to narrow results and open a matching tour detail page.",
+    "category": "Search and filters",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tours"
+      },
+      {
+        "type": "action",
+        "description": "Enter a search term that matches an available tour"
+      },
+      {
+        "type": "action",
+        "description": "Select a relevant tour filter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify matching tour results are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click a tour result"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tour detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC031",
+    "title": "Search and filter services before opening a result",
+    "description": "This test verifies that a shopper can search and filter the service list and then open a matching service detail page.",
+    "category": "Public Service Browsing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /services"
+      },
+      {
+        "type": "action",
+        "description": "Type a search term into the service search field"
+      },
+      {
+        "type": "action",
+        "description": "Select a tag filter for services"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the service list is filtered"
+      },
+      {
+        "type": "action",
+        "description": "Open a matching service card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected service detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC032",
+    "title": "Set up two-factor authentication",
+    "description": "This test verifies that an authenticated admin can complete the two-factor setup flow and see confirmation that two-factor authentication is enabled.",
+    "category": "Admin TOTP 2FA",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the two-factor settings page"
+      },
+      {
+        "type": "action",
+        "description": "View the setup code or QR code"
+      },
+      {
+        "type": "action",
+        "description": "Enter a valid 6-digit verification code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the verification"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify two-factor authentication is enabled"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC033",
+    "title": "Search and filter blog articles before opening a result",
+    "description": "This test verifies that a content reader can search blog articles, apply a tag filter, and open a matching article detail page.",
+    "category": "Public Blog Reading",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /blog"
+      },
+      {
+        "type": "action",
+        "description": "Search for a relevant article topic"
+      },
+      {
+        "type": "action",
+        "description": "Click a tag filter pill"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the article list is filtered"
+      },
+      {
+        "type": "action",
+        "description": "Open an article card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the blog article detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC034",
+    "title": "Update admin email and password in settings",
+    "description": "This test verifies that an admin can open settings, change account email and password, and see the updated settings saved.",
+    "category": "Admin Settings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the admin settings page"
+      },
+      {
+        "type": "action",
+        "description": "Update the email field with a new valid email address"
+      },
+      {
+        "type": "action",
+        "description": "Update the password field with a new valid password"
+      },
+      {
+        "type": "action",
+        "description": "Save the settings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated account settings are saved"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC035",
+    "title": "Update admin profile settings",
+    "description": "This test verifies that an authenticated admin can change profile settings in the settings page and see the update reflected in the UI.",
+    "category": "Admin settings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the admin settings page"
+      },
+      {
+        "type": "action",
+        "description": "Update the email or password settings"
+      },
+      {
+        "type": "action",
+        "description": "Save the settings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated settings are reflected on the page"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC036",
+    "title": "Open the blog list and reach an article detail from a card",
+    "description": "A public visitor can browse the blog listing and open a specific blog article detail page from a content card.",
+    "category": "Admin Blog CRUD",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /blog"
+      },
+      {
+        "type": "action",
+        "description": "Scroll through the blog list"
+      },
+      {
+        "type": "action",
+        "description": "Open a blog article from the list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the blog article detail page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the article content is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC037",
+    "title": "Read the full markdown blog article",
+    "description": "This test verifies that a public visitor can open a blog article and read its full markdown-rendered content on the detail page.",
+    "category": "Public Blog Reading",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /blog"
+      },
+      {
+        "type": "action",
+        "description": "Open a blog article card"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the blog article detail page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify article content is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC038",
+    "title": "Open the blog listing and read a blog detail page",
+    "description": "This test verifies that a content reader can open the blog listing and reach a blog article detail page.",
+    "category": "Blog Browsing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /blog"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify blog posts are displayed"
+      },
+      {
+        "type": "action",
+        "description": "Open a blog post"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected blog detail page is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC039",
+    "title": "Disable two-factor authentication",
+    "description": "This test verifies that an authenticated admin can disable two-factor authentication and see confirmation that it is turned off.",
+    "category": "Admin TOTP 2FA",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the two-factor settings page"
+      },
+      {
+        "type": "action",
+        "description": "Disable two-factor authentication"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the change"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify two-factor authentication is turned off"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC040",
+    "title": "Save recovery codes during two-factor setup",
+    "description": "This test verifies that an authenticated admin can view and save recovery codes during the two-factor setup flow.",
+    "category": "Admin TOTP 2FA",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the two-factor settings page"
+      },
+      {
+        "type": "action",
+        "description": "Copy or reveal the recovery codes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify recovery codes are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC041",
+    "title": "Update blog access controls while editing an article",
+    "description": "An admin can change a blog article's access level and VIP visibility and save the updated controls successfully.",
+    "category": "Admin Blog CRUD",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the admin username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the admin password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the blog management section"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing article"
+      },
+      {
+        "type": "action",
+        "description": "Select a different access level"
+      },
+      {
+        "type": "action",
+        "description": "Toggle hidden VIP status"
+      },
+      {
+        "type": "action",
+        "description": "Save the article"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the article saves with the updated access controls"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated access level is reflected in the article details"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC042",
+    "title": "Open the contacts page from public navigation",
+    "description": "This test verifies that a visitor can reach the contacts page from public navigation and see contact information.",
+    "category": "Public Navigation",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Open the contacts page from the public navigation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify contact information is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC043",
+    "title": "Read formatted content on a blog detail page",
+    "description": "This test verifies that a reader can open a blog post and view rendered article content on the detail page.",
+    "category": "Markdown rendering",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /blog"
+      },
+      {
+        "type": "action",
+        "description": "Open a blog post with rich content"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify formatted article content is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the blog detail page includes readable body content"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC044",
+    "title": "Reject invalid admin credentials",
+    "description": "This test verifies that the login form shows an error when an administrator submits invalid credentials.",
+    "category": "Admin Login and Auth",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /admin/login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with invalid@example.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with invalid-password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a login error message is displayed"
+      }
+    ],
+    "priority": "Medium"
+  }
+]
