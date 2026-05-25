@@ -11,17 +11,16 @@ COPY packages/ packages/
 COPY apps/backend/ apps/backend/
 RUN pnpm --filter @dark-angels/shared build
 RUN pnpm --filter @dark-angels/backend build
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
 FROM node:20-alpine AS runtime
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@9 --activate
 RUN addgroup -g 1001 app && adduser -u 1001 -G app -D app
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.base.json .npmrc ./
-COPY packages/types/package.json packages/types/
-COPY packages/shared/package.json packages/shared/
-COPY apps/backend/package.json apps/backend/
-RUN pnpm install --frozen-lockfile --prod --ignore-scripts
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/packages/shared/package.json ./packages/shared/package.json
 COPY --from=build /app/packages/shared/dist ./packages/shared/dist
+COPY --from=build /app/packages/types/package.json ./packages/types/package.json
+COPY --from=build /app/apps/backend/package.json ./apps/backend/package.json
 COPY --from=build /app/apps/backend/dist ./apps/backend/dist
 USER app
 EXPOSE 3000
