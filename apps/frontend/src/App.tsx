@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AppLayout from './components/layout/AppLayout.js';
+import ProtectedRoute from './components/auth/ProtectedRoute.js';
 import HomePage from './pages/Home/HomePage.js';
 import ToursPage from './pages/Tours/ToursPage.js';
 import TourDetailPage from './pages/Tours/TourDetailPage.js';
@@ -38,19 +39,21 @@ export default function App() {
             <Route path="blog/:id" element={<BlogDetailPage />} />
             <Route path="contacts" element={<ContactsPage />} />
             <Route path="admin/login" element={<LoginPage />} />
-            <Route path="admin" element={<DashboardPage />} />
-            <Route path="admin/two-factor" element={<TwoFactorPage />} />
-            <Route path="admin/collections" element={<CollectionsPage />} />
-            <Route path="admin/settings" element={<SettingsPage />} />
-            <Route path="admin/tours" element={<TourAdminListPage />} />
-            <Route path="admin/tours/new" element={<TourEditPage />} />
-            <Route path="admin/tours/:id" element={<TourEditPage />} />
-            <Route path="admin/services" element={<ServiceAdminListPage />} />
-            <Route path="admin/services/new" element={<ServiceEditPage />} />
-            <Route path="admin/services/:id" element={<ServiceEditPage />} />
-            <Route path="admin/blog" element={<BlogAdminListPage />} />
-            <Route path="admin/blog/new" element={<BlogEditPage />} />
-            <Route path="admin/blog/:id" element={<BlogEditPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="admin" element={<DashboardPage />} />
+              <Route path="admin/two-factor" element={<TwoFactorPage />} />
+              <Route path="admin/collections" element={<CollectionsPage />} />
+              <Route path="admin/settings" element={<SettingsPage />} />
+              <Route path="admin/tours" element={<TourAdminListPage />} />
+              <Route path="admin/tours/new" element={<TourEditPage />} />
+              <Route path="admin/tours/:id" element={<TourEditPage />} />
+              <Route path="admin/services" element={<ServiceAdminListPage />} />
+              <Route path="admin/services/new" element={<ServiceEditPage />} />
+              <Route path="admin/services/:id" element={<ServiceEditPage />} />
+              <Route path="admin/blog" element={<BlogAdminListPage />} />
+              <Route path="admin/blog/new" element={<BlogEditPage />} />
+              <Route path="admin/blog/:id" element={<BlogEditPage />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
