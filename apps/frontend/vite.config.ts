@@ -9,4 +9,7 @@ export default defineConfig({
     host: true,
     allowedHosts: ['.trycloudflare.com'],
   },
+  build: {
+    target: 'es2022',
+  },
 });
