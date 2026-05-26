@@ -64,6 +64,7 @@ Bottom tab bar with 5 tabs: Home → Tours → Blog → Services → Contacts.
 
 ## Changelog
 
+- **2026-05-26** — i18n expanded to 6 languages: kk/uz/ky/uk. All 146 UI keys translated via Google Translate (`scripts/rebuild_i18n.py`). Only `loading: '...'` kept ru (dots confuse translator).
 - **2026-05-26** — HomePage rewired to use list APIs (`useTours/Services/Blogs`) instead of curated `homepage_collections`. Cards now identical to tab pages. Added LanguageSwitcher component (RU/EN toggle) syncing both i18next and Zustand localeStore. Section headers changed: «Избранные» → «Новые».
 - **2026-05-26** — Production deployment on Cloudflare Pages with real Supabase backend. Converted TourCard/ServiceCard/BlogCard from `<div onClick={navigate}>` to `<Link to={...}>` for native navigation. Fixed React hooks error #310 in all 3 detail pages. Homepage VIP gating removed — all content public. Production E2E: 54/54 tests passing.
 - **2026-05-23** — Admin CRUD: 6 pages (Tour/Service/Blog edit forms + admin list pages), AdminFormLayout, LocalizedField (ru/en tabbed JSONB input), Dashboard un-stubbed (5/6 cards real), 40 i18n keys
