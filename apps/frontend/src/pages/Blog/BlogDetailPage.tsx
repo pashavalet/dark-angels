@@ -13,6 +13,10 @@ export default function BlogDetailPage() {
 
   const { data, isLoading, isError } = useBlog(id ?? '');
 
+  const article = data?.data;
+  const title = useLocalized(article?.title);
+  const content = useLocalized(article?.content);
+
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-6 px-4 py-8">
@@ -36,7 +40,7 @@ export default function BlogDetailPage() {
     );
   }
 
-  if (isError || !data?.data) {
+  if (isError || !article) {
     return (
       <div className="flex flex-col items-center justify-center px-4 py-16">
         <p className="text-text-muted">{t('no_articles_found', 'No articles found')}</p>
@@ -49,10 +53,6 @@ export default function BlogDetailPage() {
       </div>
     );
   }
-
-  const article = data.data;
-  const title = useLocalized(article.title);
-  const content = useLocalized(article.content);
 
   return (
     <motion.div

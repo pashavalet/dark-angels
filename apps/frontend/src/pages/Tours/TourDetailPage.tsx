@@ -12,6 +12,13 @@ export default function TourDetailPage() {
 
   const { data, isLoading, isError } = useTour(id ?? '');
 
+  const tour = data?.data;
+  const title = useLocalized(tour?.title);
+  const description = useLocalized(tour?.description);
+  const country = useLocalized(tour?.country);
+  const city = useLocalized(tour?.city);
+  const agency = useLocalized(tour?.agency);
+
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-6 px-4 py-8">
@@ -27,7 +34,7 @@ export default function TourDetailPage() {
     );
   }
 
-  if (isError || !data?.data) {
+  if (isError || !tour) {
     return (
       <div className="flex flex-col items-center justify-center px-4 py-16">
         <p className="text-text-muted">{t('no_tours_found', 'No tours found')}</p>
@@ -40,13 +47,6 @@ export default function TourDetailPage() {
       </div>
     );
   }
-
-  const tour = data.data;
-  const title = useLocalized(tour.title);
-  const description = useLocalized(tour.description);
-  const country = useLocalized(tour.country);
-  const city = useLocalized(tour.city);
-  const agency = useLocalized(tour.agency);
 
   return (
     <motion.div

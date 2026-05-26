@@ -11,6 +11,10 @@ export default function ServiceDetailPage() {
 
   const { data, isLoading, isError } = useService(id ?? '');
 
+  const service = data?.data;
+  const title = useLocalized(service?.title);
+  const description = useLocalized(service?.description);
+
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-6 px-4 py-8">
@@ -30,7 +34,7 @@ export default function ServiceDetailPage() {
     );
   }
 
-  if (isError || !data?.data) {
+  if (isError || !service) {
     return (
       <div className="flex flex-col items-center justify-center px-4 py-16">
         <p className="text-text-muted">{t('no_services_found')}</p>
@@ -43,10 +47,6 @@ export default function ServiceDetailPage() {
       </div>
     );
   }
-
-  const service = data.data;
-  const title = useLocalized(service.title);
-  const description = useLocalized(service.description);
 
   return (
     <motion.div
