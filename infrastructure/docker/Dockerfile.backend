@@ -18,7 +18,6 @@ WORKDIR /app
 RUN addgroup -g 1001 app && adduser -u 1001 -G app -D app
 COPY --from=build /prod .
 USER app
-ENV MOCK_MODE=false
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:3000/health || exit 1
 CMD ["node", "dist/server.js"]
