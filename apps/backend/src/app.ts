@@ -50,6 +50,7 @@ await app.register(serviceRoutes, { prefix: '/api/v1/services' });
 await app.register(blogRoutes, { prefix: '/api/v1/blog' });
 await app.register(homepageRoutes, { prefix: '/api/v1/homepage' });
 await app.register(uploadRoutes, { prefix: '/api/v1/upload' });
+
 await app.register(adminRoutes, { prefix: '/api/v1/admin' });
 
 app.get('/health', async () => {
