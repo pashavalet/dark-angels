@@ -7,6 +7,8 @@ vi.mock('@vitalets/google-translate-api', () => ({
 
 import { translate } from '@vitalets/google-translate-api';
 
+const mockTranslate = vi.mocked(translate);
+
 describe('translateText', () => {
   it('returns empty string for empty input', async () => {
     expect(await translateText('', 'kk')).toBe('');
@@ -14,14 +16,14 @@ describe('translateText', () => {
   });
 
   it('calls google translate API for non-empty input', async () => {
-    vi.mocked(translate).mockResolvedValueOnce({ text: 'Сәлем', raw: {} } as any);
+    mockTranslate.mockResolvedValueOnce({ text: 'Сәлем', raw: {} } as any);
     const result = await translateText('Привет', 'kk');
     expect(translate).toHaveBeenCalledWith('Привет', { to: 'kk' });
     expect(result).toBe('Сәлем');
   });
 
   it('returns original text on translate failure', async () => {
-    vi.mocked(translate).mockRejectedValueOnce(new Error('Network error'));
+    mockTranslate.mockRejectedValueOnce(new Error('Network error'));
     const result = await translateText('Привет', 'kk');
     expect(result).toBe('Привет');
   });
@@ -30,77 +32,79 @@ describe('translateText', () => {
 describe('translateLocalizedFields', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(translate).mockImplementation(async (text: string, opts: { to: string }) => ({
-      text: `[${opts.to}]${text}`,
+    mockTranslate.mockImplementation(async (...args: any[]): Promise<any> => ({
+      text: `[${args[1].to}]${args[0]}`,
       raw: {},
-    } as any));
+    }));
   });
 
   it('fills missing kk, uz, ky, uk from ru', async () => {
-    const data = {
+    const data: Record<string, Record<string, string>> = {
       title: { ru: 'Привет', en: 'Hello' },
       description: { ru: 'Описание', en: 'Description' },
     };
 
     await translateLocalizedFields(data, ['title', 'description']);
 
-    for (const field of ['title', 'description']) {
-      const obj = data[field] as Record<string, string>;
-      const ruText = obj.ru;
-      expect(obj.kk).toBe(`[kk]${ruText}`);
-      expect(obj.uz).toBe(`[uz]${ruText}`);
-      expect(obj.ky).toBe(`[ky]${ruText}`);
-      expect(obj.uk).toBe(`[uk]${ruText}`);
-    }
+    const t = data['title']!;
+    expect(t.kk).toBe('[kk]Привет');
+    expect(t.uz).toBe('[uz]Привет');
+    expect(t.ky).toBe('[ky]Привет');
+    expect(t.uk).toBe('[uk]Привет');
 
-    expect(translate).toHaveBeenCalledTimes(8); // 2 fields × 4 langs
+    const d = data['description']!;
+    expect(d.kk).toBe('[kk]Описание');
+    expect(d.uz).toBe('[uz]Описание');
+    expect(d.ky).toBe('[ky]Описание');
+    expect(d.uk).toBe('[uk]Описание');
+
+    expect(translate).toHaveBeenCalledTimes(8);
   });
 
   it('skips already-filled locale fields', async () => {
-    const data = {
+    const data: Record<string, Record<string, string>> = {
       title: { ru: 'Привет', en: 'Hello', kk: 'Сәлем' },
     };
 
     await translateLocalizedFields(data, ['title']);
 
-    expect(data.title.kk).toBe('Сәлем'); // kept original
-    expect(vi.mocked(translate).mock.calls.length).toBe(3); // only uz, ky, uk
+    expect(data['title']!.kk).toBe('Сәлем');
+    expect(mockTranslate.mock.calls.length).toBe(3);
   });
 
   it('skips field when ru is missing', async () => {
-    const data = {
+    const data: Record<string, Record<string, string>> = {
       title: { en: 'Hello' },
     };
 
     await translateLocalizedFields(data, ['title']);
 
     expect(translate).not.toHaveBeenCalled();
-    const obj = data.title as Record<string, string>;
-    expect(obj.kk).toBeUndefined();
+    expect(data['title']!.kk).toBeUndefined();
   });
 
   it('handles empty localizedFieldNames array', async () => {
-    const data = { title: { ru: 'Привет', en: 'Hello' } };
+    const data: Record<string, Record<string, string>> = { title: { ru: 'Привет', en: 'Hello' } };
 
     await translateLocalizedFields(data, []);
 
     expect(translate).not.toHaveBeenCalled();
   });
 
-  it('fills only truly empty locale values (whitespace considered empty)', async () => {
-    const data = {
+  it('fills empty locale values (whitespace considered empty)', async () => {
+    const data: Record<string, Record<string, string>> = {
       title: { ru: 'Привет', en: 'Hello', kk: '   ', uz: '' },
     };
 
     await translateLocalizedFields(data, ['title']);
 
-    expect(data.title.kk).toBe('[kk]Привет'); // whitespace filled
-    expect(data.title.uz).toBe('[uz]Привет'); // empty filled
-    expect(translate).toHaveBeenCalledTimes(4); // kk, uz, ky, uk all filled
+    expect(data['title']!.kk).toBe('[kk]Привет');
+    expect(data['title']!.uz).toBe('[uz]Привет');
+    expect(translate).toHaveBeenCalledTimes(4);
   });
 
   it('does not modify fields outside localizedFieldNames', async () => {
-    const data = {
+    const data: any = {
       title: { ru: 'Привет', en: 'Hello' },
       price: 100,
       tags: ['vip'],
@@ -114,7 +118,7 @@ describe('translateLocalizedFields', () => {
   });
 
   it('skips field when ru is empty string', async () => {
-    const data = {
+    const data: Record<string, Record<string, string>> = {
       title: { ru: '', en: 'Hello' },
     };
 
