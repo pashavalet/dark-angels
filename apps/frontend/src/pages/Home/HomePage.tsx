@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { useHomepageCollections } from '../../api/homepage.js';
-import { useAuthStore } from '../../stores/auth.js';
 import TourCard from '../../components/tours/TourCard.js';
 import ServiceCard from '../../components/services/ServiceCard.js';
 import BlogCard from '../../components/blog/BlogCard.js';
@@ -9,7 +8,6 @@ import HorizontalCarousel from '../../components/homepage/HorizontalCarousel.js'
 export default function HomePage() {
   const { t } = useTranslation('common');
   const { data, isLoading } = useHomepageCollections();
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   return (
     <div className="flex flex-col gap-2 pb-4">
@@ -40,39 +38,23 @@ export default function HomePage() {
             title={t('featured_tours')}
             items={data.featured_tours}
             renderItem={(item: any) => (
-              <div className="relative">
-                <TourCard tour={item} />
-                {!isAuthenticated && item.is_vip && (
-                  <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-bg-primary/70 backdrop-blur-sm">
-                    <span className="rounded-lg border border-accent/30 bg-bg-card/90 px-4 py-2 text-sm text-accent">
-                      {t('login_to_view')}
-                    </span>
-                  </div>
-                )}
-              </div>
+              <TourCard tour={item} to={`/tours/${item.id}`} />
             )}
             emptyMessage={t('no_featured_tours')}
           />
           <HorizontalCarousel
             title={t('featured_services')}
             items={data.featured_services}
-            renderItem={(item: any) => <ServiceCard service={item} />}
+            renderItem={(item: any) => (
+              <ServiceCard service={item} to={`/services/${item.id}`} />
+            )}
             emptyMessage={t('no_featured_services')}
           />
           <HorizontalCarousel
             title={t('featured_blog')}
             items={data.featured_blog}
             renderItem={(item: any) => (
-              <div className="relative">
-                <BlogCard article={item} />
-                {!isAuthenticated && item.access_level !== 'public' && (
-                  <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-bg-primary/70 backdrop-blur-sm">
-                    <span className="rounded-lg border border-accent/30 bg-bg-card/90 px-4 py-2 text-sm text-accent">
-                      {t('login_to_view')}
-                    </span>
-                  </div>
-                )}
-              </div>
+              <BlogCard article={item} to={`/blog/${item.id}`} />
             )}
             emptyMessage={t('no_featured_blog')}
           />
