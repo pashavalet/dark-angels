@@ -1,6 +1,9 @@
 import type { FastifyInstance } from 'fastify';
 import type { CreateServiceInput, UpdateServiceInput } from '@dark-angels/shared';
 import { createServiceRepository } from '../repositories/service.repository.js';
+import { translateLocalizedFields } from '../lib/translate.js';
+
+const SERVICE_LOCALIZED_FIELDS = ['title', 'description'];
 
 export function createServiceService(app: FastifyInstance) {
   const repo = createServiceRepository(app);
@@ -34,13 +37,17 @@ export function createServiceService(app: FastifyInstance) {
     },
 
     async create(data: CreateServiceInput) {
-      return repo.create(data as Record<string, unknown>);
+      const record = data as Record<string, unknown>;
+      await translateLocalizedFields(record, SERVICE_LOCALIZED_FIELDS);
+      return repo.create(record);
     },
 
     async update(id: string, data: UpdateServiceInput) {
       const existing = await repo.findById(id);
       if (!existing) return null;
-      return repo.update(id, data as Record<string, unknown>);
+      const record = data as Record<string, unknown>;
+      await translateLocalizedFields(record, SERVICE_LOCALIZED_FIELDS);
+      return repo.update(id, record);
     },
 
     async delete(id: string) {

@@ -1,6 +1,9 @@
 import type { FastifyInstance } from 'fastify';
 import type { CreateBlogInput, UpdateBlogInput } from '@dark-angels/shared';
 import { createBlogRepository } from '../repositories/blog.repository.js';
+import { translateLocalizedFields } from '../lib/translate.js';
+
+const BLOG_LOCALIZED_FIELDS = ['title', 'content'];
 
 export function createBlogService(app: FastifyInstance) {
   const repo = createBlogRepository(app);
@@ -36,13 +39,17 @@ export function createBlogService(app: FastifyInstance) {
     },
 
     async create(data: CreateBlogInput) {
-      return repo.create(data as Record<string, unknown>);
+      const record = data as Record<string, unknown>;
+      await translateLocalizedFields(record, BLOG_LOCALIZED_FIELDS);
+      return repo.create(record);
     },
 
     async update(id: string, data: UpdateBlogInput) {
       const existing = await repo.findById(id);
       if (!existing) return null;
-      return repo.update(id, data as Record<string, unknown>);
+      const record = data as Record<string, unknown>;
+      await translateLocalizedFields(record, BLOG_LOCALIZED_FIELDS);
+      return repo.update(id, record);
     },
 
     async delete(id: string) {

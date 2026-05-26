@@ -1,6 +1,9 @@
 import type { FastifyInstance } from 'fastify';
 import type { CreateTourInput, UpdateTourInput } from '@dark-angels/shared';
 import { createTourRepository } from '../repositories/tour.repository.js';
+import { translateLocalizedFields } from '../lib/translate.js';
+
+const TOUR_LOCALIZED_FIELDS = ['title', 'description', 'country', 'city', 'agency'];
 
 export function createTourService(app: FastifyInstance) {
   const repo = createTourRepository(app);
@@ -36,13 +39,17 @@ export function createTourService(app: FastifyInstance) {
     },
 
     async create(data: CreateTourInput) {
-      return repo.create(data as Record<string, unknown>);
+      const record = data as Record<string, unknown>;
+      await translateLocalizedFields(record, TOUR_LOCALIZED_FIELDS);
+      return repo.create(record);
     },
 
     async update(id: string, data: UpdateTourInput) {
       const existing = await repo.findById(id);
       if (!existing) return null;
-      return repo.update(id, data as Record<string, unknown>);
+      const record = data as Record<string, unknown>;
+      await translateLocalizedFields(record, TOUR_LOCALIZED_FIELDS);
+      return repo.update(id, record);
     },
 
     async delete(id: string) {
