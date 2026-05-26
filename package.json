@@ -2,7 +2,7 @@
   "name": "dark-angels",
   "private": true,
   "packageManager": "pnpm@9.15.4",
-"scripts": {
+  "scripts": {
     "dev": "pnpm --parallel -r dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
@@ -12,7 +12,8 @@
     "test:watch": "pnpm --parallel -r test:watch"
   },
   "devDependencies": {
-    "@playwright/test": "^1.50.0"
+    "@playwright/test": "^1.50.0",
+    "@types/ws": "^8.18.1"
   },
   "engines": {
     "node": ">=20",

@@ -1,6 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { loadEnv } from './env.js';
 import { createMockSupabase } from './mock-supabase.js';
+import { WebSocket as WsWebSocket } from 'ws';
 
 let supabase: SupabaseClient | null = null;
 
@@ -21,6 +22,9 @@ export function getSupabase(): SupabaseClient {
     },
     db: {
       schema: 'public',
+    },
+    realtime: {
+      transport: WsWebSocket as unknown as any,
     },
   });
 
