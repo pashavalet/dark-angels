@@ -72,6 +72,7 @@ Bottom tab bar with 5 tabs: Home → Tours → Services → Blog → Contacts.
 
 ## Changelog
 
+- **2026-05-26** — Phase 4: Admin Telegram Users panel. `TelegramUsersAdminPage` (list with filters + CSV download + pagination). `TelegramUserPortraitPage` (avatar, profile, stats, page breakdown, activity log). Routes `/admin/telegram-users` and `/admin/telegram-users/:telegramId`. Dashboard nav card with user count. `api/admin.ts` extended with `useTelegramUsers()`, `useTelegramUser()`, `useDownloadTelegramUsers()`.
 - **2026-05-26** — Phase 3: Subscription gating. `authStore` extended: `telegramUserId`, `telegramUsername`, `isSubscribed`, `setTelegramAuth()`. `api/telegram.ts`: `useTelegramAuth()` / `useTelegramRefresh()` / `useTrackPage()`. `AppLayout`: auto-login via Telegram initData on mount. `requires_subscription` checkbox in all 3 editor pages. Card components: lock overlay for gated content. Detail pages: gate screen (channel subscribe prompt) for locked content. i18n key `requires_subscription` added in 6 languages.
 - **2026-05-26** — Phase 1 Telegram Mini App: added `<script src="telegram-web-app.js">` to `index.html`.
 - **2026-05-26** — i18n expanded to 6 languages: kk/uz/ky/uk. All 146 UI keys translated via Google Translate (`scripts/rebuild_i18n.py`). Only `loading: '...'` kept ru (dots confuse translator).

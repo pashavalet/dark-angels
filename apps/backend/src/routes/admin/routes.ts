@@ -14,16 +14,18 @@ export default async function adminRoutes(app: FastifyInstance) {
   const db = app.supabase;
 
   app.get('/stats', { onRequest: [app.authenticate] }, async () => {
-    const [tours, services, blog] = await Promise.all([
+    const [tours, services, blog, telegramUsers] = await Promise.all([
       db.from('tours').select('id', { count: 'exact', head: true }),
       db.from('services').select('id', { count: 'exact', head: true }),
       db.from('blog_articles').select('id', { count: 'exact', head: true }),
+      db.from('telegram_users').select('telegram_id', { count: 'exact', head: true }),
     ]);
 
     const counts = {
       tours: tours.count ?? 0,
       services: services.count ?? 0,
       blog: blog.count ?? 0,
+      telegram_users: telegramUsers.count ?? 0,
     };
 
     const [recentTours, recentServices, recentBlog] = await Promise.all([

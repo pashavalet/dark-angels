@@ -31,6 +31,7 @@ export default function AdminDashboard() {
     { label: t('tours'), count: stats?.counts.tours ?? 0, path: '/admin/tours' },
     { label: t('services'), count: stats?.counts.services ?? 0, path: '/admin/services' },
     { label: t('blog'), count: stats?.counts.blog ?? 0, path: '/admin/blog' },
+    { label: 'Telegram', count: stats?.counts.telegram_users ?? 0, path: '/admin/telegram-users' },
   ];
 
   const navCards = [

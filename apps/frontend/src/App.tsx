@@ -21,6 +21,8 @@ import ServiceAdminListPage from './pages/Admin/ServiceAdminListPage.js';
 import ServiceEditPage from './pages/Admin/ServiceEditPage.js';
 import BlogAdminListPage from './pages/Admin/BlogAdminListPage.js';
 import BlogEditPage from './pages/Admin/BlogEditPage.js';
+import TelegramUsersAdminPage from './pages/Admin/TelegramUsersAdminPage.js';
+import TelegramUserPortraitPage from './pages/Admin/TelegramUserPortraitPage.js';
 
 const queryClient = new QueryClient();
 
@@ -53,6 +55,8 @@ export default function App() {
               <Route path="admin/blog" element={<BlogAdminListPage />} />
               <Route path="admin/blog/new" element={<BlogEditPage />} />
               <Route path="admin/blog/:id" element={<BlogEditPage />} />
+              <Route path="admin/telegram-users" element={<TelegramUsersAdminPage />} />
+              <Route path="admin/telegram-users/:telegramId" element={<TelegramUserPortraitPage />} />
             </Route>
           </Route>
         </Routes>
