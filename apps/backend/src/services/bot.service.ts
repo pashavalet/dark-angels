@@ -7,6 +7,16 @@ interface SendMessageOptions {
   reply_markup?: Record<string, unknown>;
 }
 
+interface TelegramUpdate {
+  update_id: number;
+  message?: {
+    chat: { id: number };
+    from?: { id: number };
+    text?: string;
+  };
+  callback_query?: unknown;
+}
+
 async function callBotApi<T>(botToken: string, method: string, body?: Record<string, unknown>): Promise<{ ok: boolean; result?: T; description?: string }> {
   try {
     const res = await fetch(`${BOT_API}${botToken}/${method}`, {
@@ -36,12 +46,6 @@ export async function sendBotMessage(
   return res.ok;
 }
 
-export async function setBotWebhook(botToken: string, url: string): Promise<boolean> {
-  const res = await callBotApi(botToken, 'setWebhook', { url, drop_pending_updates: true });
-  console.log('setWebhook:', res.ok, res.description);
-  return res.ok;
-}
-
 export async function setChatMenuButton(botToken: string, text: string, url: string): Promise<boolean> {
   const res = await callBotApi(botToken, 'setChatMenuButton', {
     menu_button: { type: 'web_app', text, web_app: { url } },
@@ -61,38 +65,24 @@ export async function setMyCommands(botToken: string): Promise<boolean> {
   return res.ok;
 }
 
-export async function getWebhookInfo(botToken: string) {
-  const res = await callBotApi<{ url: string; has_custom_certificate: boolean; pending_update_count: number; last_error_date?: number; last_error_message?: string }>(botToken, 'getWebhookInfo');
-  return res.ok ? res.result : null;
-}
-
-export async function deleteWebhook(botToken: string): Promise<boolean> {
-  const res = await callBotApi(botToken, 'deleteWebhook', { drop_pending_updates: true });
-  return res.ok;
-}
-
-export async function initBot(botToken: string, miniAppUrl: string, webhookUrl: string): Promise<void> {
-  console.log('initBot: miniAppUrl=', miniAppUrl, 'webhookUrl=', webhookUrl, 'token=', botToken.substring(0, 10) + '...');
-
-  if (webhookUrl) {
-    const ok = await setBotWebhook(botToken, webhookUrl);
-    console.log('initBot setWebhook result:', ok);
-    if (!ok) {
-      const info = await getWebhookInfo(botToken);
-      console.log('current webhook info:', JSON.stringify(info));
-    }
-  } else {
-    console.log('initBot: no webhookUrl, skipping setWebhook');
+export async function getUpdates(botToken: string, offset: number): Promise<TelegramUpdate[]> {
+  const url = `${BOT_API}${botToken}/getUpdates?offset=${offset}&timeout=25&allowed_updates=["message"]`;
+  try {
+    const res = await fetch(url);
+    const json = await res.json() as { ok: boolean; result?: TelegramUpdate[] };
+    if (json.ok && json.result) return json.result;
+    return [];
+  } catch (err) {
+    console.error('getUpdates error:', err);
+    return [];
   }
+}
 
-  const menuResult = await setChatMenuButton(botToken, '\uD83C\uDF1F Dark Angels', miniAppUrl);
-  console.log('initBot setChatMenuButton result:', menuResult);
-
-  const cmdResult = await setMyCommands(botToken);
-  console.log('initBot setMyCommands result:', cmdResult);
-
-  const info = await getWebhookInfo(botToken);
-  console.log('final webhook status:', JSON.stringify(info));
+export async function initBot(botToken: string, miniAppUrl: string): Promise<void> {
+  console.log('initBot: miniAppUrl=', miniAppUrl, 'token=', botToken.substring(0, 10) + '...');
+  await setChatMenuButton(botToken, '\uD83C\uDF1F Dark Angels', miniAppUrl);
+  await setMyCommands(botToken);
+  console.log('initBot complete');
 }
 
 export function makeWebAppKeyboard(text: string, url: string) {
