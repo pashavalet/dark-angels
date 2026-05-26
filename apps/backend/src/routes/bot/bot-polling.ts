@@ -65,7 +65,7 @@ async function handleCommand(
   switch (command) {
     case 'start': {
       const keyboard = miniAppUrl
-        ? makeWebAppKeyboard('\uD83D\uDEA9 Открыть Dark Angels', miniAppUrl)
+        ? makeWebAppKeyboard('\uD83E\uDD8A Dark Angels', miniAppUrl)
         : makeRemoveKeyboard();
 
       const text = [
@@ -74,8 +74,6 @@ async function handleCommand(
         'Здесь вы найдете эксклюзивные туры, услуги и материалы нашего клуба.',
         '',
         'Для доступа к закрытому контенту подпишитесь на канал @markmakemoney.',
-        '',
-        'Если вы администратор, используйте /admin для входа в панель управления.',
       ].join('\n');
 
       await sendBotMessage(botToken, chatId, text, { reply_markup: keyboard });

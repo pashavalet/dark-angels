@@ -80,7 +80,7 @@ export async function getUpdates(botToken: string, offset: number): Promise<Tele
 
 export async function initBot(botToken: string, miniAppUrl: string): Promise<void> {
   console.log('initBot: miniAppUrl=', miniAppUrl, 'token=', botToken.substring(0, 10) + '...');
-  await setChatMenuButton(botToken, '\uD83C\uDF1F Dark Angels', miniAppUrl);
+  await setChatMenuButton(botToken, '\uD83E\uDD8A Dark Angels', miniAppUrl);
   await setMyCommands(botToken);
   console.log('initBot complete');
 }
