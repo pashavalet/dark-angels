@@ -44,6 +44,7 @@ export default function BlogEditPage() {
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [initialized, setInitialized] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   if (isEdit && blogData?.data && !initialized) {
     const d = blogData.data;
@@ -125,7 +126,7 @@ export default function BlogEditPage() {
     }
   }, [id, deleteMutation, navigate, t]);
 
-  const saving = createMutation.isPending || updateMutation.isPending;
+  const saving = createMutation.isPending || updateMutation.isPending || uploadingImage;
   const deleting = deleteMutation.isPending;
 
   return (
@@ -151,10 +152,11 @@ export default function BlogEditPage() {
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-text-secondary">{t('preview_image')}</label>
-          <ImageUploader
-            value={form.preview_image ?? undefined}
-            onChange={(url) => updateField('preview_image', url)}
-          />
+<ImageUploader
+  value={form.preview_image ?? undefined}
+  onChange={(url) => updateField('preview_image', url)}
+  onUploadingChange={setUploadingImage}
+/>
         </div>
 
         <div className="space-y-2">

@@ -42,6 +42,7 @@ export default function ServiceEditPage() {
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [initialized, setInitialized] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   if (isEdit && serviceData?.data && !initialized) {
     const d = serviceData.data;
@@ -123,7 +124,7 @@ export default function ServiceEditPage() {
     }
   }, [id, deleteMutation, navigate, t]);
 
-  const saving = createMutation.isPending || updateMutation.isPending;
+  const saving = createMutation.isPending || updateMutation.isPending || uploadingImage;
   const deleting = deleteMutation.isPending;
 
   return (
@@ -172,10 +173,11 @@ export default function ServiceEditPage() {
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-text-secondary">{t('image')}</label>
-          <ImageUploader
-            value={form.image_url ?? undefined}
-            onChange={(url) => updateField('image_url', url)}
-          />
+<ImageUploader
+  value={form.image_url ?? undefined}
+  onChange={(url) => updateField('image_url', url)}
+  onUploadingChange={setUploadingImage}
+/>
         </div>
 
         <div className="space-y-2">

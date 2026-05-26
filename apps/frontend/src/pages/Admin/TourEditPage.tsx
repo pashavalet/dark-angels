@@ -52,6 +52,7 @@ export default function TourEditPage() {
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [initialized, setInitialized] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   if (isEdit && tourData?.data && !initialized) {
     const d = tourData.data;
@@ -114,7 +115,6 @@ export default function TourEditPage() {
       sort_order: 0,
       is_published: false,
     };
-    console.debug('[TourEdit] buildInput:', { image_url: input.image_url, tags: input.tags });
     return input;
   }, [form]);
 
@@ -124,13 +124,9 @@ export default function TourEditPage() {
       if (!validate()) return;
       try {
         if (isEdit) {
-          const payload = { id: id!, ...buildInput() };
-          console.debug('[TourEdit] handleSave PUT payload:', { image_url: payload.image_url });
-          const result = await updateMutation.mutateAsync(payload);
-          console.debug('[TourEdit] handleSave PUT response:', result);
+          await updateMutation.mutateAsync({ id: id!, ...buildInput() });
         } else {
-          const result = await createMutation.mutateAsync(buildInput());
-          console.debug('[TourEdit] handleSave POST response:', result);
+          await createMutation.mutateAsync(buildInput());
         }
         navigate('/admin/tours');
       } catch (err: any) {
@@ -151,7 +147,7 @@ export default function TourEditPage() {
     }
   }, [id, deleteMutation, navigate, t]);
 
-  const saving = createMutation.isPending || updateMutation.isPending;
+  const saving = createMutation.isPending || updateMutation.isPending || uploadingImage;
   const deleting = deleteMutation.isPending;
 
   return (
@@ -218,10 +214,11 @@ export default function TourEditPage() {
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-text-secondary">{t('image')}</label>
-          <ImageUploader
-            value={form.image_url ?? undefined}
-            onChange={(url) => updateField('image_url', url)}
-          />
+<ImageUploader
+  value={form.image_url ?? undefined}
+  onChange={(url) => updateField('image_url', url)}
+  onUploadingChange={setUploadingImage}
+/>
         </div>
 
         <div className="flex items-center gap-6">

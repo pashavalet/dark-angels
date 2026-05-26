@@ -8,12 +8,13 @@ interface ImageUploaderProps {
   value?: string;
   onChange: (url: string | null) => void;
   disabled?: boolean;
+  onUploadingChange?: (uploading: boolean) => void;
 }
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
-export default function ImageUploader({ value, onChange, disabled }: ImageUploaderProps) {
+export default function ImageUploader({ value, onChange, disabled, onUploadingChange }: ImageUploaderProps) {
   const { t } = useTranslation('common');
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -40,6 +41,7 @@ export default function ImageUploader({ value, onChange, disabled }: ImageUpload
     const previewUrl = URL.createObjectURL(file);
     setPreview(previewUrl);
     setUploading(true);
+    onUploadingChange?.(true);
     setError(null);
 
     try {
@@ -57,6 +59,7 @@ export default function ImageUploader({ value, onChange, disabled }: ImageUpload
       setPreview(null);
     } finally {
       setUploading(false);
+      onUploadingChange?.(false);
     }
   };
 
