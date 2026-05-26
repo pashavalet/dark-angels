@@ -9,6 +9,15 @@ const telegramAuthSchema = z.object({
   initData: z.string().min(1),
 });
 
+async function findAdminByTelegramId(db: any, telegramId: number) {
+  const { data } = await db
+    .from('admins')
+    .select('id, email')
+    .eq('telegram_id', telegramId)
+    .maybeSingle();
+  return data;
+}
+
 export default async function telegramRoutes(app: FastifyInstance) {
   const env = loadEnv();
   const db = app.supabase;
@@ -32,6 +41,8 @@ export default async function telegramRoutes(app: FastifyInstance) {
     }
 
     const isSubscribed = await checkChannelSubscription(env.TELEGRAM_BOT_TOKEN, CHAT_ID, tgUser.id);
+    const adminUser = await findAdminByTelegramId(db, tgUser.id);
+    const isAdmin = !!adminUser;
 
     const { error: upsertError } = await db.from('telegram_users').upsert({
       telegram_id: tgUser.id,
@@ -57,6 +68,7 @@ export default async function telegramRoutes(app: FastifyInstance) {
       sub: String(tgUser.id),
       telegram_id: tgUser.id,
       is_subscribed: isSubscribed,
+      is_admin: isAdmin,
       access_level: telegramAccessLevel,
       purpose: 'telegram',
     }, { expiresIn: '24h' });
@@ -70,6 +82,7 @@ export default async function telegramRoutes(app: FastifyInstance) {
           username: tgUser.username,
           first_name: tgUser.first_name,
           is_subscribed: isSubscribed,
+          is_admin: isAdmin,
           access_level: telegramAccessLevel,
         },
       },
@@ -95,6 +108,8 @@ export default async function telegramRoutes(app: FastifyInstance) {
     }
 
     const isSubscribed = await checkChannelSubscription(env.TELEGRAM_BOT_TOKEN, CHAT_ID, tgUser.id);
+    const adminUser = await findAdminByTelegramId(db, tgUser.id);
+    const isAdmin = !!adminUser;
 
     await db.from('telegram_users').upsert({
       telegram_id: tgUser.id,
@@ -110,6 +125,7 @@ export default async function telegramRoutes(app: FastifyInstance) {
       sub: String(tgUser.id),
       telegram_id: tgUser.id,
       is_subscribed: isSubscribed,
+      is_admin: isAdmin,
       access_level: telegramAccessLevel,
       purpose: 'telegram',
     }, { expiresIn: '24h' });
@@ -119,6 +135,7 @@ export default async function telegramRoutes(app: FastifyInstance) {
       data: {
         access_token: accessToken,
         is_subscribed: isSubscribed,
+        is_admin: isAdmin,
         access_level: telegramAccessLevel,
       },
     };

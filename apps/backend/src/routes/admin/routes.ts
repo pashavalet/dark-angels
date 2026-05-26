@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import crypto from 'node:crypto';
 import { z } from 'zod';
 
 const telegramUsersQuerySchema = z.object({
@@ -190,6 +191,44 @@ export default async function adminRoutes(app: FastifyInstance) {
           page_breakdown: grouped,
         },
       },
+    };
+  });
+
+  app.post('/telegram-link-code', { onRequest: [app.authenticate] }, async (request, reply) => {
+    const adminId = request.user.sub;
+    const code = crypto.randomBytes(4).toString('hex').toUpperCase().slice(0, 7);
+
+    const { error } = await app.supabase.from('telegram_link_codes').insert({
+      admin_id: adminId,
+      code,
+      expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+    });
+
+    if (error) {
+      return reply.code(500).send({
+        success: false,
+        error: { code: 'INTERNAL', message: 'Failed to generate link code' },
+      });
+    }
+
+    return {
+      success: true,
+      data: { code, expires_in_minutes: 10 },
+    };
+  });
+
+  app.get('/telegram-link-status', { onRequest: [app.authenticate] }, async (request) => {
+    const adminId = request.user.sub;
+
+    const { data } = await app.supabase
+      .from('admins')
+      .select('telegram_id')
+      .eq('id', adminId)
+      .maybeSingle();
+
+    return {
+      success: true,
+      data: { linked: !!data?.telegram_id, telegram_id: data?.telegram_id ?? null },
     };
   });
 }

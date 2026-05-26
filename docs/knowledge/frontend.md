@@ -84,6 +84,15 @@ src/
 
 Bottom tab bar with 5 tabs: Home → Tours → Services → Blog → Contacts.
 
+## Bot Integration
+
+Admin Telegram linking flow:
+1. Admin opens bot, sends `/admin` → bot replies with instructions to link
+2. Admin goes to admin panel → profile → "Link Telegram" → gets 7-char code
+3. Admin sends `/link <code>` to bot → bot verifies and links `telegram_id` to admin
+4. After linking: `/admin` shows "Open Admin Panel" button (WebApp keyboard)
+5. Mini App auto-detects admin on telegram auth → redirects to admin dashboard
+
 ---
 
 ## Changelog

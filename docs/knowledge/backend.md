@@ -76,7 +76,7 @@ Optional: MOCK_MODE (bool), TELEGRAM_BOT_TOKEN (string, default '').
 
 ## Changelog
 
-- **2026-05-26** — Phase 4: `GET /admin/stats` now includes `telegram_users` count.
+- **2026-05-27** — Bot integration: `POST /api/v1/bot/webhook` (Telegram bot webhook), `/start` → welcome + WebApp keyboard, `/admin` → admin panel button (if linked), `/link <code>` → link Telegram to admin account. `services/bot.service.ts`: sendBotMessage, setBotWebhook, makeWebAppKeyboard, parseBotCommand. `admins.telegram_id` column + `telegram_link_codes` table. `POST /admin/telegram-link-code` (generate 7-char one-time code). `GET /admin/telegram-link-status`. `TELEGRAM_MINIAPP_URL` + `BOT_WEBHOOK_URL` env vars. Telegram auth now detects admin users (`is_admin` in JWT + response).
 - **2026-05-26** — Phase 2: Telegram API backend. `lib/telegram-api.ts`: `validateInitData` (HMAC-SHA256), `checkChannelSubscription` (getChatMember), `parseInitDataUser`. `routes/telegram/routes.ts`: `POST /auth/telegram` (verify → subscribe check → upsert user → JWT), `POST /auth/telegram/refresh` (re-check + refresh token), `POST /track` (page view logging). Admin routes extended: `GET /admin/telegram-users` (paginated, filterable), `GET /admin/telegram-users/download` (CSV), `GET /admin/telegram-users/:telegramId` (portrait + activity log + stats). FastifyJWT payload type extended with `telegram_id`, `is_subscribed`, `access_level`.
 
 - **2026-05-26** — Admin stats endpoint: `GET /admin/stats` (auth required) returns counts (tours/services/blog) + recent items (last 5 each). New route file: `routes/admin/routes.ts`. 10 unit tests for `translateLocalizedFields` (mock + edge cases).
