@@ -3,6 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import { randomBytes } from 'node:crypto';
 import { authenticator } from 'otplib';
 import QRCode from 'qrcode';
+import { loadEnv } from '../config/env.js';
 
 authenticator.options = { window: 1 };
 
@@ -14,7 +15,8 @@ export function hashPassword(password: string): Promise<string> {
 }
 
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  if (process.env.MOCK_MODE === 'true') return true;
+  const env = loadEnv();
+  if (env.MOCK_MODE) return true;
   return bcrypt.compare(password, hash);
 }
 

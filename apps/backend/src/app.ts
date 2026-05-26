@@ -63,6 +63,8 @@ app.get('/debug/env', async () => {
   return {
     MOCK_MODE: env.MOCK_MODE,
     SUPABASE_URL: env.SUPABASE_URL?.replace(/(.{10}).*(.{15})$/, '$1***$2'),
+    RAW_MOCK_MODE: process.env.MOCK_MODE,
+    RAW_NODE_ENV: process.env.NODE_ENV,
   };
 });
 
