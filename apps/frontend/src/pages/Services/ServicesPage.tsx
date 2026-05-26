@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useServices } from '../../api/services.js';
+import { useAuthStore } from '../../stores/auth.js';
 import ServiceCard from '../../components/services/ServiceCard.js';
 
 const itemVariants = {
@@ -11,6 +12,7 @@ const itemVariants = {
 
 export default function ServicesPage() {
   const { t } = useTranslation('common');
+  const isSubscribed = useAuthStore((s) => s.isSubscribed);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -31,7 +33,7 @@ export default function ServicesPage() {
     return Array.from(tags).sort();
   }, [data?.data]);
 
-  const services = data?.data ?? [];
+  const services = useMemo(() => (data?.data ?? []).filter(s => !s.requires_subscription || isSubscribed), [data?.data, isSubscribed]);
   const meta = data?.meta;
 
   return (
