@@ -1,7 +1,12 @@
 import { useTranslation } from 'react-i18next';
+import { useMainButton } from '../../hooks/useMainButton.js';
 
 export default function ContactsPage() {
   const { t } = useTranslation('common');
+
+  useMainButton(t('telegram_contact_label'), () => {
+    window.open('https://t.me/darkangels_admin', '_blank');
+  }, true);
 
   return (
     <div className="flex flex-col gap-4 px-4 py-8">

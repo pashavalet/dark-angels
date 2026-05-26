@@ -21,11 +21,13 @@ interface TelegramWebApp {
     hideProgress: () => void;
     enable: () => void;
     disable: () => void;
+    setParams: (params: { color?: string; text_color?: string }) => void;
   };
   BackButton: {
     show: () => void;
     hide: () => void;
     onClick: (fn: () => void) => void;
+    offClick: (fn: () => void) => void;
   };
   HapticFeedback: {
     impactOccurred: (style: 'light' | 'medium' | 'heavy') => void;
@@ -37,8 +39,16 @@ interface TelegramWebApp {
     user?: TelegramUser;
     query_id?: string;
   };
+  initData: string;
   colorScheme: 'light' | 'dark';
   platform: string;
+  onEvent: (event: string, callback: () => void) => void;
+  offEvent: (event: string, callback: () => void) => void;
+  SettingsButton: {
+    show: () => void;
+    hide: () => void;
+    onClick: (fn: () => void) => void;
+  };
 }
 
 declare global {
@@ -53,6 +63,18 @@ export function getTelegram(): TelegramWebApp | null {
   return window.Telegram?.WebApp ?? null;
 }
 
+export function isInTelegram(): boolean {
+  return !!getTelegram();
+}
+
+export function getInitData(): string {
+  return getTelegram()?.initData ?? '';
+}
+
+export function getTelegramUser(): TelegramUser | null {
+  return getTelegram()?.initDataUnsafe?.user ?? null;
+}
+
 export function useTelegram() {
   const tg = getTelegram();
 
@@ -60,6 +82,7 @@ export function useTelegram() {
     return {
       tg: null,
       user: null,
+      initData: '',
       ready: () => {},
       expand: () => {},
       close: () => {},
@@ -69,6 +92,7 @@ export function useTelegram() {
   return {
     tg,
     user: tg.initDataUnsafe.user ?? null,
+    initData: tg.initData,
     ready: () => tg.ready(),
     expand: () => tg.expand(),
     close: () => tg.close(),

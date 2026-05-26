@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { useTour } from '../../api/tours.js';
 import { useLocalized } from '../../hooks/useLocalized.js';
 import { useAuthStore } from '../../stores/auth.js';
+import { useBackButton } from '../../hooks/useBackButton.js';
+import { useMainButton } from '../../hooks/useMainButton.js';
 import VipBadge from '../../components/ui/VipBadge.js';
 
 export default function TourDetailPage() {
@@ -21,6 +23,10 @@ export default function TourDetailPage() {
   const country = useLocalized(tour?.country);
   const city = useLocalized(tour?.city);
   const agency = useLocalized(tour?.agency);
+  useBackButton(() => navigate(-1));
+  useMainButton(t('contacts'), () => {
+    if (tour?.contacts) window.open(`https://t.me/${tour.contacts.replace('@', '')}`, '_blank');
+  }, !isLocked && !!tour?.contacts);
 
   if (isLoading) {
     return (

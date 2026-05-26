@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useBlog } from '../../api/blogs.js';
 import { useLocalized } from '../../hooks/useLocalized.js';
 import { useAuthStore } from '../../stores/auth.js';
+import { useBackButton } from '../../hooks/useBackButton.js';
 import MarkdownRenderer from '../../components/blog/MarkdownRenderer.js';
 import VipBadge from '../../components/ui/VipBadge.js';
 
@@ -19,6 +20,7 @@ export default function BlogDetailPage() {
   const isLocked = article?.requires_subscription && !isSubscribed;
   const title = useLocalized(article?.title);
   const content = useLocalized(article?.content);
+  useBackButton(() => navigate(-1));
 
   if (isLoading) {
     return (

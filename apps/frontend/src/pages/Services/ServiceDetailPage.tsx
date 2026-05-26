@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { useService } from '../../api/services.js';
 import { useLocalized } from '../../hooks/useLocalized.js';
 import { useAuthStore } from '../../stores/auth.js';
+import { useBackButton } from '../../hooks/useBackButton.js';
+import { useMainButton } from '../../hooks/useMainButton.js';
 
 export default function ServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +19,10 @@ export default function ServiceDetailPage() {
   const isLocked = service?.requires_subscription && !isSubscribed;
   const title = useLocalized(service?.title);
   const description = useLocalized(service?.description);
+  useBackButton(() => navigate(-1));
+  useMainButton(t('contacts'), () => {
+    if (service?.contacts) window.open(`https://t.me/${service.contacts.replace('@', '')}`, '_blank');
+  }, !isLocked && !!service?.contacts);
 
   if (isLoading) {
     return (

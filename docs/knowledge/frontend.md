@@ -36,8 +36,24 @@ Luxury dark aesthetic: gold accent, deep charcoal backgrounds, muted borders.
 
 `src/lib/telegram.ts` provides:
 - `getTelegram()` — returns `window.Telegram.WebApp` or null
-- `useTelegram()` — React hook: `{ tg, user, ready, expand, close }`
+- `useTelegram()` — React hook: `{ tg, user, ready, expand, close, initData, initDataUnsafe }`
+- `getInitData()` — returns raw `initData` string for backend auth
+- `isInTelegram()` — boolean check
+- `getTelegramUser()` — typed Telegram user object
 - Falls back gracefully when app is opened outside Telegram
+
+### Telegram UX Hooks
+
+- **`useBackButton(callback)`** — Shows `tg.BackButton`, calls `callback` on click, hides on unmount
+- **`useMainButton(text, callback, enabled?)`** — Shows `tg.MainButton` with text, calls `callback` on click, auto-hides on unmount. `enabled` defaults to `true`
+
+Both hooks integrate with Telegram-native navigation. Callbacks use `useRef` for stable references.
+
+### Theme & Language
+
+- `AppLayout` sets CSS vars (`--tg-bg`, `--tg-text`, etc.) from `tg.themeParams` on mount
+- `themeChanged` event listener keeps CSS vars in sync
+- Telegram `language_code` auto-detected on mount; applies via `i18n.changeLanguage()` unless user already picked a locale
 
 SDK script loaded in `index.html`:
 ```html
@@ -57,7 +73,7 @@ src/
 │   ├── auth/          # ProtectedRoute
 │   ├── admin/         # AdminFormLayout, SortableList
 │   └── homepage/      # HorizontalCarousel
-├── hooks/             # useLocalized
+├── hooks/             # useLocalized, useBackButton, useMainButton
 ├── api/               # tours, services, blogs, homepage, upload, auth, admin (React Query hooks)
 ├── stores/            # authStore, localeStore
 ├── i18n/              # i18next config + 6 locales (ru/en/kk/uz/ky/uk)
@@ -72,6 +88,7 @@ Bottom tab bar with 5 tabs: Home → Tours → Services → Blog → Contacts.
 
 ## Changelog
 
+- **2026-05-27** — Phase 5: Telegram-native BackButton on Tour/Service/Blog detail pages; MainButton on Tours/Service detail pages (opens Telegram contact) and ContactsPage. `useBackButton`/`useMainButton` hooks created. `AppLayout`: `themeChanged` listener, Telegram language detection via `i18n.changeLanguage()`. `lib/telegram.ts` extended: `getInitData()`, `isInTelegram()`, `getTelegramUser()`, raw `initData` in `useTelegram()`, `initData` on interface, `setParams` on MainButton, `offClick` on BackButton, `onEvent`/`offEvent`/`SettingsButton`.
 - **2026-05-26** — Phase 4: Admin Telegram Users panel. `TelegramUsersAdminPage` (list with filters + CSV download + pagination). `TelegramUserPortraitPage` (avatar, profile, stats, page breakdown, activity log). Routes `/admin/telegram-users` and `/admin/telegram-users/:telegramId`. Dashboard nav card with user count. `api/admin.ts` extended with `useTelegramUsers()`, `useTelegramUser()`, `useDownloadTelegramUsers()`.
 - **2026-05-26** — Phase 3: Subscription gating. `authStore` extended: `telegramUserId`, `telegramUsername`, `isSubscribed`, `setTelegramAuth()`. `api/telegram.ts`: `useTelegramAuth()` / `useTelegramRefresh()` / `useTrackPage()`. `AppLayout`: auto-login via Telegram initData on mount. `requires_subscription` checkbox in all 3 editor pages. Card components: lock overlay for gated content. Detail pages: gate screen (channel subscribe prompt) for locked content. i18n key `requires_subscription` added in 6 languages.
 - **2026-05-26** — Phase 1 Telegram Mini App: added `<script src="telegram-web-app.js">` to `index.html`.

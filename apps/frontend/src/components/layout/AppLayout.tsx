@@ -4,6 +4,9 @@ import { useLocation, Outlet } from 'react-router-dom';
 import { useTelegram, getTelegram } from '../../lib/telegram.js';
 import { useTelegramAuth } from '../../api/telegram.js';
 import { useAuthStore } from '../../stores/auth.js';
+import { useLocaleStore } from '../../stores/locale.js';
+import type { SupportedLocale } from '../../stores/locale.js';
+import i18n from '../../i18n/index.js';
 import BottomNav from './BottomNav.js';
 import LanguageSwitcher from '../ui/LanguageSwitcher.js';
 
@@ -19,15 +22,54 @@ export default function AppLayout() {
   const showNav = !location.pathname.startsWith('/admin');
   const telegramAuth = useTelegramAuth();
   const setTelegramAuth = useAuthStore((s) => s.setTelegramAuth);
+  const { locale, setLocale } = useLocaleStore();
 
-  useState(() => {
+  useEffect(() => {
     ready();
     expand();
-    if (tg) {
-      document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color ?? '#0a0a0b');
-      document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color ?? '#f5f5f5');
+  }, []);
+
+  useEffect(() => {
+    const t = getTelegram();
+    if (!t) return;
+
+    const tp = t.themeParams;
+    const docEl = document.documentElement;
+    if (tp?.bg_color) docEl.style.setProperty('--tg-bg', tp.bg_color);
+    if (tp?.text_color) docEl.style.setProperty('--tg-text', tp.text_color);
+    if (tp?.button_color) docEl.style.setProperty('--tg-button', tp.button_color);
+    if (tp?.button_text_color) docEl.style.setProperty('--tg-button-text', tp.button_text_color);
+    if (tp?.secondary_bg_color) docEl.style.setProperty('--tg-secondary-bg', tp.secondary_bg_color);
+
+    const handleTheme = () => {
+      const updatedTg = getTelegram();
+      if (!updatedTg) return;
+      const newTp = updatedTg.themeParams;
+      if (newTp?.bg_color) docEl.style.setProperty('--tg-bg', newTp.bg_color);
+      if (newTp?.text_color) docEl.style.setProperty('--tg-text', newTp.text_color);
+      if (newTp?.button_color) docEl.style.setProperty('--tg-button', newTp.button_color);
+      if (newTp?.button_text_color) docEl.style.setProperty('--tg-button-text', newTp.button_text_color);
+      if (newTp?.secondary_bg_color) docEl.style.setProperty('--tg-secondary-bg', newTp.secondary_bg_color);
+    };
+
+    t.onEvent('themeChanged', handleTheme);
+    return () => {
+      t.offEvent('themeChanged', handleTheme);
+    };
+  }, []);
+
+  useEffect(() => {
+    const t = getTelegram();
+    const tgUser = t?.initDataUnsafe?.user;
+    if (tgUser?.language_code && !locale) {
+      const supported = ['ru', 'en', 'kk', 'uz', 'ky', 'uk'];
+      const lang = tgUser.language_code.slice(0, 2);
+      if (supported.includes(lang)) {
+        setLocale(lang as SupportedLocale);
+        i18n.changeLanguage(lang);
+      }
     }
-  });
+  }, []);
 
   useEffect(() => {
     const t = getTelegram();
@@ -37,8 +79,7 @@ export default function AppLayout() {
     const existingToken = localStorage.getItem('tg_access_token');
     if (existingToken) return;
 
-    const w = t as any;
-    const rawInitData = w.initData ?? '';
+    const rawInitData = t.initData;
     if (!rawInitData) return;
 
     telegramAuth.mutate(rawInitData, {
