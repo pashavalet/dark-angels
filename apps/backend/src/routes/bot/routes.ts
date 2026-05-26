@@ -4,6 +4,7 @@ import { loadEnv } from '../../config/env.js';
 import {
   sendBotMessage,
   setBotWebhook,
+  setChatMenuButton,
   makeWebAppKeyboard,
   makeRemoveKeyboard,
   parseBotCommand,
@@ -15,8 +16,11 @@ export default async function botRoutes(app: FastifyInstance) {
   const botToken = env.TELEGRAM_BOT_TOKEN;
   const miniAppUrl = env.TELEGRAM_MINIAPP_URL;
 
-  if (env.BOT_WEBHOOK_URL) {
-    setBotWebhook(botToken, `${env.BOT_WEBHOOK_URL}/api/v1/bot/webhook`);
+  if (botToken && miniAppUrl) {
+    if (env.BOT_WEBHOOK_URL) {
+      await setBotWebhook(botToken, `${env.BOT_WEBHOOK_URL}/api/v1/bot/webhook`);
+    }
+    await setChatMenuButton(botToken, '\uD83C\uDF1F Dark Angels', miniAppUrl);
   }
 
   app.post('/bot/webhook', async (request, reply) => {

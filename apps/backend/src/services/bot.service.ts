@@ -41,9 +41,32 @@ export async function setBotWebhook(botToken: string, url: string): Promise<bool
       body: JSON.stringify({ url, drop_pending_updates: true }),
     });
     const json = await res.json() as { ok: boolean; description?: string };
-    console.log('setWebhook:', json.description);
+    console.log('setWebhook:', json.ok, json.description);
     return json.ok;
-  } catch {
+  } catch (err) {
+    console.error('setWebhook failed:', err);
+    return false;
+  }
+}
+
+export async function setChatMenuButton(
+  botToken: string,
+  text: string,
+  url: string,
+): Promise<boolean> {
+  try {
+    const res = await fetch(`${BOT_API}${botToken}/setChatMenuButton`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        menu_button: { type: 'web_app', text, web_app: { url } },
+      }),
+    });
+    const json = await res.json() as { ok: boolean; description?: string };
+    console.log('setChatMenuButton:', json.ok, json.description);
+    return json.ok;
+  } catch (err) {
+    console.error('setChatMenuButton failed:', err);
     return false;
   }
 }
