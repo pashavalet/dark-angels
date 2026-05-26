@@ -59,4 +59,16 @@ app.get('/health', async () => {
   };
 });
 
+app.get('/debug/env', async () => {
+  return {
+    MOCK_MODE: env.MOCK_MODE,
+    SUPABASE_URL: env.SUPABASE_URL?.replace(/(.{10}).*(.{15})$/, '$1***$2'),
+  };
+});
+
+app.get('/debug/admins', async () => {
+  const { data, error } = await app.supabase.from('admins').select('email').limit(10);
+  return { data, error };
+});
+
 export { app, env };
