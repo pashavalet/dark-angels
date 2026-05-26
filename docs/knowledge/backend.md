@@ -42,30 +42,13 @@ Set `MOCK_MODE=true` in `.env` to run without Supabase:
 ```
 /api/v1/
 ├── auth/       login, logout, refresh, 2fa/*
+├── telegram/   initData verification, subscription check (planned)
 ├── tours/      public GET, admin CRUD
 ├── services/   public GET, admin CRUD
 ├── blog/       public GET, admin CRUD
 ├── homepage/   collections management
 ├── upload/     image upload pipeline
-└── admin/      stats endpoint (GET /admin/stats)
-```
-```
-## Plugin Architecture
-
-```
-app.ts
-├── @fastify/cors       — CORS with credentials
-├── @fastify/rate-limit — configurable window/max
-├── supabase.ts         — SupabaseClient decorator (fastify-plugin)
-└── auth.ts             — JWT auth (authenticate decorator)
-```
-/api/v1/
-├── auth/       login, logout, refresh, 2fa/*
-├── tours/      public GET, admin CRUD
-├── services/   public GET, admin CRUD
-├── blog/       public GET, admin CRUD
-├── homepage/   collections management
-└── upload/     image upload pipeline
+└── admin/      stats, telegram-users (planned)
 ```
 
 ## Error Handling
@@ -82,11 +65,13 @@ const ValidationError = createError('VALIDATION_ERROR', '%s', 400);
 ## Environment Variables
 
 Validated via Zod at startup. Required: PORT, HOST, SUPABASE_URL, SUPABASE_SERVICE_KEY, JWT_SECRET (≥32 chars).
-Optional: MOCK_MODE (bool), MOCK_BCRYPT_ROUNDS (int, default 4).
+Optional: MOCK_MODE (bool), TELEGRAM_BOT_TOKEN (string, default '').
 
 ---
 
 ## Changelog
+
+- **2026-05-26** — Phase 1 Telegram Mini App: `TELEGRAM_BOT_TOKEN` added to env schema (optional, default ''). `@grammyjs/types` devDep for Telegram API types. Migration file created for upcoming DB tables.
 
 - **2026-05-26** — Admin stats endpoint: `GET /admin/stats` (auth required) returns counts (tours/services/blog) + recent items (last 5 each). New route file: `routes/admin/routes.ts`. 10 unit tests for `translateLocalizedFields` (mock + edge cases).
 - **2026-05-26** — Production deployment on Railway (Docker, Node 20-alpine) with Supabase realtime. Fixed Zod `z.coerce.boolean()` trap: `parse("false")` returns true (non-empty string). Replaced with `z.string().transform(v => v === 'true')`. Fixed dotenv in production: guarded with `if (NODE_ENV !== 'production')`. Fixed Supabase WebSocket crash on Node 20: added `ws` package, passed as `realtime.transport`. verifyPassword now uses parsed `env.MOCK_MODE` (boolean) not raw `process.env.MOCK_MODE` (string).

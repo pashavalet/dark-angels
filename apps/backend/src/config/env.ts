@@ -26,6 +26,7 @@ const envSchema = z.object({
   ALLOWED_IMAGE_TYPES: z.string().default('image/jpeg,image/png,image/webp'),
   OTPLIB_ISSUER: z.string().default('DarkAngels'),
   MOCK_MODE: z.string().default('false').transform(v => v === 'true' || v === '1'),
+  TELEGRAM_BOT_TOKEN: z.string().default(''),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

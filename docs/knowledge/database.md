@@ -10,10 +10,12 @@ PostgreSQL schema, migrations, and indexing strategy for the Dark Angels Telegra
 |---|---|---|
 | `admins` | Admin authentication | UUID PK, email (unique), password_hash, totp_secret, recovery_codes_hash |
 | `refresh_tokens` | JWT refresh session | FK → admins, token_hash, expires_at |
-| `tours` | Tour content | JSONB `{ru,en}` for: title/desc/country/city/agency; earnings, is_vip, hidden_vip, tags[], image_url, sort_order |
-| `services` | Service content | JSONB title/desc; price, tags[], image_url, sort_order |
-| `blog_articles` | Blog content | JSONB title/content; tags[], hidden_vip, access_level, sort_order |
+| `tours` | Tour content | JSONB `{ru,en}` for: title/desc/country/city/agency; earnings, is_vip, hidden_vip, tags[], image_url, sort_order, requires_subscription |
+| `services` | Service content | JSONB title/desc; price, tags[], image_url, sort_order, requires_subscription |
+| `blog_articles` | Blog content | JSONB title/content; tags[], hidden_vip, access_level, sort_order, requires_subscription |
 | `homepage_collections` | Curated homepage sections | section, item_id, item_type, sort_order, is_pinned |
+| `telegram_users` | Telegram user data for analytics | telegram_id (BIGINT PK), username, first_name, last_name, language_code, is_premium, access_level, is_channel_subscriber |
+| `user_activity` | User interaction tracking | FK → telegram_users, page, item_type, item_id |
 
 ## Localization Pattern
 
@@ -31,12 +33,18 @@ Adding a language requires app deployment, not DB migration.
 - `idx_tours_vip` — composite on `(is_vip, hidden_vip)`
 - `idx_blog_access` — on `access_level`
 - Sorted indexes on `sort_order` for tours, services, blog
+- `idx_telegram_users_access` — on `access_level`
+- `idx_telegram_users_subscriber` — on `is_channel_subscriber`
+- `idx_telegram_users_username` — on `username`
+- `idx_user_activity_telegram` — composite on `(telegram_id, created_at DESC)`
+- `idx_user_activity_page` — composite on `(telegram_id, page)`
 
 ## Migrations
 
 - Location: `infrastructure/supabase/migrations/`
 - Naming: `YYYYMMDDHHMMSS_description.sql`
 - Each migration is atomic
+- Current: `20260521000000_initial_schema.sql`, `20260526000001_telegram_integration.sql`
 
 ## RLS Strategy
 
@@ -50,4 +58,5 @@ Adding a language requires app deployment, not DB migration.
 
 ## Changelog
 
+- **2026-05-26** — Phase 1 Telegram Mini App: new `telegram_users` (analytics) and `user_activity` (portrait) tables. `requires_subscription` boolean column added to tours, services, blog_articles. Migration `20260526000001_telegram_integration.sql`.
 - **2026-05-26** — RLS migration: enabled on all 6 tables. Public SELECT policies created for tours/services/blog_articles/homepage_collections. admins and refresh_tokens blocked for anon (service key only).

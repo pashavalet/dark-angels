@@ -39,6 +39,11 @@ Luxury dark aesthetic: gold accent, deep charcoal backgrounds, muted borders.
 - `useTelegram()` — React hook: `{ tg, user, ready, expand, close }`
 - Falls back gracefully when app is opened outside Telegram
 
+SDK script loaded in `index.html`:
+```html
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+```
+
 ## Component Structure
 
 ```
@@ -67,6 +72,7 @@ Bottom tab bar with 5 tabs: Home → Tours → Services → Blog → Contacts.
 
 ## Changelog
 
+- **2026-05-26** — Phase 1 Telegram Mini App: added `<script src="telegram-web-app.js">` to `index.html`.
 - **2026-05-26** — i18n expanded to 6 languages: kk/uz/ky/uk. All 146 UI keys translated via Google Translate (`scripts/rebuild_i18n.py`). Only `loading: '...'` kept ru (dots confuse translator).
 - **2026-05-26** — HomePage rewired to use list APIs (`useTours/Services/Blogs`) instead of curated `homepage_collections`. Cards now identical to tab pages. Added LanguageSwitcher component (RU/EN toggle) syncing both i18next and Zustand localeStore. Section headers changed: «Избранные» → «Новые».
 - **2026-05-26** — DashboardPage: real stats widgets (counts + recent items). Fetches from new `GET /admin/stats` endpoint via React Query. Nav cards kept alongside metrics. API hook: `useAdminStats()` in `api/admin.ts`.
