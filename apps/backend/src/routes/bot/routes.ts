@@ -15,12 +15,17 @@ export default async function botRoutes(app: FastifyInstance) {
   const botToken = env.TELEGRAM_BOT_TOKEN;
   const miniAppUrl = env.TELEGRAM_MINIAPP_URL;
 
+  const webhookBase = env.BOT_WEBHOOK_URL.startsWith('http')
+    ? env.BOT_WEBHOOK_URL
+    : `https://${env.BOT_WEBHOOK_URL}`;
+
   const webhookUrl = env.BOT_WEBHOOK_URL
-    ? `${env.BOT_WEBHOOK_URL}/api/v1/bot/webhook`
-    : undefined;
+    ? `${webhookBase}/api/v1/bot/webhook`
+    : '';
 
   if (botToken && miniAppUrl) {
     try {
+      console.log('Bot init: miniAppUrl=', miniAppUrl, 'webhookUrl=', webhookUrl);
       await initBot(botToken, miniAppUrl, webhookUrl);
     } catch (err) {
       console.error('bot init failed:', err);

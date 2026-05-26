@@ -71,22 +71,28 @@ export async function deleteWebhook(botToken: string): Promise<boolean> {
   return res.ok;
 }
 
-export async function initBot(botToken: string, miniAppUrl: string, webhookUrl?: string): Promise<void> {
-  console.log('initBot: webhookUrl=', webhookUrl);
+export async function initBot(botToken: string, miniAppUrl: string, webhookUrl: string): Promise<void> {
+  console.log('initBot: miniAppUrl=', miniAppUrl, 'webhookUrl=', webhookUrl, 'token=', botToken.substring(0, 10) + '...');
 
   if (webhookUrl) {
     const ok = await setBotWebhook(botToken, webhookUrl);
+    console.log('initBot setWebhook result:', ok);
     if (!ok) {
       const info = await getWebhookInfo(botToken);
       console.log('current webhook info:', JSON.stringify(info));
     }
+  } else {
+    console.log('initBot: no webhookUrl, skipping setWebhook');
   }
 
-  await setChatMenuButton(botToken, '\uD83C\uDF1F Dark Angels', miniAppUrl);
-  await setMyCommands(botToken);
+  const menuResult = await setChatMenuButton(botToken, '\uD83C\uDF1F Dark Angels', miniAppUrl);
+  console.log('initBot setChatMenuButton result:', menuResult);
+
+  const cmdResult = await setMyCommands(botToken);
+  console.log('initBot setMyCommands result:', cmdResult);
 
   const info = await getWebhookInfo(botToken);
-  console.log('webhook status:', JSON.stringify(info));
+  console.log('final webhook status:', JSON.stringify(info));
 }
 
 export function makeWebAppKeyboard(text: string, url: string) {
