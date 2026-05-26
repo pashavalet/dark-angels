@@ -1,13 +1,24 @@
 import { useTranslation } from 'react-i18next';
-import { useHomepageCollections } from '../../api/homepage.js';
+import { useTours } from '../../api/tours.js';
+import { useServices } from '../../api/services.js';
+import { useBlogs } from '../../api/blogs.js';
 import TourCard from '../../components/tours/TourCard.js';
 import ServiceCard from '../../components/services/ServiceCard.js';
 import BlogCard from '../../components/blog/BlogCard.js';
 import HorizontalCarousel from '../../components/homepage/HorizontalCarousel.js';
+import LanguageSwitcher from '../../components/ui/LanguageSwitcher.js';
+
+const HOMEPAGE_LIMIT = 6;
 
 export default function HomePage() {
   const { t } = useTranslation('common');
-  const { data, isLoading } = useHomepageCollections();
+  const { data: toursData, isLoading: toursLoading } = useTours({ limit: HOMEPAGE_LIMIT });
+  const { data: servicesData, isLoading: servicesLoading } = useServices({ limit: HOMEPAGE_LIMIT });
+  const { data: blogsData, isLoading: blogsLoading } = useBlogs({ limit: HOMEPAGE_LIMIT });
+
+  const tours = toursData?.data ?? [];
+  const services = servicesData?.data ?? [];
+  const blogs = blogsData?.data ?? [];
 
   return (
     <div className="flex flex-col gap-2 pb-4">
@@ -18,48 +29,38 @@ export default function HomePage() {
         <p className="text-text-secondary text-lg max-w-md">
           {t('tagline')}
         </p>
+        <LanguageSwitcher />
       </section>
 
-      {isLoading ? (
-        <div className="space-y-8">
-          {[t('featured_tours'), t('featured_services'), t('featured_blog')].map((title) => (
-            <HorizontalCarousel
-              key={title}
-              title={title}
-              items={[]}
-              renderItem={() => null}
-              isLoading
-            />
-          ))}
-        </div>
-      ) : data ? (
-        <>
-          <HorizontalCarousel
-            title={t('featured_tours')}
-            items={data.featured_tours}
-            renderItem={(item: any) => (
-              <TourCard tour={item} to={`/tours/${item.id}`} />
-            )}
-            emptyMessage={t('no_featured_tours')}
-          />
-          <HorizontalCarousel
-            title={t('featured_services')}
-            items={data.featured_services}
-            renderItem={(item: any) => (
-              <ServiceCard service={item} to={`/services/${item.id}`} />
-            )}
-            emptyMessage={t('no_featured_services')}
-          />
-          <HorizontalCarousel
-            title={t('featured_blog')}
-            items={data.featured_blog}
-            renderItem={(item: any) => (
-              <BlogCard article={item} to={`/blog/${item.id}`} />
-            )}
-            emptyMessage={t('no_featured_blog')}
-          />
-        </>
-      ) : null}
+      <HorizontalCarousel
+        title={t('new_tours')}
+        items={tours}
+        renderItem={(item: any) => (
+          <TourCard tour={item} to={`/tours/${item.id}`} />
+        )}
+        emptyMessage={t('no_new_tours')}
+        isLoading={toursLoading}
+      />
+
+      <HorizontalCarousel
+        title={t('new_services')}
+        items={services}
+        renderItem={(item: any) => (
+          <ServiceCard service={item} to={`/services/${item.id}`} />
+        )}
+        emptyMessage={t('no_new_services')}
+        isLoading={servicesLoading}
+      />
+
+      <HorizontalCarousel
+        title={t('new_blog')}
+        items={blogs}
+        renderItem={(item: any) => (
+          <BlogCard article={item} to={`/blog/${item.id}`} />
+        )}
+        emptyMessage={t('no_new_blog')}
+        isLoading={blogsLoading}
+      />
     </div>
   );
 }
