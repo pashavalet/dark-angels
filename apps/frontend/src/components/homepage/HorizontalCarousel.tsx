@@ -9,6 +9,7 @@ interface HorizontalCarouselProps {
   renderItem: (item: unknown, index: number) => ReactNode;
   emptyMessage?: string;
   isLoading?: boolean;
+  compact?: boolean;
 }
 
 const containerVariants = {
@@ -23,13 +24,13 @@ const itemVariants = {
   show: { opacity: 1, x: 0, transition: { duration: 0.25, ease: 'easeOut' } },
 };
 
-function SkeletonCard() {
+function SkeletonCard({ compact }: { compact?: boolean }) {
   return (
-    <div className="shrink-0 w-[280px] sm:w-[320px] rounded-xl border border-border bg-bg-card overflow-hidden animate-pulse">
-      <div className="aspect-video bg-bg-elevated" />
-      <div className="p-4 space-y-2">
-        <div className="h-5 bg-bg-elevated rounded w-3/4" />
-        <div className="h-4 bg-bg-elevated rounded w-1/2" />
+    <div className={cn('shrink-0 rounded-xl border border-border bg-bg-card overflow-hidden animate-pulse', compact ? 'w-[180px] sm:w-[200px]' : 'w-[280px] sm:w-[320px]')}>
+      <div className={cn('bg-bg-elevated', compact ? 'h-28' : 'aspect-video')} />
+      <div className={cn('space-y-2', compact ? 'p-3' : 'p-4')}>
+        <div className={cn('bg-bg-elevated rounded', compact ? 'h-3 w-3/4' : 'h-5 w-3/4')} />
+        <div className={cn('bg-bg-elevated rounded', compact ? 'h-2 w-1/2' : 'h-4 w-1/2')} />
       </div>
     </div>
   );
@@ -41,15 +42,18 @@ export default function HorizontalCarousel({
   renderItem,
   emptyMessage,
   isLoading,
+  compact,
 }: HorizontalCarouselProps) {
   const { t } = useTranslation('common');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   function scroll(dir: 'left' | 'right') {
     if (!scrollRef.current) return;
-    const amount = 300;
+    const amount = compact ? 200 : 300;
     scrollRef.current.scrollBy({ left: dir === 'left' ? -amount : amount, behavior: 'smooth' });
   }
+
+  const cardWidth = compact ? 'w-[180px] sm:w-[200px]' : 'w-[280px] sm:w-[320px]';
 
   return (
     <section className="mb-8">
@@ -94,7 +98,7 @@ export default function HorizontalCarousel({
       {isLoading ? (
         <div className="flex gap-4 px-4 overflow-x-auto scrollbar-none">
           {Array.from({ length: 4 }).map((_, i) => (
-            <SkeletonCard key={i} />
+            <SkeletonCard key={i} compact={compact} />
           ))}
         </div>
       ) : items.length === 0 ? (
@@ -114,7 +118,7 @@ export default function HorizontalCarousel({
             <motion.div
               key={item.id ?? index}
               variants={itemVariants}
-              className="snap-start shrink-0 w-[280px] sm:w-[320px]"
+              className={cn('snap-start shrink-0', cardWidth)}
             >
               {renderItem(item, index)}
             </motion.div>
