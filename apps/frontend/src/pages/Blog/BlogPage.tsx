@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useBlogs } from '../../api/blogs.js';
 import BlogCard from '../../components/blog/BlogCard.js';
@@ -13,7 +12,6 @@ const itemVariants = {
 
 export default function BlogPage() {
   const { t } = useTranslation('common');
-  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -124,7 +122,7 @@ export default function BlogPage() {
         >
           {articles.map((article) => (
             <motion.div key={article.id} variants={itemVariants}>
-              <BlogCard article={article} onClick={() => navigate(`/blog/${article.id}`)} />
+              <BlogCard article={article} to={`/blog/${article.id}`} />
             </motion.div>
           ))}
         </motion.div>

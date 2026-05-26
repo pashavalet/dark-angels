@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTours } from '../../api/tours.js';
 import TourCard from '../../components/tours/TourCard.js';
@@ -12,7 +11,6 @@ const itemVariants = {
 
 export default function ToursPage() {
   const { t } = useTranslation('common');
-  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -123,7 +121,7 @@ export default function ToursPage() {
         >
           {tours.map((tour) => (
             <motion.div key={tour.id} variants={itemVariants}>
-              <TourCard tour={tour} onClick={() => navigate(`/tours/${tour.id}`)} />
+              <TourCard tour={tour} to={`/tours/${tour.id}`} />
             </motion.div>
           ))}
         </motion.div>

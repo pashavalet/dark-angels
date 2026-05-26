@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useServices } from '../../api/services.js';
 import ServiceCard from '../../components/services/ServiceCard.js';
@@ -12,7 +11,6 @@ const itemVariants = {
 
 export default function ServicesPage() {
   const { t } = useTranslation('common');
-  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -123,7 +121,7 @@ export default function ServicesPage() {
         >
           {services.map((service) => (
             <motion.div key={service.id} variants={itemVariants}>
-              <ServiceCard service={service} onClick={() => navigate(`/services/${service.id}`)} />
+              <ServiceCard service={service} to={`/services/${service.id}`} />
             </motion.div>
           ))}
         </motion.div>

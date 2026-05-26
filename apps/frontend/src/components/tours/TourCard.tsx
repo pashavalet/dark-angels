@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useLocalized } from '../../hooks/useLocalized.js';
 import { cn } from '../../lib/cn.js';
 import VipBadge from '../ui/VipBadge.js';
@@ -5,33 +6,17 @@ import type { Tour } from '@dark-angels/types';
 
 interface TourCardProps {
   tour: Tour;
-  onClick?: () => void;
+  to?: string;
 }
 
-export default function TourCard({ tour, onClick }: TourCardProps) {
+export default function TourCard({ tour, to }: TourCardProps) {
   const title = useLocalized(tour.title);
   const city = useLocalized(tour.city);
   const country = useLocalized(tour.country);
-  const isInteractive = !!onClick;
+  const isInteractive = !!to;
 
-  return (
-    <div
-      onClick={onClick}
-      onKeyDown={(e) => {
-        if ((e.key === 'Enter' || e.key === ' ') && onClick) {
-          e.preventDefault();
-          onClick();
-        }
-      }}
-      role={isInteractive ? 'button' : 'article'}
-      tabIndex={isInteractive ? 0 : undefined}
-      className={cn(
-        'group rounded-xl border border-border bg-bg-card overflow-hidden',
-        'hover:border-accent/30 transition-all duration-200',
-        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
-        isInteractive && 'cursor-pointer active:scale-[0.98]',
-      )}
-    >
+  const cardContent = (
+    <>
       <div className="relative aspect-video overflow-hidden">
         {tour.image_url ? (
           <img
@@ -77,6 +62,34 @@ export default function TourCard({ tour, onClick }: TourCardProps) {
           <p className="mt-3 text-sm font-medium text-accent">{tour.earnings}</p>
         )}
       </div>
+    </>
+  );
+
+  if (to) {
+    return (
+      <Link
+        to={to}
+        className={cn(
+          'group rounded-xl border border-border bg-bg-card overflow-hidden',
+          'hover:border-accent/30 transition-all duration-200',
+          'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+          'block cursor-pointer active:scale-[0.98]',
+        )}
+      >
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        'group rounded-xl border border-border bg-bg-card overflow-hidden',
+        'hover:border-accent/30 transition-all duration-200',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+      )}
+    >
+      {cardContent}
     </div>
   );
 }

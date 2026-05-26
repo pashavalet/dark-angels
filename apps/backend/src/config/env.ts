@@ -25,7 +25,7 @@ const envSchema = z.object({
   MAX_FILE_SIZE_MB: z.coerce.number().positive().default(5),
   ALLOWED_IMAGE_TYPES: z.string().default('image/jpeg,image/png,image/webp'),
   OTPLIB_ISSUER: z.string().default('DarkAngels'),
-  MOCK_MODE: z.coerce.boolean().default(false),
+  MOCK_MODE: z.string().default('false').transform(v => v === 'true' || v === '1'),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;
