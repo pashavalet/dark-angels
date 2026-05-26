@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { loadEnv } from '../../config/env.js';
+import type { EnvConfig } from '../../config/env.js';
 import {
   sendBotMessage,
   getUpdates,
@@ -12,8 +12,7 @@ import {
 let lastUpdateId = 0;
 let polling = false;
 
-export function startBotPolling(app: FastifyInstance): void {
-  const env = loadEnv();
+export function startBotPolling(env: EnvConfig, app: FastifyInstance): void {
   const botToken = env.TELEGRAM_BOT_TOKEN;
   const miniAppUrl = env.TELEGRAM_MINIAPP_URL;
 

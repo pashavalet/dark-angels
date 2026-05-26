@@ -28,7 +28,6 @@ const envSchema = z.object({
   MOCK_MODE: z.string().default('false').transform(v => v === 'true' || v === '1'),
   TELEGRAM_BOT_TOKEN: z.string().default(''),
   TELEGRAM_MINIAPP_URL: z.string().default(''),
-  BOT_WEBHOOK_URL: z.string().default(''),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

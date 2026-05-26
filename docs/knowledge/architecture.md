@@ -49,11 +49,14 @@ apps/backend   →  packages/shared  →  packages/types
 - **JSONB for i18n**: `{ru, en}` instead of `*_ru/*_en` columns — flexible, no DB migration for new languages
 - **No tRPC**: REST chosen for simplicity; CMS has infrequent content updates
 - **No SSR**: Vite SPA is sufficient for Telegram Mini App (runs inside Telegram WebView)
+- **Bot polling over webhook**: Railway Docker caused 404 on webhook routes; `getUpdates` polling simpler, needs no routes
+- **pnpm deploy with `files: ["dist"]`**: Root `.gitignore` excludes `dist/` from deploy; explicit `files` field overrides
 
 ---
 
 ## Changelog
 
+- **2026-05-27** — Docker deploy fix: `pnpm deploy` respects `.gitignore` — root `.gitignore` had `dist/`, excluding compiled JS. Fixed with `files: ["dist"]` in backend package.json + `ARG CACHEBUST` in Dockerfile.
 - **2026-05-26** — Production deployment: backend on Railway (Docker, Node 20-alpine), frontend on Cloudflare Pages, Supabase PostgreSQL. Docker build uses `pnpm deploy /prod` approach. WebSocket support via `ws` package for Supabase realtime. E2E test suite: 54/54 passing on production stack. Fixed critical Zod `z.coerce.boolean()` bug (parse("false") returns true due to truthy non-empty string). Fixed React hooks #310 in detail pages (useLocalized after conditional returns).
 - **2026-05-23** — CI/CD: GitHub Actions pipeline (lint→typecheck→test→build), Docker multi-stage (backend Alpine + frontend Nginx), docker-compose
 - **2026-05-23** — Testing: Vitest unit tests (24 passing), Playwright E2E config (playwright.config.ts at root), functional test suite (39/39)

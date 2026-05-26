@@ -49,11 +49,14 @@ Set `MOCK_MODE=true` in `.env` to run without Supabase:
 ├── blog/       public GET, admin CRUD
 ├── homepage/   collections management
 ├── upload/     image upload pipeline
-└── admin/
-    ├── stats               GET counts + recent items
-    ├── telegram-users      GET paginated list w/ filters
-    ├── telegram-users/download  GET CSV export
-    └── telegram-users/:id  GET user portrait + activity log
+├── admin/
+│   ├── stats               GET counts + recent items
+│   ├── telegram-link-code  POST generate 7-char code (10min expiry)
+│   ├── telegram-link-status GET check if admin has linked Telegram
+│   ├── telegram-users      GET paginated list w/ filters
+│   ├── telegram-users/download  GET CSV export
+│   └── telegram-users/:id  GET user portrait + activity log
+└── bot/       [removed] — no bot routes, uses polling
 ```
 
 ## Error Handling
@@ -71,16 +74,41 @@ const ValidationError = createError('VALIDATION_ERROR', '%s', 400);
 
 Validated via Zod at startup. Required: PORT, HOST, SUPABASE_URL, SUPABASE_SERVICE_KEY, JWT_SECRET (≥32 chars).
 Optional: MOCK_MODE (bool), TELEGRAM_BOT_TOKEN (string, default ''), TELEGRAM_MINIAPP_URL (string, default '').
+Note: `BOT_WEBHOOK_URL` was removed — bot uses polling (`getUpdates`), no webhook needed.
 
 ## Bot (polling, no webhook)
 
-`routes/bot/bot-polling.ts` starts on `app.listen`. Calls `getUpdates` with 25s timeout, processes `/start`/`/admin`/`/link` commands. No webhook, no route registration. `initBot()` sets chat menu button + commands on startup.
+`routes/bot/bot-polling.ts` starts after `app.listen()` in `server.ts` (fire-and-forget). Uses Telegram API `getUpdates` with 25s long-polling timeout, 3s `setInterval` loop. Processes commands:
+
+| Command | Action |
+|---|---|
+| `/start` | ReplyKeyboardMarkup + Web App button → opens Mini App |
+| `/admin` | If linked: Web App keyboard → opens admin panel in Mini App |
+| `/link <code>` | Links Telegram user to admin account via `telegram_link_codes` |
+
+Bot init (`initBot()`):
+- `setChatMenuButton` — permanent "Open" button near message input
+- `setMyCommands` — registers `/start` and `/admin` command suggestions
+
+Service layer: `services/bot.service.ts` — raw `fetch` to Telegram API, no npm bot packages. `@grammyjs/types` (dev dep) only for type definitions.
+
+## Docker Deployment
+
+Multi-stage Docker build (`infrastructure/docker/Dockerfile.backend`):
+
+1. **Build stage**: Install deps → build `@dark-angels/shared` (tsc) → build `@dark-angels/backend` (tsc) → `pnpm deploy /prod`
+2. **Runtime stage**: alpine, copy `/prod` → user `app` → `node dist/server.js`
+
+Critical: `pnpm deploy` respects `.gitignore`. Root `.gitignore` has `dist/` which excludes compiled JS from deploy. Fixed via `"files": ["dist"]` in `apps/backend/package.json` — overrides `.gitignore` for pnpm/publish file inclusion.
+
+Cache invalidation: `ARG CACHEBUST` in Dockerfile forces rebuild of subsequent layers. Increment the value (1→2→3...) each deploy to bypass Docker cache.
 
 ---
 
 ## Changelog
 
-- **2026-05-27** — Bot polling: switched from webhook (404 issues on Railway Docker) to `getUpdates` polling. No routes needed. Bot init + polling start in `server.ts`.
+- **2026-05-27** — Docker fix: `"files": ["dist"]` in package.json ensures pnpm deploy includes compiled JS despite root `.gitignore` excluding `dist/`. `ARG CACHEBUST` for forced cache invalidation on Railway.
+- **2026-05-27** — Bot polling: switched from webhook (404 issues on Railway Docker) to `getUpdates` polling. Handles `/start`/`/admin`/`/link`. Bot init (`setChatMenuButton` + `setMyCommands`) runs on startup. No routes, no webhook URL needed.
 - **2026-05-26** — Phase 2: Telegram API backend. `lib/telegram-api.ts`: `validateInitData` (HMAC-SHA256), `checkChannelSubscription` (getChatMember), `parseInitDataUser`. `routes/telegram/routes.ts`: `POST /auth/telegram` (verify → subscribe check → upsert user → JWT), `POST /auth/telegram/refresh` (re-check + refresh token), `POST /track` (page view logging). Admin routes extended: `GET /admin/telegram-users` (paginated, filterable), `GET /admin/telegram-users/download` (CSV), `GET /admin/telegram-users/:telegramId` (portrait + activity log + stats). FastifyJWT payload type extended with `telegram_id`, `is_subscribed`, `access_level`.
 
 - **2026-05-26** — Admin stats endpoint: `GET /admin/stats` (auth required) returns counts (tours/services/blog) + recent items (last 5 each). New route file: `routes/admin/routes.ts`. 10 unit tests for `translateLocalizedFields` (mock + edge cases).
