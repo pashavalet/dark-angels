@@ -69,5 +69,6 @@ Optional: MOCK_MODE (bool), MOCK_BCRYPT_ROUNDS (int, default 4).
 
 ## Changelog
 
+- **2026-05-26** — Production deployment on Railway (Docker, Node 20-alpine) with Supabase realtime. Fixed Zod `z.coerce.boolean()` trap: `parse("false")` returns true (non-empty string). Replaced with `z.string().transform(v => v === 'true')`. Fixed dotenv in production: guarded with `if (NODE_ENV !== 'production')`. Fixed Supabase WebSocket crash on Node 20: added `ws` package, passed as `realtime.transport`. verifyPassword now uses parsed `env.MOCK_MODE` (boolean) not raw `process.env.MOCK_MODE` (string).
 - **2026-05-23** — Functional E2E tests: API login/tokens, all public routes return 200 with data from in-memory mock DB
 - **2026-05-23** — Mock mode: in-memory DB + chainable mock Supabase client + dotenv + mock-data.ts seed file (3 entities each + collections)

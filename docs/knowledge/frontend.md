@@ -64,6 +64,7 @@ Bottom tab bar with 5 tabs: Home → Tours → Blog → Services → Contacts.
 
 ## Changelog
 
+- **2026-05-26** — Production deployment on Cloudflare Pages with real Supabase backend. Converted TourCard/ServiceCard/BlogCard from `<div onClick={navigate}>` to `<Link to={...}>` for native navigation (right-click open, SEO, accessibility, testability). List pages (ToursPage/ServicesPage/BlogPage) pass `to` prop, removed `useNavigate`. Fixed React hooks error #310 in all 3 detail pages (TourDetailPage/ServiceDetailPage/BlogDetailPage): moved `useLocalized` calls above loading/error early returns to maintain consistent hook count. Production E2E: 54/54 tests passing on deployed stack.
 - **2026-05-23** — Admin CRUD: 6 pages (Tour/Service/Blog edit forms + admin list pages), AdminFormLayout, LocalizedField (ru/en tabbed JSONB input), Dashboard un-stubbed (5/6 cards real), 40 i18n keys
 - **2026-05-23** — Functional E2E tests: 43/43 passing (Playwright Python), homepage carousels, CRUD detail pages, admin login+2FA+DnD+CRUD lists
 - **2026-05-23** — WCAG 2.2 AA: focus-visible on 30+ elements, contrast fix (450/700 vs 500/700), reduced-motion skip/whitelist, Space key actionable cards
