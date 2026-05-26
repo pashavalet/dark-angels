@@ -85,7 +85,7 @@ export default function AppLayout() {
     telegramAuth.mutate(rawInitData, {
       onSuccess: (data) => {
         localStorage.setItem('tg_access_token', data.access_token);
-        setTelegramAuth(data.user.telegram_id, data.user.username, data.user.is_subscribed);
+        setTelegramAuth(data.user.telegram_id, data.user.username, data.user.is_subscribed, data.user.is_admin);
       },
     });
   }, []);

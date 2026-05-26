@@ -10,6 +10,7 @@ interface TelegramAuthResponse {
       username: string | null;
       first_name: string;
       is_subscribed: boolean;
+      is_admin: boolean;
       access_level: string;
     };
   };

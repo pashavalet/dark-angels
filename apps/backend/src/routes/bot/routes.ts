@@ -1,10 +1,9 @@
 import type { FastifyInstance } from 'fastify';
-import crypto from 'node:crypto';
 import { loadEnv } from '../../config/env.js';
 import {
   sendBotMessage,
-  setBotWebhook,
-  setChatMenuButton,
+  initBot,
+  getWebhookInfo,
   makeWebAppKeyboard,
   makeRemoveKeyboard,
   parseBotCommand,
@@ -16,11 +15,16 @@ export default async function botRoutes(app: FastifyInstance) {
   const botToken = env.TELEGRAM_BOT_TOKEN;
   const miniAppUrl = env.TELEGRAM_MINIAPP_URL;
 
+  const webhookUrl = env.BOT_WEBHOOK_URL
+    ? `${env.BOT_WEBHOOK_URL}/api/v1/bot/webhook`
+    : undefined;
+
   if (botToken && miniAppUrl) {
-    if (env.BOT_WEBHOOK_URL) {
-      await setBotWebhook(botToken, `${env.BOT_WEBHOOK_URL}/api/v1/bot/webhook`);
+    try {
+      await initBot(botToken, miniAppUrl, webhookUrl);
+    } catch (err) {
+      console.error('bot init failed:', err);
     }
-    await setChatMenuButton(botToken, '\uD83C\uDF1F Dark Angels', miniAppUrl);
   }
 
   app.post('/bot/webhook', async (request, reply) => {
@@ -59,6 +63,34 @@ export default async function botRoutes(app: FastifyInstance) {
     return reply.code(200).send({ ok: true });
   });
 
+  app.get('/bot/setup', async (request, reply) => {
+    if (!botToken || !miniAppUrl) {
+      return reply.code(400).send({
+        success: false,
+        error: 'TELEGRAM_BOT_TOKEN or TELEGRAM_MINIAPP_URL not configured',
+      });
+    }
+    try {
+      await initBot(botToken, miniAppUrl, webhookUrl);
+      return { success: true, message: 'Bot re-initialized' };
+    } catch (err) {
+      return reply.code(500).send({ success: false, error: String(err) });
+    }
+  });
+
+  app.get('/debug/bot', async () => {
+    if (!botToken) {
+      return { configured: false, message: 'TELEGRAM_BOT_TOKEN not set' };
+    }
+    const info = await getWebhookInfo(botToken);
+    return {
+      configured: true,
+      mini_app_url: miniAppUrl,
+      webhook_url: webhookUrl,
+      webhook_info: info,
+    };
+  });
+
   async function handleStart(chatId: number) {
     const keyboard = miniAppUrl
       ? makeWebAppKeyboard('\uD83D\uDEA9 Открыть Dark Angels', miniAppUrl)
@@ -67,11 +99,11 @@ export default async function botRoutes(app: FastifyInstance) {
     const text = [
       '\u2705 Добро пожаловать в Dark Angels! \uD83C\uDFCD\uFE0F',
       '',
-      '\u0417\u0434\u0435\u0441\u044C \u0432\u044B \u043D\u0430\u0439\u0434\u0435\u0442\u0435 \u044D\u043A\u0441\u043A\u043B\u044E\u0437\u0438\u0432\u043D\u044B\u0435 \u0442\u0443\u0440\u044B, \u0443\u0441\u043B\u0443\u0433\u0438 \u0438 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B \u043D\u0430\u0448\u0435\u0433\u043E \u043A\u043B\u0443\u0431\u0430 \u043D\u0430 \u0431\u0430\u0439\u043A\u0430\u0445.',
+      'Здесь вы найдете эксклюзивные туры, услуги и материалы нашего клуба на байках.',
       '',
-      '\u0414\u043B\u044F \u0434\u043E\u0441\u0442\u0443\u043F\u0430 \u043A \u0437\u0430\u043A\u0440\u044B\u0442\u043E\u043C\u0443 \u043A\u043E\u043D\u0442\u0435\u043D\u0442\u0443 \u043F\u043E\u0434\u043F\u0438\u0448\u0438\u0442\u0435\u0441\u044C \u043D\u0430 \u043A\u0430\u043D\u0430\u043B @markmakemoney.',
+      'Для доступа к закрытому контенту подпишитесь на канал @markmakemoney.',
       '',
-      '\u0415\u0441\u043B\u0438 \u0432\u044B \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440, \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 /admin \u0434\u043B\u044F \u0432\u0445\u043E\u0434\u0430 \u0432 \u043F\u0430\u043D\u0435\u043B\u044C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F.',
+      'Если вы администратор, используйте /admin для входа в панель управления.',
     ].join('\n');
 
     await sendBotMessage(botToken, chatId, text, {
@@ -88,13 +120,13 @@ export default async function botRoutes(app: FastifyInstance) {
 
     if (!admin) {
       const text = [
-        '\u26A0\uFE0F \u0412\u0430\u0448 Telegram \u043D\u0435 \u043F\u0440\u0438\u0432\u044F\u0437\u0430\u043D \u043A \u0430\u043A\u043A\u0430\u0443\u043D\u0442\u0443 \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430.',
+        '\u26A0\uFE0F Ваш Telegram не привязан к аккаунту администратора.',
         '',
-        '\u0427\u0442\u043E\u0431\u044B \u043F\u0440\u0438\u0432\u044F\u0437\u0430\u0442\u044C:',
-        '1. \u0412\u043E\u0439\u0434\u0438\u0442\u0435 \u0432 \u043F\u0430\u043D\u0435\u043B\u044C \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430 \u043D\u0430 \u0441\u0430\u0439\u0442\u0435',
-        '2. \u041F\u0435\u0440\u0435\u0439\u0434\u0438\u0442\u0435 \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043F\u0440\u043E\u0444\u0438\u043B\u044F',
-        '3. \u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u00AB\u041F\u0440\u0438\u0432\u044F\u0437\u0430\u0442\u044C Telegram\u00BB',
-        '4. \u041E\u0442\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044B\u0439 \u043A\u043E\u0434 \u0441\u044E\u0434\u0430: /link <\u043A\u043E\u0434>',
+        'Чтобы привязать:',
+        '1. Войдите в панель администратора на сайте',
+        '2. Перейдите в настройки профиля',
+        '3. Нажмите «Привязать Telegram»',
+        '4. Отправьте полученный код сюда: /link <код>',
       ].join('\n');
 
       await sendBotMessage(botToken, chatId, text);
@@ -102,18 +134,18 @@ export default async function botRoutes(app: FastifyInstance) {
     }
 
     const adminKeyboard = miniAppUrl
-      ? makeWebAppKeyboard('\uD83D\uDD12 \u041F\u0430\u043D\u0435\u043B\u044C \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430', `${miniAppUrl}/admin`)
+      ? makeWebAppKeyboard('\uD83D\uDD12 Панель администратора', `${miniAppUrl}/admin`)
       : makeRemoveKeyboard();
 
     const text = [
-      `\u2705 \u0412\u044B \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u043E\u0432\u0430\u043D\u044B \u043A\u0430\u043A ${admin.email}`,
+      `\u2705 Вы авторизованы как ${admin.email}`,
       '',
-      '\u0427\u0435\u0440\u0435\u0437 \u043F\u0430\u043D\u0435\u043B\u044C \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430 \u0432\u044B \u043C\u043E\u0436\u0435\u0442\u0435:',
-      '\u2022 \u0423\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0442\u0443\u0440\u0430\u043C\u0438, \u0443\u0441\u043B\u0443\u0433\u0430\u043C\u0438 \u0438 \u0431\u043B\u043E\u0433\u043E\u043C',
-      '\u2022 \u041F\u0440\u043E\u0441\u043C\u0430\u0442\u0440\u0438\u0432\u0430\u0442\u044C \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0443 \u0438 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u0435\u0439',
-      '\u2022 \u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0434\u0430\u043D\u043D\u044B\u0435',
+      'Через панель администратора вы можете:',
+      '\u2022 Управлять турами, услугами и блогом',
+      '\u2022 Просматривать статистику и пользователей',
+      '\u2022 Экспортировать данные',
       '',
-      '\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043D\u043E\u043F\u043A\u0443 \u043D\u0438\u0436\u0435, \u0447\u0442\u043E\u0431\u044B \u043E\u0442\u043A\u0440\u044B\u0442\u044C.',
+      'Нажмите кнопку ниже, чтобы открыть.',
     ].join('\n');
 
     await sendBotMessage(botToken, chatId, text, {
@@ -126,7 +158,7 @@ export default async function botRoutes(app: FastifyInstance) {
       await sendBotMessage(
         botToken,
         chatId,
-        '\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435: /link <\u043A\u043E\u0434 \u0438\u0437 \u043F\u0430\u043D\u0435\u043B\u0438 \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430>',
+        'Используйте: /link <код из панели администратора>',
       );
       return;
     }
@@ -141,7 +173,7 @@ export default async function botRoutes(app: FastifyInstance) {
       await sendBotMessage(
         botToken,
         chatId,
-        '\u274C \u041A\u043E\u0434 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u0432\u0432\u043E\u0434\u0430.',
+        '\u274C Код не найден. Проверьте правильность ввода.',
       );
       return;
     }
@@ -150,7 +182,7 @@ export default async function botRoutes(app: FastifyInstance) {
       await sendBotMessage(
         botToken,
         chatId,
-        '\u274C \u042D\u0442\u043E\u0442 \u043A\u043E\u0434 \u0443\u0436\u0435 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D.',
+        '\u274C Этот код уже использован.',
       );
       return;
     }
@@ -159,7 +191,7 @@ export default async function botRoutes(app: FastifyInstance) {
       await sendBotMessage(
         botToken,
         chatId,
-        '\u274C \u041A\u043E\u0434 \u0438\u0441\u0442\u0435\u043A. \u0421\u0433\u0435\u043D\u0435\u0440\u0438\u0440\u0443\u0439\u0442\u0435 \u043D\u043E\u0432\u044B\u0439 \u0432 \u043F\u0430\u043D\u0435\u043B\u0438 \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430.',
+        '\u274C Код истек. Сгенерируйте новый в панели администратора.',
       );
       return;
     }
@@ -173,7 +205,7 @@ export default async function botRoutes(app: FastifyInstance) {
       await sendBotMessage(
         botToken,
         chatId,
-        '\u274C \u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438\u0432\u044F\u0437\u043A\u0438. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043F\u043E\u0437\u0436\u0435.',
+        '\u274C Ошибка привязки. Попробуйте позже.',
       );
       return;
     }
@@ -186,7 +218,7 @@ export default async function botRoutes(app: FastifyInstance) {
     await sendBotMessage(
       botToken,
       chatId,
-      '\u2705 \u0412\u0430\u0448 Telegram \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043F\u0440\u0438\u0432\u044F\u0437\u0430\u043D \u043A \u0430\u043A\u043A\u0430\u0443\u043D\u0442\u0443 \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430!\n\n\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 /admin \u0434\u043B\u044F \u0432\u0445\u043E\u0434\u0430 \u0432 \u043F\u0430\u043D\u0435\u043B\u044C.',
+      '\u2705 Ваш Telegram успешно привязан к аккаунту администратора!\n\nИспользуйте /admin для входа в панель.',
     );
   }
 }
