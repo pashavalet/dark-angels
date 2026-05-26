@@ -12,7 +12,7 @@ declare module 'fastify' {
 
 declare module '@fastify/jwt' {
   interface FastifyJWT {
-    payload: { sub: string; email: string; purpose?: string };
-    user: { sub: string; email: string; purpose?: string };
+    payload: { sub: string; email?: string; purpose?: string; telegram_id?: number; is_subscribed?: boolean; access_level?: string };
+    user: { sub: string; email?: string; purpose?: string; telegram_id?: number; is_subscribed?: boolean; access_level?: string };
   }
 }

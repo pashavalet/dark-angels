@@ -7,6 +7,7 @@ import { loadEnv } from './config/env.js';
 import supabasePlugin from './plugins/supabase.js';
 import authPlugin from './plugins/auth.js';
 import authRoutes from './routes/auth/routes.js';
+import telegramRoutes from './routes/telegram/routes.js';
 import tourRoutes from './routes/tours/routes.js';
 import serviceRoutes from './routes/services/routes.js';
 import blogRoutes from './routes/blog/routes.js';
@@ -45,6 +46,7 @@ await app.register(rateLimit, {
 await app.register(supabasePlugin);
 await app.register(authPlugin);
 await app.register(authRoutes, { prefix: '/api/v1/auth' });
+await app.register(telegramRoutes, { prefix: '/api/v1' });
 await app.register(tourRoutes, { prefix: '/api/v1/tours' });
 await app.register(serviceRoutes, { prefix: '/api/v1/services' });
 await app.register(blogRoutes, { prefix: '/api/v1/blog' });

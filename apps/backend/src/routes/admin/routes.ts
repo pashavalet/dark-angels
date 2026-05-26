@@ -1,4 +1,14 @@
 import type { FastifyInstance } from 'fastify';
+import { z } from 'zod';
+
+const telegramUsersQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(20),
+  subscribed: z.coerce.boolean().optional(),
+  premium: z.coerce.boolean().optional(),
+  language: z.string().optional(),
+  search: z.string().optional(),
+});
 
 export default async function adminRoutes(app: FastifyInstance) {
   const db = app.supabase;
@@ -30,6 +40,152 @@ export default async function adminRoutes(app: FastifyInstance) {
           tours: recentTours.data ?? [],
           services: recentServices.data ?? [],
           blog: recentBlog.data ?? [],
+        },
+      },
+    };
+  });
+
+  app.get('/telegram-users', { onRequest: [app.authenticate] }, async (request) => {
+    const query = telegramUsersQuerySchema.parse(request.query);
+    const offset = (query.page - 1) * query.limit;
+
+    let q = db.from('telegram_users').select('*', { count: 'exact' });
+
+    if (query.subscribed !== undefined) {
+      q = q.eq('is_channel_subscriber', query.subscribed);
+    }
+    if (query.premium !== undefined) {
+      q = q.eq('is_premium', query.premium);
+    }
+    if (query.language) {
+      q = q.eq('language_code', query.language);
+    }
+    if (query.search) {
+      const s = query.search.replace(/%/g, '\\%').replace(/_/g, '\\_');
+      q = q.or(
+        `username.ilike.%${s}%,first_name.ilike.%${s}%,last_name.ilike.%${s}%`,
+      );
+    }
+
+    q = q
+      .order('last_seen_at', { ascending: false })
+      .range(offset, offset + query.limit - 1);
+
+    const { data, count, error } = await q;
+    if (error) throw error;
+
+    return {
+      success: true,
+      data: data ?? [],
+      meta: {
+        page: query.page,
+        limit: query.limit,
+        total: count ?? 0,
+        totalPages: Math.ceil((count ?? 0) / query.limit),
+      },
+    };
+  });
+
+  app.get('/telegram-users/download', { onRequest: [app.authenticate] }, async (request, reply) => {
+    const query = telegramUsersQuerySchema.parse(request.query);
+
+    let q = db.from('telegram_users').select('*', { count: 'exact' });
+
+    if (query.subscribed !== undefined) {
+      q = q.eq('is_channel_subscriber', query.subscribed);
+    }
+    if (query.premium !== undefined) {
+      q = q.eq('is_premium', query.premium);
+    }
+    if (query.language) {
+      q = q.eq('language_code', query.language);
+    }
+    if (query.search) {
+      const s = query.search.replace(/%/g, '\\%').replace(/_/g, '\\_');
+      q = q.or(
+        `username.ilike.%${s}%,first_name.ilike.%${s}%,last_name.ilike.%${s}%`,
+      );
+    }
+
+    q = q.order('last_seen_at', { ascending: false });
+
+    const { data, error } = await q;
+    if (error) throw error;
+
+    const users = data ?? [];
+
+    const header = 'telegram_id,username,first_name,last_name,language_code,is_premium,is_channel_subscriber,access_level,first_seen_at,last_seen_at';
+    const rows = users.map((u: any) =>
+      [
+        u.telegram_id,
+        u.username ?? '',
+        u.first_name ?? '',
+        u.last_name ?? '',
+        u.language_code ?? '',
+        u.is_premium,
+        u.is_channel_subscriber,
+        u.access_level,
+        u.first_seen_at,
+        u.last_seen_at,
+      ].join(','),
+    );
+    const csv = [header, ...rows].join('\n');
+
+    reply.header('Content-Type', 'text/csv');
+    reply.header('Content-Disposition', 'attachment; filename="telegram-users.csv"');
+    return reply.send(csv);
+  });
+
+  app.get('/telegram-users/:telegramId', { onRequest: [app.authenticate] }, async (request, reply) => {
+    const { telegramId } = request.params as { telegramId: string };
+    const id = Number(telegramId);
+    if (Number.isNaN(id)) {
+      return reply.code(400).send({
+        success: false,
+        error: { code: 'VALIDATION_ERROR', message: 'Invalid telegram_id' },
+      });
+    }
+
+    const { data: user, error: userError } = await db
+      .from('telegram_users')
+      .select('*')
+      .eq('telegram_id', id)
+      .single();
+
+    if (userError || !user) {
+      return reply.code(404).send({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'Telegram user not found' },
+      });
+    }
+
+    const { data: activity, error: activityError } = await db
+      .from('user_activity')
+      .select('*')
+      .eq('telegram_id', id)
+      .order('created_at', { ascending: false })
+      .limit(200);
+
+    if (activityError) throw activityError;
+
+    const grouped = (activity ?? []).reduce(
+      (acc: Record<string, number>, a: any) => {
+        const page = a.page || 'unknown';
+        acc[page] = (acc[page] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+
+    return {
+      success: true,
+      data: {
+        user,
+        activity: activity ?? [],
+        stats: {
+          total_interactions: activity?.length ?? 0,
+          unique_pages: Object.keys(grouped).length,
+          page_breakdown: grouped,
         },
       },
     };

@@ -42,13 +42,18 @@ Set `MOCK_MODE=true` in `.env` to run without Supabase:
 ```
 /api/v1/
 ├── auth/       login, logout, refresh, 2fa/*
-├── telegram/   initData verification, subscription check (planned)
+├── auth/telegram   POST initData verify, upsert user, return JWT
+├── track       POST activity tracking (page views)
 ├── tours/      public GET, admin CRUD
 ├── services/   public GET, admin CRUD
 ├── blog/       public GET, admin CRUD
 ├── homepage/   collections management
 ├── upload/     image upload pipeline
-└── admin/      stats, telegram-users (planned)
+└── admin/
+    ├── stats               GET counts + recent items
+    ├── telegram-users      GET paginated list w/ filters
+    ├── telegram-users/download  GET CSV export
+    └── telegram-users/:id  GET user portrait + activity log
 ```
 
 ## Error Handling
@@ -71,7 +76,7 @@ Optional: MOCK_MODE (bool), TELEGRAM_BOT_TOKEN (string, default '').
 
 ## Changelog
 
-- **2026-05-26** — Phase 1 Telegram Mini App: `TELEGRAM_BOT_TOKEN` added to env schema (optional, default ''). `@grammyjs/types` devDep for Telegram API types. Migration file created for upcoming DB tables.
+- **2026-05-26** — Phase 2: Telegram API backend. `lib/telegram-api.ts`: `validateInitData` (HMAC-SHA256), `checkChannelSubscription` (getChatMember), `parseInitDataUser`. `routes/telegram/routes.ts`: `POST /auth/telegram` (verify → subscribe check → upsert user → JWT), `POST /auth/telegram/refresh` (re-check + refresh token), `POST /track` (page view logging). Admin routes extended: `GET /admin/telegram-users` (paginated, filterable), `GET /admin/telegram-users/download` (CSV), `GET /admin/telegram-users/:telegramId` (portrait + activity log + stats). FastifyJWT payload type extended with `telegram_id`, `is_subscribed`, `access_level`.
 
 - **2026-05-26** — Admin stats endpoint: `GET /admin/stats` (auth required) returns counts (tours/services/blog) + recent items (last 5 each). New route file: `routes/admin/routes.ts`. 10 unit tests for `translateLocalizedFields` (mock + edge cases).
 - **2026-05-26** — Production deployment on Railway (Docker, Node 20-alpine) with Supabase realtime. Fixed Zod `z.coerce.boolean()` trap: `parse("false")` returns true (non-empty string). Replaced with `z.string().transform(v => v === 'true')`. Fixed dotenv in production: guarded with `if (NODE_ENV !== 'production')`. Fixed Supabase WebSocket crash on Node 20: added `ws` package, passed as `realtime.transport`. verifyPassword now uses parsed `env.MOCK_MODE` (boolean) not raw `process.env.MOCK_MODE` (string).
