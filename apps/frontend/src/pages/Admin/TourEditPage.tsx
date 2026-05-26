@@ -99,7 +99,7 @@ export default function TourEditPage() {
       .map((t) => t.trim())
       .filter((t) => t.length > 0);
 
-    return {
+    const input = {
       title: form.title,
       description: form.description,
       country: form.country,
@@ -114,6 +114,8 @@ export default function TourEditPage() {
       sort_order: 0,
       is_published: false,
     };
+    console.debug('[TourEdit] buildInput:', { image_url: input.image_url, tags: input.tags });
+    return input;
   }, [form]);
 
   const handleSave = useCallback(
@@ -122,9 +124,13 @@ export default function TourEditPage() {
       if (!validate()) return;
       try {
         if (isEdit) {
-          await updateMutation.mutateAsync({ id: id!, ...buildInput() });
+          const payload = { id: id!, ...buildInput() };
+          console.debug('[TourEdit] handleSave PUT payload:', { image_url: payload.image_url });
+          const result = await updateMutation.mutateAsync(payload);
+          console.debug('[TourEdit] handleSave PUT response:', result);
         } else {
-          await createMutation.mutateAsync(buildInput());
+          const result = await createMutation.mutateAsync(buildInput());
+          console.debug('[TourEdit] handleSave POST response:', result);
         }
         navigate('/admin/tours');
       } catch (err: any) {
