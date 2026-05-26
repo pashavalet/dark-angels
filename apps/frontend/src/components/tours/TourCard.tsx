@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useLocalized } from '../../hooks/useLocalized.js';
 import { cn } from '../../lib/cn.js';
 import VipBadge from '../ui/VipBadge.js';
+import { useAuthStore } from '../../stores/auth.js';
 import type { Tour } from '@dark-angels/types';
 
 interface TourCardProps {
@@ -15,6 +16,8 @@ export default function TourCard({ tour, to, compact }: TourCardProps) {
   const city = useLocalized(tour.city);
   const country = useLocalized(tour.country);
   const description = useLocalized(tour.description);
+  const isSubscribed = useAuthStore((s) => s.isSubscribed);
+  const isLocked = tour.requires_subscription && !isSubscribed;
 
   const cardContent = (
     <>
@@ -31,6 +34,12 @@ export default function TourCard({ tour, to, compact }: TourCardProps) {
         {tour.is_vip && (
           <div className={cn('absolute', compact ? 'top-1 right-1' : 'top-2 right-2')}>
             <VipBadge level="vip" />
+          </div>
+        )}
+
+        {isLocked && (
+          <div className="absolute inset-0 flex items-center justify-center bg-bg-card/60 backdrop-blur-[2px]">
+            <span className="text-2xl opacity-80">🔒</span>
           </div>
         )}
       </div>

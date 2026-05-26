@@ -18,6 +18,7 @@ interface FormState {
   contacts: string;
   is_vip: boolean;
   hidden_vip: boolean;
+  requires_subscription: boolean;
   tags: string;
   image_url: string | null;
 }
@@ -34,6 +35,7 @@ const INITIAL_FORM: FormState = {
   contacts: '',
   is_vip: false,
   hidden_vip: false,
+  requires_subscription: false,
   tags: '',
   image_url: null,
 };
@@ -66,6 +68,7 @@ export default function TourEditPage() {
       contacts: d.contacts ?? '',
       is_vip: d.is_vip,
       hidden_vip: d.hidden_vip,
+      requires_subscription: d.requires_subscription ?? false,
       tags: (d.tags ?? []).join(', '),
       image_url: d.image_url ?? null,
     });
@@ -110,6 +113,7 @@ export default function TourEditPage() {
       contacts: form.contacts || null,
       is_vip: form.is_vip,
       hidden_vip: form.hidden_vip,
+      requires_subscription: form.requires_subscription,
       tags,
       image_url: form.image_url,
       sort_order: 0,
@@ -240,6 +244,16 @@ export default function TourEditPage() {
               className="h-5 w-5 rounded border-border bg-bg-elevated text-accent focus:ring-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             />
             <span className="text-sm font-medium text-text-secondary">{t('hidden_vip')}</span>
+          </label>
+
+          <label className="flex items-center gap-3 min-h-[44px] min-w-[44px] cursor-pointer">
+            <input
+              type="checkbox"
+              checked={form.requires_subscription}
+              onChange={(e) => updateField('requires_subscription', e.target.checked)}
+              className="h-5 w-5 rounded border-border bg-bg-elevated text-accent focus:ring-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+            />
+            <span className="text-sm font-medium text-text-secondary">{t('requires_subscription')}</span>
           </label>
         </div>
 

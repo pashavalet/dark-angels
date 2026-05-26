@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useLocalized } from '../../hooks/useLocalized.js';
 import { cn } from '../../lib/cn.js';
+import { useAuthStore } from '../../stores/auth.js';
 import VipBadge from '../ui/VipBadge.js';
 import type { BlogArticle } from '@dark-angels/types';
 
@@ -14,6 +15,8 @@ interface BlogCardProps {
 export default function BlogCard({ article, to, compact }: BlogCardProps) {
   const { t } = useTranslation('common');
   const title = useLocalized(article.title);
+  const isSubscribed = useAuthStore((s) => s.isSubscribed);
+  const isLocked = article.requires_subscription && !isSubscribed;
 
   const cardContent = (
     <>
@@ -26,6 +29,12 @@ export default function BlogCard({ article, to, compact }: BlogCardProps) {
           />
         ) : null}
         <div className="absolute inset-0 bg-gradient-to-t from-bg-card/80 to-transparent" />
+
+        {isLocked && (
+          <div className="absolute inset-0 flex items-center justify-center bg-bg-card/60 backdrop-blur-[2px]">
+            <span className="text-2xl opacity-80">🔒</span>
+          </div>
+        )}
 
         <div className={cn('absolute', compact ? 'top-1 left-1' : 'top-2 left-2')}>
           <VipBadge level={article.access_level} />

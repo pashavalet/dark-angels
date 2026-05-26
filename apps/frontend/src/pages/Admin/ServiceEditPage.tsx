@@ -13,6 +13,7 @@ interface FormState {
   description: LocalizedString;
   price: string;
   contacts: string;
+  requires_subscription: boolean;
   tags: string;
   image_url: string | null;
 }
@@ -24,6 +25,7 @@ const INITIAL_FORM: FormState = {
   description: { ...EMPTY_LOCALIZED },
   price: '',
   contacts: '',
+  requires_subscription: false,
   tags: '',
   image_url: null,
 };
@@ -51,6 +53,7 @@ export default function ServiceEditPage() {
       description: { ru: d.description.ru, en: d.description.en },
       price: d.price ?? '',
       contacts: d.contacts ?? '',
+      requires_subscription: d.requires_subscription ?? false,
       tags: (d.tags ?? []).join(', '),
       image_url: d.image_url ?? null,
     });
@@ -88,6 +91,7 @@ export default function ServiceEditPage() {
       description: form.description,
       price: form.price || null,
       contacts: form.contacts || null,
+      requires_subscription: form.requires_subscription,
       tags,
       image_url: form.image_url,
       sort_order: 0,
@@ -179,6 +183,16 @@ export default function ServiceEditPage() {
   onUploadingChange={setUploadingImage}
 />
         </div>
+
+        <label className="flex items-center gap-3 min-h-[44px] min-w-[44px] cursor-pointer">
+          <input
+            type="checkbox"
+            checked={form.requires_subscription}
+            onChange={(e) => updateField('requires_subscription', e.target.checked)}
+            className="h-5 w-5 rounded border-border bg-bg-elevated text-accent focus:ring-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          />
+          <span className="text-sm font-medium text-text-secondary">{t('requires_subscription')}</span>
+        </label>
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-text-secondary">{t('tags_label')}</label>

@@ -11,6 +11,7 @@ export const createTourSchema = z.object({
   contacts: z.string().optional(),
   is_vip: z.boolean().default(false),
   hidden_vip: z.boolean().default(false),
+  requires_subscription: z.boolean().default(false),
   tags: z.array(z.string()).default([]),
   image_url: z.string().url().optional().nullable(),
 });

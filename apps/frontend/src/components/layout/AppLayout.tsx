@@ -1,6 +1,9 @@
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, Outlet } from 'react-router-dom';
-import { useTelegram } from '../../lib/telegram.js';
+import { useTelegram, getTelegram } from '../../lib/telegram.js';
+import { useTelegramAuth } from '../../api/telegram.js';
+import { useAuthStore } from '../../stores/auth.js';
 import BottomNav from './BottomNav.js';
 import LanguageSwitcher from '../ui/LanguageSwitcher.js';
 
@@ -14,6 +17,8 @@ export default function AppLayout() {
   const location = useLocation();
   const { tg, expand, ready } = useTelegram();
   const showNav = !location.pathname.startsWith('/admin');
+  const telegramAuth = useTelegramAuth();
+  const setTelegramAuth = useAuthStore((s) => s.setTelegramAuth);
 
   useState(() => {
     ready();
@@ -23,6 +28,26 @@ export default function AppLayout() {
       document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color ?? '#f5f5f5');
     }
   });
+
+  useEffect(() => {
+    const t = getTelegram();
+    if (!t?.initDataUnsafe?.user) return;
+    if (telegramAuth.isPending) return;
+
+    const existingToken = localStorage.getItem('tg_access_token');
+    if (existingToken) return;
+
+    const w = t as any;
+    const rawInitData = w.initData ?? '';
+    if (!rawInitData) return;
+
+    telegramAuth.mutate(rawInitData, {
+      onSuccess: (data) => {
+        localStorage.setItem('tg_access_token', data.access_token);
+        setTelegramAuth(data.user.telegram_id, data.user.username, data.user.is_subscribed);
+      },
+    });
+  }, []);
 
   return (
     <div className="min-h-dvh bg-bg-primary">
@@ -45,5 +70,3 @@ export default function AppLayout() {
     </div>
   );
 }
-
-import { useState } from 'react';

@@ -6,6 +6,7 @@ export const createServiceSchema = z.object({
   description: localizedStringSchema,
   price: z.string().optional(),
   contacts: z.string().optional(),
+  requires_subscription: z.boolean().default(false),
   tags: z.array(z.string()).default([]),
   image_url: z.string().url().optional().nullable(),
 });

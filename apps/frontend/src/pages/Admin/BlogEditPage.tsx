@@ -15,6 +15,7 @@ interface FormState {
   tags: string;
   hidden_vip: boolean;
   access_level: AccessLevel;
+  requires_subscription: boolean;
 }
 
 const EMPTY_LOCALIZED: LocalizedString = { ru: '', en: '' };
@@ -26,6 +27,7 @@ const INITIAL_FORM: FormState = {
   tags: '',
   hidden_vip: false,
   access_level: 'public',
+  requires_subscription: false,
 };
 
 const ACCESS_LEVELS: AccessLevel[] = ['public', 'vip', 'premium', 'invite'];
@@ -55,6 +57,7 @@ export default function BlogEditPage() {
       tags: (d.tags ?? []).join(', '),
       hidden_vip: d.hidden_vip,
       access_level: d.access_level,
+      requires_subscription: d.requires_subscription ?? false,
     });
     setInitialized(true);
   }
@@ -92,6 +95,7 @@ export default function BlogEditPage() {
       tags,
       hidden_vip: form.hidden_vip,
       access_level: form.access_level,
+      requires_subscription: form.requires_subscription,
       sort_order: 0,
       is_published: false,
     };
@@ -179,6 +183,16 @@ export default function BlogEditPage() {
             className="h-5 w-5 rounded border-border bg-bg-elevated text-accent focus:ring-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
           />
           <span className="text-sm font-medium text-text-secondary">{t('hidden_vip')}</span>
+        </label>
+
+        <label className="flex items-center gap-3 min-h-[44px] min-w-[44px] cursor-pointer">
+          <input
+            type="checkbox"
+            checked={form.requires_subscription}
+            onChange={(e) => updateField('requires_subscription', e.target.checked)}
+            className="h-5 w-5 rounded border-border bg-bg-elevated text-accent focus:ring-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          />
+          <span className="text-sm font-medium text-text-secondary">{t('requires_subscription')}</span>
         </label>
 
         <div className="space-y-2">

@@ -58,5 +58,6 @@ Adding a language requires app deployment, not DB migration.
 
 ## Changelog
 
+- **2026-05-26** — Phase 3: `requires_subscription` field added to shared zod schemas (tour/service/blog create + update) and TypeScript types (Tour, Service, BlogArticle interfaces).
 - **2026-05-26** — Phase 1 Telegram Mini App: new `telegram_users` (analytics) and `user_activity` (portrait) tables. `requires_subscription` boolean column added to tours, services, blog_articles. Migration `20260526000001_telegram_integration.sql`.
 - **2026-05-26** — RLS migration: enabled on all 6 tables. Public SELECT policies created for tours/services/blog_articles/homepage_collections. admins and refresh_tokens blocked for anon (service key only).

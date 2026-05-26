@@ -6,10 +6,14 @@ interface AuthState {
   isAuthenticated: boolean;
   isPremium: boolean;
   accessLevel: string;
+  telegramUserId: number | null;
+  telegramUsername: string | null;
+  isSubscribed: boolean;
   login: (token: string, admin: { id: string; email: string }) => void;
   logout: () => void;
   setAccess: (level: string, premium: boolean) => void;
   updateEmail: (email: string) => void;
+  setTelegramAuth: (userId: number, username: string | null, subscribed: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -18,6 +22,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: !!localStorage.getItem('access_token'),
   isPremium: false,
   accessLevel: 'public',
+  telegramUserId: null,
+  telegramUsername: null,
+  isSubscribed: false,
 
   login: (token, admin) => {
     localStorage.setItem('access_token', token);
@@ -26,7 +33,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   logout: () => {
     localStorage.removeItem('access_token');
-    set({ accessToken: null, admin: null, isAuthenticated: false, isPremium: false, accessLevel: 'public' });
+    set({ accessToken: null, admin: null, isAuthenticated: false, isPremium: false, accessLevel: 'public', telegramUserId: null, telegramUsername: null, isSubscribed: false });
   },
 
   setAccess: (level, premium) => {
@@ -36,4 +43,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   updateEmail: (email) => set((state) => ({
     admin: state.admin ? { ...state.admin, email } : null,
   })),
+
+  setTelegramAuth: (userId, username, subscribed) => {
+    set({ telegramUserId: userId, telegramUsername: username, isSubscribed: subscribed, accessLevel: subscribed ? 'subscriber' : 'public' });
+  },
 }));

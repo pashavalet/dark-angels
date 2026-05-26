@@ -12,6 +12,7 @@ export interface Tour {
   contacts: string | null;
   is_vip: boolean;
   hidden_vip: boolean;
+  requires_subscription: boolean;
   tags: string[];
   image_url: string | null;
   sort_order: number;
@@ -26,6 +27,7 @@ export interface Service {
   description: LocalizedString;
   price: string | null;
   contacts: string | null;
+  requires_subscription: boolean;
   tags: string[];
   image_url: string | null;
   sort_order: number;
@@ -42,6 +44,7 @@ export interface BlogArticle {
   tags: string[];
   hidden_vip: boolean;
   access_level: AccessLevel;
+  requires_subscription: boolean;
   sort_order: number;
   is_published: boolean;
   created_at: string;

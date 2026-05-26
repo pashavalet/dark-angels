@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useLocalized } from '../../hooks/useLocalized.js';
 import { cn } from '../../lib/cn.js';
+import { useAuthStore } from '../../stores/auth.js';
 import type { Service } from '@dark-angels/types';
 
 interface ServiceCardProps {
@@ -12,6 +13,8 @@ interface ServiceCardProps {
 export default function ServiceCard({ service, to, compact }: ServiceCardProps) {
   const title = useLocalized(service.title);
   const description = useLocalized(service.description);
+  const isSubscribed = useAuthStore((s) => s.isSubscribed);
+  const isLocked = service.requires_subscription && !isSubscribed;
 
   const cardContent = (
     <>
@@ -24,6 +27,12 @@ export default function ServiceCard({ service, to, compact }: ServiceCardProps) 
           />
         ) : null}
         <div className="absolute inset-0 bg-gradient-to-t from-bg-card/80 to-transparent" />
+
+        {isLocked && (
+          <div className="absolute inset-0 flex items-center justify-center bg-bg-card/60 backdrop-blur-[2px]">
+            <span className="text-2xl opacity-80">🔒</span>
+          </div>
+        )}
       </div>
 
       <div className={cn('flex flex-col gap-1.5', compact ? 'p-3' : 'p-4')}>

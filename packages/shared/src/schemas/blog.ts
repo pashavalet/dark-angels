@@ -8,6 +8,7 @@ export const createBlogSchema = z.object({
   tags: z.array(z.string()).default([]),
   hidden_vip: z.boolean().default(false),
   access_level: z.enum(['public', 'vip', 'premium', 'invite']).default('public'),
+  requires_subscription: z.boolean().default(false),
 });
 
 export const updateBlogSchema = createBlogSchema.partial();

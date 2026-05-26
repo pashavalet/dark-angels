@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useService } from '../../api/services.js';
 import { useLocalized } from '../../hooks/useLocalized.js';
+import { useAuthStore } from '../../stores/auth.js';
 
 export default function ServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -12,6 +13,8 @@ export default function ServiceDetailPage() {
   const { data, isLoading, isError } = useService(id ?? '');
 
   const service = data?.data;
+  const isSubscribed = useAuthStore((s) => s.isSubscribed);
+  const isLocked = service?.requires_subscription && !isSubscribed;
   const title = useLocalized(service?.title);
   const description = useLocalized(service?.description);
 
@@ -44,6 +47,26 @@ export default function ServiceDetailPage() {
         >
           {t('back')}
         </button>
+      </div>
+    );
+  }
+
+  if (isLocked) {
+    return (
+      <div className="flex flex-col items-center justify-center px-4 py-20 text-center">
+        <span className="text-5xl mb-4">🔒</span>
+        <h2 className="font-serif text-xl font-bold text-accent mb-2">По подписке</h2>
+        <p className="text-text-secondary mb-6 max-w-xs">
+          Этот контент доступен только подписчикам канала @markmakemoney
+        </p>
+        <a
+          href="https://t.me/markmakemoney"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="min-h-[44px] inline-flex items-center rounded-lg bg-accent px-6 text-sm font-medium text-bg-primary hover:opacity-90 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+        >
+          Подписаться
+        </a>
       </div>
     );
   }
