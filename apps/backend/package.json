@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
+  "files": ["dist"],
   "scripts": {
     "predev": "pnpm --filter @dark-angels/shared build",
     "dev": "tsx watch src/server.ts",
