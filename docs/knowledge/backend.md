@@ -37,8 +37,27 @@ Set `MOCK_MODE=true` in `.env` to run without Supabase:
 - `dotenv` loads `.env` at startup; environment validated via Zod (PORT, HOST, JWT_SECRET=32, ...)
 - BCrypt rounds: 4 in mock mode, 12 in production
 
-## Route Structure (future)
+## Route Structure
 
+```
+/api/v1/
+├── auth/       login, logout, refresh, 2fa/*
+├── tours/      public GET, admin CRUD
+├── services/   public GET, admin CRUD
+├── blog/       public GET, admin CRUD
+├── homepage/   collections management
+├── upload/     image upload pipeline
+└── admin/      stats endpoint (GET /admin/stats)
+```
+```
+## Plugin Architecture
+
+```
+app.ts
+├── @fastify/cors       — CORS with credentials
+├── @fastify/rate-limit — configurable window/max
+├── supabase.ts         — SupabaseClient decorator (fastify-plugin)
+└── auth.ts             — JWT auth (authenticate decorator)
 ```
 /api/v1/
 ├── auth/       login, logout, refresh, 2fa/*
@@ -69,7 +88,7 @@ Optional: MOCK_MODE (bool), MOCK_BCRYPT_ROUNDS (int, default 4).
 
 ## Changelog
 
-- **2026-05-26** — Auto-translate: `lib/translate.ts` with `translateLocalizedFields()` using `@vitalets/google-translate-api`. Hooks into Tour (5 fields), Service (2), Blog (2) create/update — auto-fills kk/uz/ky/uk from ru input.
+- **2026-05-26** — Admin stats endpoint: `GET /admin/stats` (auth required) returns counts (tours/services/blog) + recent items (last 5 each). New route file: `routes/admin/routes.ts`. 10 unit tests for `translateLocalizedFields` (mock + edge cases).
 - **2026-05-26** — Production deployment on Railway (Docker, Node 20-alpine) with Supabase realtime. Fixed Zod `z.coerce.boolean()` trap: `parse("false")` returns true (non-empty string). Replaced with `z.string().transform(v => v === 'true')`. Fixed dotenv in production: guarded with `if (NODE_ENV !== 'production')`. Fixed Supabase WebSocket crash on Node 20: added `ws` package, passed as `realtime.transport`. verifyPassword now uses parsed `env.MOCK_MODE` (boolean) not raw `process.env.MOCK_MODE` (string).
 - **2026-05-23** — Functional E2E tests: API login/tokens, all public routes return 200 with data from in-memory mock DB
 - **2026-05-23** — Mock mode: in-memory DB + chainable mock Supabase client + dotenv + mock-data.ts seed file (3 entities each + collections)

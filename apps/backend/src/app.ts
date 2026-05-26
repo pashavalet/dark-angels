@@ -12,6 +12,7 @@ import serviceRoutes from './routes/services/routes.js';
 import blogRoutes from './routes/blog/routes.js';
 import homepageRoutes from './routes/homepage/routes.js';
 import uploadRoutes from './routes/upload/routes.js';
+import adminRoutes from './routes/admin/routes.js';
 
 const env = loadEnv();
 
@@ -49,6 +50,7 @@ await app.register(serviceRoutes, { prefix: '/api/v1/services' });
 await app.register(blogRoutes, { prefix: '/api/v1/blog' });
 await app.register(homepageRoutes, { prefix: '/api/v1/homepage' });
 await app.register(uploadRoutes, { prefix: '/api/v1/upload' });
+await app.register(adminRoutes, { prefix: '/api/v1/admin' });
 
 app.get('/health', async () => {
   const { error } = await app.supabase.from('tours').select('id').limit(1);

@@ -1,12 +1,21 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { logout as logoutApi } from '../../api/auth.js';
+import { useAdminStats } from '../../api/admin.js';
 import { useAuthStore } from '../../stores/auth.js';
+import { useLocaleStore } from '../../stores/locale.js';
+
+function getLocTitle(obj: Record<string, string> | undefined, locale: string) {
+  if (!obj) return '';
+  return obj[locale] ?? obj['ru'] ?? obj['en'] ?? Object.values(obj)[0] ?? '';
+}
 
 export default function AdminDashboard() {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
   const auth = useAuthStore();
+  const { locale } = useLocaleStore();
+  const { data: stats, isLoading } = useAdminStats();
 
   async function handleLogout() {
     try {
@@ -18,7 +27,13 @@ export default function AdminDashboard() {
     navigate('/admin/login');
   }
 
-  const cards = [
+  const statCards = [
+    { label: t('tours'), count: stats?.counts.tours ?? 0, path: '/admin/tours' },
+    { label: t('services'), count: stats?.counts.services ?? 0, path: '/admin/services' },
+    { label: t('blog'), count: stats?.counts.blog ?? 0, path: '/admin/blog' },
+  ];
+
+  const navCards = [
     { label: t('tours'), path: '/admin/tours' },
     { label: t('services'), path: '/admin/services' },
     { label: t('blog'), path: '/admin/blog' },
@@ -40,18 +55,40 @@ export default function AdminDashboard() {
         </button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((item) => (
+      <div className="grid gap-4 sm:grid-cols-3">
+        {statCards.map((item) => (
           <button
             key={item.label}
             onClick={() => navigate(item.path)}
-            className="rounded-xl border border-border bg-bg-card p-6 text-center font-medium text-text-secondary transition-colors hover:border-accent hover:text-text-primary focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
-            style={{ minHeight: '64px' }}
+            className="rounded-xl border border-border bg-bg-card p-6 text-left transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
           >
-            {item.label}{item.path === '/admin/settings' ? '' : item.path === '/admin' ? ` — ${t('coming_soon')}` : ''}
+            <div className="text-3xl font-bold text-accent">
+              {isLoading ? '...' : item.count}
+            </div>
+            <div className="mt-1 text-sm text-text-secondary">{item.label}</div>
           </button>
         ))}
       </div>
+
+      {stats?.recent && (
+        <>
+          <h2 className="mt-4 font-serif text-xl font-bold text-text-primary">{t('new_tours')}</h2>
+          <div className="space-y-2">
+            {stats.recent.tours.slice(0, 3).map((tour) => (
+              <button
+                key={tour.id}
+                onClick={() => navigate(`/admin/tours/${tour.id}`)}
+                className="flex w-full items-center gap-3 rounded-lg border border-border bg-bg-card p-3 text-left text-sm transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+              >
+                <span className="flex-1 truncate text-text-primary">{getLocTitle(tour.title, locale)}</span>
+                <span className="text-xs text-text-secondary">
+                  {new Date(tour.created_at).toLocaleDateString()}
+                </span>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

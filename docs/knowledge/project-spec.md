@@ -20,7 +20,7 @@ Telegram Mini App CMS platform for escort agency with multilingual content manag
 | Concern | Key Decision |
 |---|---|
 | Package manager | pnpm 9+ with isolated node linker |
-| Language support | JSONB fields `{ru, en}` + i18next |
+| Language support | JSONB fields `{ru,en,kk,uz,ky,uk}` + i18next |
 | API style | REST /api/v1 with typed Zod schemas |
 | Auth | JWT (15m) + refresh tokens (7d) + bcrypt (cost 12) |
 | Admin security | TOTP 2FA, account lockout, rate limiting |

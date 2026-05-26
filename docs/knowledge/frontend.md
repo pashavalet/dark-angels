@@ -14,7 +14,7 @@ React SPA patterns and Telegram Mini App integration for the Dark Angels web cli
 | Styling | TailwindCSS v4 |
 | Routing | React Router v7 |
 | State (client) | Zustand 5 |
-| State (server) | React Query (future) |
+| State (server) | React Query (TanStack Query v5) |
 | SDK | `window.Telegram.WebApp` (raw API) |
 
 ## Dark Theme (Tailwind v4)
@@ -39,26 +39,29 @@ Luxury dark aesthetic: gold accent, deep charcoal backgrounds, muted borders.
 - `useTelegram()` — React hook: `{ tg, user, ready, expand, close }`
 - Falls back gracefully when app is opened outside Telegram
 
-## Component Structure (future)
+## Component Structure
 
 ```
 src/
 ├── components/
-│   ├── layout/        # BottomNav, PageTransition
-│   ├── ui/            # shadcn/ui components
-│   ├── tours/         # TourCard, TourList
+│   ├── layout/        # AppLayout, BottomNav
+│   ├── ui/            # ImageUploader, LocalizedField, VipBadge, LanguageSwitcher
+│   ├── tours/         # TourCard
 │   ├── services/      # ServiceCard
 │   ├── blog/          # BlogCard, MarkdownRenderer
-│   └── admin/         # CRUD panels, DragDrop
-├── hooks/             # useTelegram, useLocale
-├── stores/            # authStore, localeStore, uiStore
-├── i18n/              # i18next config + ru/en locales
+│   ├── auth/          # ProtectedRoute
+│   ├── admin/         # AdminFormLayout, SortableList
+│   └── homepage/      # HorizontalCarousel
+├── hooks/             # useLocalized
+├── api/               # tours, services, blogs, homepage, upload, auth, admin (React Query hooks)
+├── stores/            # authStore, localeStore
+├── i18n/              # i18next config + 6 locales (ru/en/kk/uz/ky/uk)
 └── lib/               # cn(), telegram.ts
 ```
 
-## Navigation (future)
+## Navigation
 
-Bottom tab bar with 5 tabs: Home → Tours → Blog → Services → Contacts.
+Bottom tab bar with 5 tabs: Home → Tours → Services → Blog → Contacts.
 
 ---
 
@@ -66,7 +69,7 @@ Bottom tab bar with 5 tabs: Home → Tours → Blog → Services → Contacts.
 
 - **2026-05-26** — i18n expanded to 6 languages: kk/uz/ky/uk. All 146 UI keys translated via Google Translate (`scripts/rebuild_i18n.py`). Only `loading: '...'` kept ru (dots confuse translator).
 - **2026-05-26** — HomePage rewired to use list APIs (`useTours/Services/Blogs`) instead of curated `homepage_collections`. Cards now identical to tab pages. Added LanguageSwitcher component (RU/EN toggle) syncing both i18next and Zustand localeStore. Section headers changed: «Избранные» → «Новые».
-- **2026-05-26** — Production deployment on Cloudflare Pages with real Supabase backend. Converted TourCard/ServiceCard/BlogCard from `<div onClick={navigate}>` to `<Link to={...}>` for native navigation. Fixed React hooks error #310 in all 3 detail pages. Homepage VIP gating removed — all content public. Production E2E: 54/54 tests passing.
+- **2026-05-26** — DashboardPage: real stats widgets (counts + recent items). Fetches from new `GET /admin/stats` endpoint via React Query. Nav cards kept alongside metrics. API hook: `useAdminStats()` in `api/admin.ts`.
 - **2026-05-23** — Admin CRUD: 6 pages (Tour/Service/Blog edit forms + admin list pages), AdminFormLayout, LocalizedField (ru/en tabbed JSONB input), Dashboard un-stubbed (5/6 cards real), 40 i18n keys
 - **2026-05-23** — Functional E2E tests: 43/43 passing (Playwright Python), homepage carousels, CRUD detail pages, admin login+2FA+DnD+CRUD lists
 - **2026-05-23** — WCAG 2.2 AA: focus-visible on 30+ elements, contrast fix (450/700 vs 500/700), reduced-motion skip/whitelist, Space key actionable cards

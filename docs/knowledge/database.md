@@ -41,12 +41,13 @@ Adding a language requires app deployment, not DB migration.
 ## RLS Strategy
 
 - Backend uses Supabase service key → bypasses RLS
-- Public/anonymous access requires RLS read policies (to be added when client-side Supabase is needed)
+- RLS enabled on all 6 tables (admins, refresh_tokens, tours, services, blog_articles, homepage_collections)
+- 4 public SELECT policies: tours (is_published + !hidden_vip), services (is_published), blog_articles (is_published + !hidden_vip), homepage_collections (allow all)
+- admins and refresh_tokens have RLS enabled with no policies → blocked for anon, accessible via service key only
 - Admin mutations go through backend API
 
 ---
 
 ## Changelog
 
-- **2026-05-21** — Initial migration: 6 tables, indexes, `updated_at` trigger function
-- **2026-05-21** — Seed data: test admin (bcrypt), sample content in ru/en
+- **2026-05-26** — RLS migration: enabled on all 6 tables. Public SELECT policies created for tours/services/blog_articles/homepage_collections. admins and refresh_tokens blocked for anon (service key only).
