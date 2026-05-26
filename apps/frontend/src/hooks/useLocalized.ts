@@ -4,5 +4,5 @@ import { useLocaleStore } from '../stores/locale.js';
 export function useLocalized(obj: LocalizedString | undefined): string {
   const { locale } = useLocaleStore();
   if (!obj) return '';
-  return obj[locale] ?? obj['en'] ?? Object.values(obj)[0] ?? '';
+  return obj[locale] ?? obj['ru'] ?? obj['en'] ?? Object.values(obj)[0] ?? '';
 }

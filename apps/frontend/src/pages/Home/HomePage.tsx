@@ -6,7 +6,6 @@ import TourCard from '../../components/tours/TourCard.js';
 import ServiceCard from '../../components/services/ServiceCard.js';
 import BlogCard from '../../components/blog/BlogCard.js';
 import HorizontalCarousel from '../../components/homepage/HorizontalCarousel.js';
-import LanguageSwitcher from '../../components/ui/LanguageSwitcher.js';
 
 const HOMEPAGE_LIMIT = 6;
 
@@ -29,7 +28,6 @@ export default function HomePage() {
         <p className="text-text-secondary text-lg max-w-md">
           {t('tagline')}
         </p>
-        <LanguageSwitcher />
       </section>
 
       <HorizontalCarousel

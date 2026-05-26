@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type SupportedLocale = 'ru' | 'en';
+export type SupportedLocale = 'ru' | 'en' | 'kk' | 'uz' | 'ky' | 'uk';
 
 interface LocaleState {
   locale: SupportedLocale;
@@ -8,7 +8,7 @@ interface LocaleState {
 }
 
 export const useLocaleStore = create<LocaleState>((set) => ({
-  locale: (localStorage.getItem('app_locale') as SupportedLocale) ?? 'en',
+  locale: (localStorage.getItem('app_locale') as SupportedLocale) ?? 'ru',
   setLocale: (locale) => {
     localStorage.setItem('app_locale', locale);
     set({ locale });

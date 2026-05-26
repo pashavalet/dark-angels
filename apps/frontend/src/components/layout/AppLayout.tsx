@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, Outlet } from 'react-router-dom';
 import { useTelegram } from '../../lib/telegram.js';
 import BottomNav from './BottomNav.js';
+import LanguageSwitcher from '../ui/LanguageSwitcher.js';
 
 const pageVariants = {
   initial: { opacity: 0, y: 8 },
@@ -40,6 +41,7 @@ export default function AppLayout() {
         </AnimatePresence>
       </div>
       {showNav && <BottomNav />}
+      {showNav && <LanguageSwitcher />}
     </div>
   );
 }

@@ -1,12 +1,15 @@
-export type SupportedLocale = 'ru' | 'en';
+export type SupportedLocale = 'ru' | 'en' | 'kk' | 'uz' | 'ky' | 'uk';
 
 export interface LocalizedString {
   ru: string;
   en: string;
-  [key: string]: string;
+  kk?: string;
+  uz?: string;
+  ky?: string;
+  uk?: string;
 }
 
 export function getLocalizedValue(obj: LocalizedString, locale: SupportedLocale): string {
   if (!obj) return '';
-  return obj[locale] ?? obj['en'] ?? Object.values(obj)[0] ?? '';
+  return obj[locale] ?? obj['ru'] ?? obj['en'] ?? Object.values(obj)[0] ?? '';
 }
