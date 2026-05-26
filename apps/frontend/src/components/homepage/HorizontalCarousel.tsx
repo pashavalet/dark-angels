@@ -26,8 +26,8 @@ const itemVariants = {
 
 function SkeletonCard({ compact }: { compact?: boolean }) {
   return (
-    <div className={cn('shrink-0 rounded-xl border border-border bg-bg-card overflow-hidden animate-pulse', compact ? 'w-[180px] sm:w-[200px]' : 'w-[280px] sm:w-[320px]')}>
-      <div className={cn('bg-bg-elevated', compact ? 'h-28' : 'aspect-video')} />
+    <div className={cn('shrink-0 rounded-xl border border-border bg-bg-card overflow-hidden animate-pulse', compact ? 'w-[220px] sm:w-[240px]' : 'w-[280px] sm:w-[320px]')}>
+      <div className={cn('bg-bg-elevated', compact ? 'aspect-[4/3]' : 'aspect-video')} />
       <div className={cn('space-y-2', compact ? 'p-3' : 'p-4')}>
         <div className={cn('bg-bg-elevated rounded', compact ? 'h-3 w-3/4' : 'h-5 w-3/4')} />
         <div className={cn('bg-bg-elevated rounded', compact ? 'h-2 w-1/2' : 'h-4 w-1/2')} />
@@ -49,11 +49,11 @@ export default function HorizontalCarousel({
 
   function scroll(dir: 'left' | 'right') {
     if (!scrollRef.current) return;
-    const amount = compact ? 200 : 300;
+    const amount = compact ? 240 : 300;
     scrollRef.current.scrollBy({ left: dir === 'left' ? -amount : amount, behavior: 'smooth' });
   }
 
-  const cardWidth = compact ? 'w-[180px] sm:w-[200px]' : 'w-[280px] sm:w-[320px]';
+  const cardWidth = compact ? 'w-[220px] sm:w-[240px]' : 'w-[280px] sm:w-[320px]';
 
   return (
     <section className="mb-8">

@@ -11,10 +11,11 @@ interface ServiceCardProps {
 
 export default function ServiceCard({ service, to, compact }: ServiceCardProps) {
   const title = useLocalized(service.title);
+  const description = useLocalized(service.description);
 
   const cardContent = (
     <>
-      <div className={cn('relative overflow-hidden bg-bg-elevated', compact ? 'h-28' : 'aspect-video')}>
+      <div className={cn('relative overflow-hidden bg-bg-elevated', compact ? 'aspect-[4/3]' : 'aspect-video')}>
         {service.image_url ? (
           <img
             src={service.image_url}
@@ -25,32 +26,42 @@ export default function ServiceCard({ service, to, compact }: ServiceCardProps) 
         <div className="absolute inset-0 bg-gradient-to-t from-bg-card/80 to-transparent" />
       </div>
 
-      <div className={cn(compact ? 'p-3' : 'p-4')}>
-        <h3 className={cn('text-text-primary leading-tight', compact ? 'text-xs font-medium line-clamp-1' : 'font-semibold line-clamp-2')}>
+      <div className={cn('flex flex-col gap-1.5', compact ? 'p-3' : 'p-4')}>
+        <h3 className={cn('text-text-primary leading-tight', compact ? 'text-sm font-medium line-clamp-1' : 'font-semibold line-clamp-2')}>
           {title}
         </h3>
 
-        {service.description && !compact && (
-          <p className="mt-1.5 text-sm text-text-secondary line-clamp-3">
-            {useLocalized(service.description)}
+        {description && (
+          <p className={cn('text-text-secondary', compact ? 'text-xs line-clamp-2' : 'text-sm line-clamp-3')}>
+            {description}
           </p>
         )}
 
-        {service.tags.length > 0 && !compact && (
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {service.tags.map((tag) => (
+        {service.tags.length > 0 && (
+          <div className={cn('flex flex-wrap gap-1', compact ? 'mt-0.5' : 'mt-3')}>
+            {service.tags.slice(0, compact ? 2 : undefined).map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-border px-2 py-0.5 text-xs text-text-secondary"
+                className={cn(
+                  'rounded-full border border-border text-text-secondary',
+                  compact ? 'px-1.5 py-0.5 text-[10px]' : 'px-2 py-0.5 text-xs',
+                )}
               >
                 {tag}
               </span>
             ))}
+            {compact && service.tags.length > 2 && (
+              <span className="px-1.5 py-0.5 text-[10px] rounded-full border border-border text-text-secondary">
+                +{service.tags.length - 2}
+              </span>
+            )}
           </div>
         )}
 
-        {service.price && !compact && (
-          <p className="mt-3 text-sm font-semibold text-accent">{service.price}</p>
+        {service.price && (
+          <p className={cn('font-semibold text-accent', compact ? 'text-xs' : 'mt-3 text-sm')}>
+            {service.price}
+          </p>
         )}
       </div>
     </>
