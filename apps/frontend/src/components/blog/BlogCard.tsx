@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocalized } from '../../hooks/useLocalized.js';
 import { cn } from '../../lib/cn.js';
 import { useAuthStore } from '../../stores/auth.js';
+import SubscriptionModal from '../ui/SubscriptionModal.js';
 import VipBadge from '../ui/VipBadge.js';
 import type { BlogArticle } from '@dark-angels/types';
 
@@ -76,6 +77,24 @@ export default function BlogCard({ article, to, compact }: BlogCardProps) {
       </div>
     </>
   );
+
+  if (to && isLocked) {
+    return (
+      <SubscriptionModal isLocked>
+        <div
+          className={cn(
+            'group rounded-xl border border-border bg-bg-card overflow-hidden',
+            'hover:border-accent/30 transition-all duration-200',
+            'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+            'block cursor-pointer',
+            compact ? 'active:scale-[0.97]' : 'active:scale-[0.98]',
+          )}
+        >
+          {cardContent}
+        </div>
+      </SubscriptionModal>
+    );
+  }
 
   if (to) {
     return (

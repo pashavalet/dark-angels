@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useTours } from '../../api/tours.js';
 import { useServices } from '../../api/services.js';
 import { useBlogs } from '../../api/blogs.js';
-import { useAuthStore } from '../../stores/auth.js';
 import TourCard from '../../components/tours/TourCard.js';
 import ServiceCard from '../../components/services/ServiceCard.js';
 import BlogCard from '../../components/blog/BlogCard.js';
@@ -28,7 +27,6 @@ function sortFeatured<T extends { is_vip?: boolean; access_level?: string; creat
 
 export default function HomePage() {
   const { t } = useTranslation('common');
-  const isSubscribed = useAuthStore((s) => s.isSubscribed);
   const { data: toursData, isLoading: toursLoading } = useTours({ limit: HOMEPAGE_FETCH_LIMIT });
   const { data: servicesData, isLoading: servicesLoading } = useServices({ limit: HOMEPAGE_FETCH_LIMIT });
   const { data: blogsData, isLoading: blogsLoading } = useBlogs({ limit: HOMEPAGE_FETCH_LIMIT });
@@ -37,9 +35,9 @@ export default function HomePage() {
   const allServices = servicesData?.data ?? [];
   const allBlogs = blogsData?.data ?? [];
 
-  const tours = useMemo(() => sortFeatured(allTours.filter(t => (t.is_vip || isRecent(t.created_at)) && (!t.requires_subscription || isSubscribed))), [allTours, isSubscribed]);
-  const services = useMemo(() => sortFeatured(allServices.filter(s => isRecent(s.created_at) && (!s.requires_subscription || isSubscribed))), [allServices, isSubscribed]);
-  const blog = useMemo(() => sortFeatured(allBlogs.filter(b => (b.access_level === 'vip' || isRecent(b.created_at)) && (!b.requires_subscription || isSubscribed))), [allBlogs, isSubscribed]);
+  const tours = useMemo(() => sortFeatured(allTours.filter(t => t.is_vip || isRecent(t.created_at))), [allTours]);
+  const services = useMemo(() => sortFeatured(allServices.filter(s => isRecent(s.created_at))), [allServices]);
+  const blog = useMemo(() => sortFeatured(allBlogs.filter(b => b.access_level === 'vip' || isRecent(b.created_at))), [allBlogs]);
 
   return (
     <div className="flex flex-col gap-2 pb-4">

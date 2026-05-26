@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useLocalized } from '../../hooks/useLocalized.js';
 import { cn } from '../../lib/cn.js';
 import { useAuthStore } from '../../stores/auth.js';
+import SubscriptionModal from '../ui/SubscriptionModal.js';
 import type { Service } from '@dark-angels/types';
 
 interface ServiceCardProps {
@@ -75,6 +76,24 @@ export default function ServiceCard({ service, to, compact }: ServiceCardProps) 
       </div>
     </>
   );
+
+  if (to && isLocked) {
+    return (
+      <SubscriptionModal isLocked>
+        <div
+          className={cn(
+            'group rounded-xl border border-border bg-bg-card overflow-hidden',
+            'hover:border-accent/30 transition-all duration-200',
+            'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+            'block cursor-pointer',
+            compact ? 'active:scale-[0.97]' : 'active:scale-[0.98]',
+          )}
+        >
+          {cardContent}
+        </div>
+      </SubscriptionModal>
+    );
+  }
 
   if (to) {
     return (

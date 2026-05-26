@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useTours } from '../../api/tours.js';
-import { useAuthStore } from '../../stores/auth.js';
 import TourCard from '../../components/tours/TourCard.js';
 
 const itemVariants = {
@@ -12,7 +11,6 @@ const itemVariants = {
 
 export default function ToursPage() {
   const { t } = useTranslation('common');
-  const isSubscribed = useAuthStore((s) => s.isSubscribed);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -33,7 +31,7 @@ export default function ToursPage() {
     return Array.from(tags).sort();
   }, [data?.data]);
 
-  const tours = useMemo(() => (data?.data ?? []).filter(t => !t.requires_subscription || isSubscribed), [data?.data, isSubscribed]);
+  const tours = data?.data ?? [];
   const meta = data?.meta;
 
   return (

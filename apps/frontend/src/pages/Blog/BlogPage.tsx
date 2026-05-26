@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useBlogs } from '../../api/blogs.js';
-import { useAuthStore } from '../../stores/auth.js';
 import BlogCard from '../../components/blog/BlogCard.js';
 import { cn } from '../../lib/cn.js';
 
@@ -13,7 +12,6 @@ const itemVariants = {
 
 export default function BlogPage() {
   const { t } = useTranslation('common');
-  const isSubscribed = useAuthStore((s) => s.isSubscribed);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
@@ -34,7 +32,7 @@ export default function BlogPage() {
     return Array.from(tags).sort();
   }, [data?.data]);
 
-  const articles = useMemo(() => (data?.data ?? []).filter(a => !a.requires_subscription || isSubscribed), [data?.data, isSubscribed]);
+  const articles = data?.data ?? [];
   const meta = data?.meta;
 
   return (
