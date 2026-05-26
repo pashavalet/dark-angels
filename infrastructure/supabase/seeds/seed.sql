@@ -3,7 +3,7 @@
 -- To generate: bcrypt.hashSync('admin123456!', 12)
 
 INSERT INTO admins (email, password_hash) VALUES
-('admin@darkangels.local', '$2b$12$LJ3m4ys3GZfnYMz8kVsKaODqF8GqL0vJZ/EhK1pXjG0cRfHbXjyOm');
+('admin@darkangels.local', '$2b$12$QJFxJmHbuxidy4.R9qn22uaVYkGvrH9013tZ4kPezipuLd9AcEzj2');
 
 -- Sample tours
 INSERT INTO tours (title, description, country, city, agency, earnings, contacts, is_vip, tags, sort_order) VALUES
