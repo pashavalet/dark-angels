@@ -107,6 +107,7 @@ Cache invalidation: `ARG CACHEBUST` in Dockerfile forces rebuild of subsequent l
 
 ## Changelog
 
+- **2026-05-27** — `GET /admin/stats` now includes interaction analytics from `user_activity`: total interactions, unique users (all/7d/30d), top pages, item type breakdown, and daily interactions (last 14 days).
 - **2026-05-27** — Hardened `/api/v1/admin/*`: all admin routes now require both JWT auth and admin role check (`email` claim from classic admin token or `is_admin: true` from Telegram token).
 - **2026-05-27** — Docker fix: `"files": ["dist"]` in package.json ensures pnpm deploy includes compiled JS despite root `.gitignore` excluding `dist/`. `ARG CACHEBUST` for forced cache invalidation on Railway.
 - **2026-05-27** — Bot polling: switched from webhook (404 issues on Railway Docker) to `getUpdates` polling. Handles `/start`/`/admin`/`/link`. Bot init (`setChatMenuButton` + `setMyCommands`) runs on startup. No routes, no webhook URL needed.

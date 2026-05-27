@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, Outlet } from 'react-router-dom';
 import { useTelegram, getTelegram } from '../../lib/telegram.js';
-import { useTelegramAuth } from '../../api/telegram.js';
+import { useTelegramAuth, useTrackPage } from '../../api/telegram.js';
 import { useAuthStore } from '../../stores/auth.js';
 import { useLocaleStore } from '../../stores/locale.js';
 import type { SupportedLocale } from '../../stores/locale.js';
@@ -21,6 +21,7 @@ export default function AppLayout() {
   const { tg, expand, ready } = useTelegram();
   const showNav = !location.pathname.startsWith('/admin');
   const telegramAuth = useTelegramAuth();
+  const trackPage = useTrackPage();
   const setTelegramSession = useAuthStore((s) => s.setTelegramSession);
   const { locale, setLocale } = useLocaleStore();
 
@@ -91,6 +92,30 @@ export default function AppLayout() {
       },
     });
   }, []);
+
+  useEffect(() => {
+    const t = getTelegram();
+    if (!t?.initData) return;
+
+    const path = location.pathname;
+    const segments = path.split('/').filter(Boolean);
+    const section = segments[0] ?? 'home';
+    const maybeId = segments[1];
+    const uuidLike = maybeId && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(maybeId)
+      ? maybeId
+      : undefined;
+
+    const itemType = section === 'tours' || section === 'services' || section === 'blog'
+      ? section.slice(0, -1)
+      : undefined;
+
+    trackPage.mutate({
+      initData: t.initData,
+      page: path,
+      item_type: itemType,
+      item_id: uuidLike,
+    });
+  }, [location.pathname]);
 
   return (
     <div className="min-h-dvh bg-bg-primary">

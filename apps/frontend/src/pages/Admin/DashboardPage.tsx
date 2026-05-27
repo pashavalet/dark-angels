@@ -34,6 +34,13 @@ export default function AdminDashboard() {
     { label: 'Telegram', count: stats?.counts.telegram_users ?? 0, path: '/admin/telegram-users' },
   ];
 
+  const analyticsCards = [
+    { label: 'Interactions', value: stats?.analytics.total_interactions ?? 0 },
+    { label: 'Users (all)', value: stats?.analytics.unique_users ?? 0 },
+    { label: 'Users (7d)', value: stats?.analytics.unique_users_7d ?? 0 },
+    { label: 'Users (30d)', value: stats?.analytics.unique_users_30d ?? 0 },
+  ];
+
   const navCards = [
     { label: t('settings'), path: '/admin/settings' },
     { label: t('two_factor_auth'), path: '/admin/two-factor' },
@@ -77,6 +84,15 @@ export default function AdminDashboard() {
         ))}
       </div>
 
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {analyticsCards.map((item) => (
+          <div key={item.label} className="rounded-xl border border-border bg-bg-card p-4">
+            <div className="text-2xl font-bold text-accent">{isLoading ? '...' : item.value}</div>
+            <div className="mt-1 text-xs text-text-secondary">{item.label}</div>
+          </div>
+        ))}
+      </div>
+
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {navCards.map((item) => (
           <button
@@ -87,6 +103,22 @@ export default function AdminDashboard() {
             {item.label}
           </button>
         ))}
+      </div>
+
+      <div className="rounded-xl border border-border bg-bg-card p-4">
+        <h2 className="font-serif text-lg font-bold text-text-primary">Top Pages</h2>
+        <div className="mt-3 space-y-2">
+          {(stats?.analytics.top_pages ?? []).length === 0 ? (
+            <p className="text-sm text-text-secondary">No interaction data yet</p>
+          ) : (
+            stats?.analytics.top_pages.map((row) => (
+              <div key={row.page} className="flex items-center justify-between text-sm">
+                <span className="truncate text-text-primary">{row.page}</span>
+                <span className="text-text-secondary">{row.count}</span>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       {stats?.recent && (

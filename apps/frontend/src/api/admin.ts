@@ -3,6 +3,15 @@ import { apiClient } from './client.js';
 
 interface StatsData {
   counts: { tours: number; services: number; blog: number; telegram_users: number };
+  analytics: {
+    total_interactions: number;
+    unique_users: number;
+    unique_users_7d: number;
+    unique_users_30d: number;
+    top_pages: { page: string; count: number }[];
+    type_breakdown: Record<string, number>;
+    daily_interactions: { day: string; count: number }[];
+  };
   recent: {
     tours: { id: string; title: Record<string, string>; created_at: string }[];
     services: { id: string; title: Record<string, string>; created_at: string }[];

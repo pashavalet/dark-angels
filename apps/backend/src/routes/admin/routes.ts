@@ -44,10 +44,62 @@ export default async function adminRoutes(app: FastifyInstance) {
       db.from('blog_articles').select('id, title, created_at').order('created_at', { ascending: false }).limit(5),
     ]);
 
+    const since7d = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    const since30d = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+    const [activityAll, activity7d, activity30d] = await Promise.all([
+      db.from('user_activity').select('telegram_id, page, item_type, created_at').order('created_at', { ascending: false }).limit(5000),
+      db.from('user_activity').select('telegram_id, created_at').gte('created_at', since7d),
+      db.from('user_activity').select('telegram_id, created_at').gte('created_at', since30d),
+    ]);
+
+    const interactions = activityAll.data ?? [];
+
+    const pageBreakdown = interactions.reduce((acc: Record<string, number>, row: any) => {
+      const key = row.page ?? 'unknown';
+      acc[key] = (acc[key] ?? 0) + 1;
+      return acc;
+    }, {});
+
+    const typeBreakdown = interactions.reduce((acc: Record<string, number>, row: any) => {
+      const key = row.item_type ?? 'page';
+      acc[key] = (acc[key] ?? 0) + 1;
+      return acc;
+    }, {});
+
+    const dailyMap = interactions.reduce((acc: Record<string, number>, row: any) => {
+      const day = String(row.created_at).slice(0, 10);
+      acc[day] = (acc[day] ?? 0) + 1;
+      return acc;
+    }, {});
+
+    const daily = Object.entries(dailyMap)
+      .map(([day, count]) => ({ day, count }))
+      .sort((a, b) => a.day.localeCompare(b.day))
+      .slice(-14);
+
+    const uniqueUsers = new Set(interactions.map((a: any) => a.telegram_id)).size;
+    const uniqueUsers7d = new Set((activity7d.data ?? []).map((a: any) => a.telegram_id)).size;
+    const uniqueUsers30d = new Set((activity30d.data ?? []).map((a: any) => a.telegram_id)).size;
+
+    const topPages = Object.entries(pageBreakdown)
+      .map(([page, count]) => ({ page, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 8);
+
     return {
       success: true,
       data: {
         counts,
+        analytics: {
+          total_interactions: interactions.length,
+          unique_users: uniqueUsers,
+          unique_users_7d: uniqueUsers7d,
+          unique_users_30d: uniqueUsers30d,
+          top_pages: topPages,
+          type_breakdown: typeBreakdown,
+          daily_interactions: daily,
+        },
         recent: {
           tours: recentTours.data ?? [],
           services: recentServices.data ?? [],
