@@ -4,6 +4,7 @@ import { cn } from '../../lib/cn.js';
 import VipBadge from '../ui/VipBadge.js';
 import { useAuthStore } from '../../stores/auth.js';
 import SubscriptionModal from '../ui/SubscriptionModal.js';
+import ContactsDisplay from '../ui/ContactsDisplay.js';
 import type { Tour } from '@dark-angels/types';
 
 interface TourCardProps {
@@ -88,6 +89,8 @@ export default function TourCard({ tour, to, compact }: TourCardProps) {
             {tour.earnings}
           </p>
         )}
+
+        <ContactsDisplay contacts={tour.contacts} className={compact ? 'text-xs' : ''} />
       </div>
     </>
   );

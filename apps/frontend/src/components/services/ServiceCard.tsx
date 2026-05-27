@@ -3,6 +3,7 @@ import { useLocalized } from '../../hooks/useLocalized.js';
 import { cn } from '../../lib/cn.js';
 import { useAuthStore } from '../../stores/auth.js';
 import SubscriptionModal from '../ui/SubscriptionModal.js';
+import ContactsDisplay from '../ui/ContactsDisplay.js';
 import type { Service } from '@dark-angels/types';
 
 interface ServiceCardProps {
@@ -73,6 +74,8 @@ export default function ServiceCard({ service, to, compact }: ServiceCardProps) 
             {service.price}
           </p>
         )}
+
+        <ContactsDisplay contacts={service.contacts} className={compact ? 'text-xs' : ''} />
       </div>
     </>
   );
