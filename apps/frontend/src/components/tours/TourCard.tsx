@@ -21,7 +21,7 @@ export default function TourCard({ tour, to, compact }: TourCardProps) {
   const isSubscribed = useAuthStore((s) => s.isSubscribed);
   const isLocked = tour.requires_subscription && !isSubscribed;
 
-  const cardContent = (
+  const cardShell = (
     <>
       <div className={cn('relative overflow-hidden bg-bg-elevated', compact ? 'aspect-[4/3]' : 'aspect-video')}>
         {tour.image_url ? (
@@ -89,56 +89,46 @@ export default function TourCard({ tour, to, compact }: TourCardProps) {
             {tour.earnings}
           </p>
         )}
-
-        <ContactsDisplay contacts={tour.contacts} className={compact ? 'text-xs' : ''} />
       </div>
     </>
   );
 
+  const shellClassName = cn(
+    'group rounded-xl border border-border bg-bg-card overflow-hidden',
+    'hover:border-accent/30 transition-all duration-200',
+    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+    compact ? 'active:scale-[0.97]' : 'active:scale-[0.98]',
+  );
+
+  const cardShellNode = to ? (
+    <Link to={to} className={shellClassName}>
+      {cardShell}
+    </Link>
+  ) : (
+    <div className={shellClassName}>
+      {cardShell}
+    </div>
+  );
+
+  const contactsNode = tour.contacts ? (
+    <ContactsDisplay contacts={tour.contacts} className={compact ? 'text-xs px-3 pb-3' : 'px-4 pb-4'} />
+  ) : null;
+
   if (to && isLocked) {
     return (
       <SubscriptionModal isLocked>
-        <div
-          className={cn(
-            'group rounded-xl border border-border bg-bg-card overflow-hidden',
-            'hover:border-accent/30 transition-all duration-200',
-            'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
-            'block cursor-pointer',
-            compact ? 'active:scale-[0.97]' : 'active:scale-[0.98]',
-          )}
-        >
-          {cardContent}
+        <div className="flex flex-col gap-2">
+          {cardShellNode}
+          {contactsNode}
         </div>
       </SubscriptionModal>
     );
   }
 
-  if (to) {
-    return (
-      <Link
-        to={to}
-        className={cn(
-          'group rounded-xl border border-border bg-bg-card overflow-hidden',
-          'hover:border-accent/30 transition-all duration-200',
-          'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
-          'block cursor-pointer',
-          compact ? 'active:scale-[0.97]' : 'active:scale-[0.98]',
-        )}
-      >
-        {cardContent}
-      </Link>
-    );
-  }
-
   return (
-    <div
-      className={cn(
-        'group rounded-xl border border-border bg-bg-card overflow-hidden',
-        'hover:border-accent/30 transition-all duration-200',
-        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
-      )}
-    >
-      {cardContent}
+    <div className="flex flex-col gap-2">
+      {cardShellNode}
+      {contactsNode}
     </div>
   );
 }
