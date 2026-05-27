@@ -107,6 +107,7 @@ Cache invalidation: `ARG CACHEBUST` in Dockerfile forces rebuild of subsequent l
 
 ## Changelog
 
+- **2026-05-27** — Hardened `/api/v1/admin/*`: all admin routes now require both JWT auth and admin role check (`email` claim from classic admin token or `is_admin: true` from Telegram token).
 - **2026-05-27** — Docker fix: `"files": ["dist"]` in package.json ensures pnpm deploy includes compiled JS despite root `.gitignore` excluding `dist/`. `ARG CACHEBUST` for forced cache invalidation on Railway.
 - **2026-05-27** — Bot polling: switched from webhook (404 issues on Railway Docker) to `getUpdates` polling. Handles `/start`/`/admin`/`/link`. Bot init (`setChatMenuButton` + `setMyCommands`) runs on startup. No routes, no webhook URL needed.
 - **2026-05-26** — Phase 2: Telegram API backend. `lib/telegram-api.ts`: `validateInitData` (HMAC-SHA256), `checkChannelSubscription` (getChatMember), `parseInitDataUser`. `routes/telegram/routes.ts`: `POST /auth/telegram` (verify → subscribe check → upsert user → JWT), `POST /auth/telegram/refresh` (re-check + refresh token), `POST /track` (page view logging). Admin routes extended: `GET /admin/telegram-users` (paginated, filterable), `GET /admin/telegram-users/download` (CSV), `GET /admin/telegram-users/:telegramId` (portrait + activity log + stats). FastifyJWT payload type extended with `telegram_id`, `is_subscribed`, `access_level`.

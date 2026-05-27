@@ -107,6 +107,7 @@ Cards, detail pages, and Telegram `MainButton` use parsed href so same field can
 
 ## Changelog
 
+- **2026-05-27** — Telegram admin session fix: on Telegram auth, admin users now also receive `access_token` session state used by protected admin routes/API calls. Added explicit `Stats` quick button labels on dashboard/admin forms and quick nav strip on 2FA page.
 - **2026-05-27** — Admin UX: dashboard now renders quick navigation buttons (including Settings/2FA/Telegram Users), and `AdminFormLayout` now includes persistent quick links to Dashboard, Settings, 2FA, and Telegram Users.
 - **2026-05-27** — Contacts button moved back inside tour/service cards. Card navigation switched from outer `<Link>` to keyboard-accessible clickable container, contacts link stops propagation and opens external URL.
 - **2026-05-27** — Contacts in tour/service cards now render as clickable button-style links (same UX direction as Contacts page). Admin contact hint updated: primary flow is direct URL.

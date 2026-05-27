@@ -35,13 +35,14 @@ export default function AdminDashboard() {
   ];
 
   const navCards = [
+    { label: 'Stats', path: '/admin' },
+    { label: t('settings'), path: '/admin/settings' },
+    { label: t('two_factor_auth'), path: '/admin/two-factor' },
+    { label: 'Telegram Users', path: '/admin/telegram-users' },
     { label: t('tours'), path: '/admin/tours' },
     { label: t('services'), path: '/admin/services' },
     { label: t('blog'), path: '/admin/blog' },
     { label: t('collections'), path: '/admin/collections' },
-    { label: 'Telegram Users', path: '/admin/telegram-users' },
-    { label: t('two_factor_auth'), path: '/admin/two-factor' },
-    { label: t('settings'), path: '/admin/settings' },
   ];
 
   return (

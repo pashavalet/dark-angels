@@ -15,6 +15,7 @@ interface AuthState {
   setAccess: (level: string, premium: boolean) => void;
   updateEmail: (email: string) => void;
   setTelegramAuth: (userId: number, username: string | null, subscribed: boolean, admin?: boolean) => void;
+  setTelegramSession: (token: string, userId: number, username: string | null, subscribed: boolean, admin?: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -48,5 +49,22 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   setTelegramAuth: (userId, username, subscribed, admin) => {
     set({ telegramUserId: userId, telegramUsername: username, isSubscribed: subscribed, isAdmin: admin ?? false, accessLevel: subscribed ? 'subscriber' : 'public' });
+  },
+
+  setTelegramSession: (token, userId, username, subscribed, admin) => {
+    localStorage.setItem('tg_access_token', token);
+    if (admin) {
+      localStorage.setItem('access_token', token);
+    }
+
+    set({
+      accessToken: admin ? token : null,
+      isAuthenticated: !!admin,
+      telegramUserId: userId,
+      telegramUsername: username,
+      isSubscribed: subscribed,
+      isAdmin: admin ?? false,
+      accessLevel: subscribed ? 'subscriber' : 'public',
+    });
   },
 }));

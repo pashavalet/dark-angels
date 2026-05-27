@@ -1,9 +1,11 @@
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { setup2FA, verify2FA, disable2FA } from '../../api/auth.js';
 
 export default function TwoFactorPage() {
   const { t } = useTranslation('common');
+  const navigate = useNavigate();
   const [step, setStep] = useState<'idle' | 'setup' | 'codes' | 'disable'>('idle');
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [secret, setSecret] = useState<string | null>(null);
@@ -13,6 +15,14 @@ export default function TwoFactorPage() {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
+
+  const quickNav = (
+    <div className="grid w-full max-w-sm grid-cols-3 gap-2">
+      <button type="button" onClick={() => navigate('/admin')} className="min-h-[44px] rounded-lg border border-border bg-bg-card px-3 text-sm text-text-secondary">Stats</button>
+      <button type="button" onClick={() => navigate('/admin/settings')} className="min-h-[44px] rounded-lg border border-border bg-bg-card px-3 text-sm text-text-secondary">{t('settings')}</button>
+      <button type="button" onClick={() => navigate('/admin/telegram-users')} className="min-h-[44px] rounded-lg border border-border bg-bg-card px-3 text-sm text-text-secondary">Telegram</button>
+    </div>
+  );
 
   function handleCodeChange(index: number, value: string) {
     if (!/^\d?$/.test(value)) return;
@@ -93,6 +103,7 @@ export default function TwoFactorPage() {
   if (step === 'setup' && qrCode) {
     return (
       <div className="flex flex-col items-center gap-6 px-4 py-8">
+        {quickNav}
         <h1 className="font-serif text-2xl font-bold text-accent">{t('two_factor_auth')}</h1>
         <p className="text-sm text-text-secondary">{t('scan_qr_code')}</p>
         <div className="rounded-xl bg-white p-4">
@@ -136,6 +147,7 @@ export default function TwoFactorPage() {
   if (step === 'codes') {
     return (
       <div className="flex flex-col items-center gap-6 px-4 py-8">
+        {quickNav}
         <h1 className="font-serif text-2xl font-bold text-accent">{t('recovery_codes')}</h1>
         <p className="text-sm text-text-secondary">{t('save_recovery_codes')}</p>
         <div className="grid grid-cols-2 gap-2 w-full max-w-sm">
@@ -171,6 +183,7 @@ export default function TwoFactorPage() {
   if (step === 'disable') {
     return (
       <div className="flex flex-col items-center gap-6 px-4 py-8">
+        {quickNav}
         <h1 className="font-serif text-2xl font-bold text-accent">{t('disable_2fa')}</h1>
         <p className="text-sm text-text-secondary">{t('enter_2fa_code')}</p>
         {error && (
@@ -216,6 +229,7 @@ export default function TwoFactorPage() {
 
   return (
     <div className="flex flex-col items-center gap-6 px-4 py-8">
+      {quickNav}
       <h1 className="font-serif text-2xl font-bold text-accent">{t('two_factor_auth')}</h1>
 
       {error && (

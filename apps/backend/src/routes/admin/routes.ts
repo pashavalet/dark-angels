@@ -13,8 +13,17 @@ const telegramUsersQuerySchema = z.object({
 
 export default async function adminRoutes(app: FastifyInstance) {
   const db = app.supabase;
+  const requireAdmin = async (request: any, reply: any) => {
+    const isAdmin = Boolean(request.user?.email) || request.user?.is_admin === true;
+    if (!isAdmin) {
+      return reply.code(403).send({
+        success: false,
+        error: { code: 'FORBIDDEN', message: 'Admin access required' },
+      });
+    }
+  };
 
-  app.get('/stats', { onRequest: [app.authenticate] }, async () => {
+  app.get('/stats', { onRequest: [app.authenticate, requireAdmin] }, async () => {
     const [tours, services, blog, telegramUsers] = await Promise.all([
       db.from('tours').select('id', { count: 'exact', head: true }),
       db.from('services').select('id', { count: 'exact', head: true }),
@@ -48,7 +57,7 @@ export default async function adminRoutes(app: FastifyInstance) {
     };
   });
 
-  app.get('/telegram-users', { onRequest: [app.authenticate] }, async (request) => {
+  app.get('/telegram-users', { onRequest: [app.authenticate, requireAdmin] }, async (request) => {
     const query = telegramUsersQuerySchema.parse(request.query);
     const offset = (query.page - 1) * query.limit;
 
@@ -89,7 +98,7 @@ export default async function adminRoutes(app: FastifyInstance) {
     };
   });
 
-  app.get('/telegram-users/download', { onRequest: [app.authenticate] }, async (request, reply) => {
+  app.get('/telegram-users/download', { onRequest: [app.authenticate, requireAdmin] }, async (request, reply) => {
     const query = telegramUsersQuerySchema.parse(request.query);
 
     let q = db.from('telegram_users').select('*', { count: 'exact' });
@@ -139,7 +148,7 @@ export default async function adminRoutes(app: FastifyInstance) {
     return reply.send(csv);
   });
 
-  app.get('/telegram-users/:telegramId', { onRequest: [app.authenticate] }, async (request, reply) => {
+  app.get('/telegram-users/:telegramId', { onRequest: [app.authenticate, requireAdmin] }, async (request, reply) => {
     const { telegramId } = request.params as { telegramId: string };
     const id = Number(telegramId);
     if (Number.isNaN(id)) {
@@ -194,7 +203,7 @@ export default async function adminRoutes(app: FastifyInstance) {
     };
   });
 
-  app.post('/telegram-link-code', { onRequest: [app.authenticate] }, async (request, reply) => {
+  app.post('/telegram-link-code', { onRequest: [app.authenticate, requireAdmin] }, async (request, reply) => {
     const adminId = request.user.sub;
     const code = crypto.randomBytes(4).toString('hex').toUpperCase().slice(0, 7);
 
@@ -217,7 +226,7 @@ export default async function adminRoutes(app: FastifyInstance) {
     };
   });
 
-  app.get('/telegram-link-status', { onRequest: [app.authenticate] }, async (request) => {
+  app.get('/telegram-link-status', { onRequest: [app.authenticate, requireAdmin] }, async (request) => {
     const adminId = request.user.sub;
 
     const { data } = await app.supabase

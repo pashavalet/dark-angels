@@ -21,7 +21,7 @@ export default function AppLayout() {
   const { tg, expand, ready } = useTelegram();
   const showNav = !location.pathname.startsWith('/admin');
   const telegramAuth = useTelegramAuth();
-  const setTelegramAuth = useAuthStore((s) => s.setTelegramAuth);
+  const setTelegramSession = useAuthStore((s) => s.setTelegramSession);
   const { locale, setLocale } = useLocaleStore();
 
   useEffect(() => {
@@ -76,16 +76,18 @@ export default function AppLayout() {
     if (!t?.initDataUnsafe?.user) return;
     if (telegramAuth.isPending) return;
 
-    const existingToken = localStorage.getItem('tg_access_token');
-    if (existingToken) return;
-
     const rawInitData = t.initData;
     if (!rawInitData) return;
 
     telegramAuth.mutate(rawInitData, {
       onSuccess: (data) => {
-        localStorage.setItem('tg_access_token', data.access_token);
-        setTelegramAuth(data.user.telegram_id, data.user.username, data.user.is_subscribed, data.user.is_admin);
+        setTelegramSession(
+          data.access_token,
+          data.user.telegram_id,
+          data.user.username,
+          data.user.is_subscribed,
+          data.user.is_admin,
+        );
       },
     });
   }, []);
