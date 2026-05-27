@@ -211,10 +211,10 @@ export default function TourEditPage() {
               value={form.contacts}
               onChange={(e) => updateField('contacts', e.target.value)}
               className="w-full rounded-lg border border-border bg-bg-elevated px-4 py-3 text-sm text-text-primary placeholder:text-text-muted/50 transition-colors focus:border-accent/50 focus:outline-none focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
-              placeholder="@manager | https://t.me/manager"
+              placeholder="https://t.me/manager"
             />
             <p className="text-xs text-text-muted">
-              Формат: `@username`, `https://...` или `текст | ссылка`.
+              Вставьте ссылку (`https://...`, `tg://...`) или формат `текст | ссылка`.
             </p>
           </div>
         </div>

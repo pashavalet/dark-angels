@@ -13,23 +13,24 @@ export default function ContactsDisplay({ contacts, className }: ContactsDisplay
   if (!contacts) return null;
 
   const link = parseContactLink(contacts);
+  const raw = contacts.trim();
+  const buttonText = link && (raw === link.href || /^(https?:|tg:|mailto:)/i.test(raw))
+    ? t('contacts')
+    : link?.label ?? t('contacts');
 
   return (
     <div className={cn('mt-2', className)}>
-      <p className="text-xs uppercase tracking-widest text-text-muted">
-        {t('contacts')}
-      </p>
       {link ? (
         <a
           href={link.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-1 block text-sm font-medium text-accent hover:underline break-all"
+          className="block rounded-xl border border-accent bg-bg-card px-4 py-2.5 text-center text-sm font-medium text-accent transition-colors hover:bg-bg-elevated active:opacity-80 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 min-h-[44px]"
         >
-          {link.label}
+          {buttonText}
         </a>
       ) : (
-        <p className="mt-1 text-sm font-medium text-text-primary break-all">{contacts}</p>
+        <p className="text-sm font-medium text-text-primary break-all">{contacts}</p>
       )}
     </div>
   );
