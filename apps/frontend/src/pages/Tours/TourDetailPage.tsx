@@ -7,6 +7,7 @@ import { useAuthStore } from '../../stores/auth.js';
 import { useBackButton } from '../../hooks/useBackButton.js';
 import { useMainButton } from '../../hooks/useMainButton.js';
 import VipBadge from '../../components/ui/VipBadge.js';
+import { parseContactLink } from '../../lib/contact-link.js';
 
 export default function TourDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -23,10 +24,11 @@ export default function TourDetailPage() {
   const country = useLocalized(tour?.country);
   const city = useLocalized(tour?.city);
   const agency = useLocalized(tour?.agency);
+  const contactLink = parseContactLink(tour?.contacts);
   useBackButton(() => navigate(-1));
   useMainButton(t('contacts'), () => {
-    if (tour?.contacts) window.open(`https://t.me/${tour.contacts.replace('@', '')}`, '_blank');
-  }, !isLocked && !!tour?.contacts);
+    if (contactLink?.href) window.open(contactLink.href, '_blank', 'noopener,noreferrer');
+  }, !isLocked && !!contactLink);
 
   if (isLoading) {
     return (
@@ -163,7 +165,18 @@ export default function TourDetailPage() {
               <p className="text-xs uppercase tracking-widest text-text-muted">
                 {t('contacts', 'Contacts')}
               </p>
-              <p className="mt-1 font-medium text-text-primary">{tour.contacts}</p>
+              {contactLink ? (
+                <a
+                  href={contactLink.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 block font-medium text-accent hover:underline break-all"
+                >
+                  {contactLink.label}
+                </a>
+              ) : (
+                <p className="mt-1 font-medium text-text-primary break-all">{tour.contacts}</p>
+              )}
             </div>
           )}
         </section>

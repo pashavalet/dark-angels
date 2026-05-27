@@ -93,10 +93,21 @@ Admin Telegram linking flow:
 4. After linking: `/admin` shows "Open Admin Panel" button (WebApp keyboard)
 5. Mini App auto-detects admin on telegram auth → redirects to admin dashboard
 
+## Content Links
+
+`contacts` fields in tours/services are plain strings, but UI now parses clickable link syntax:
+- `@username` → `https://t.me/username`
+- `https://...` / `tg://...` / `mailto:...` → direct link
+- `label | https://...` → clickable custom label
+- `[label](https://...)` → markdown-style alias
+
+Cards, detail pages, and Telegram `MainButton` use parsed href so same field can show custom text and open any URL.
+
 ---
 
 ## Changelog
 
+- **2026-05-27** — Contacts clickable links: `contacts` now supports `@username`, raw URLs, `label | url`, and `[label](url)`. Cards + detail pages + `MainButton` use parsed href.
 - **2026-05-27** — Admin Telegram linking: auth store `isAdmin` field, `setTelegramAuth` accepts `admin` param, BottomNav shows shield icon tab for admin users. Telegram auth response includes `is_admin`; frontend auto-detects admins.
 - **2026-05-27** — Admin Telegram linking: auth store `isAdmin` field, `setTelegramAuth` accepts `admin` param. BottomNav shows shield icon tab for admin users. Telegram auth response includes `is_admin`; frontend auto-detects admins.
 - **2026-05-27** — Phase 5: Telegram-native BackButton/MainButton on detail pages + ContactsPage. `useBackButton`/`useMainButton` hooks. `AppLayout`: theme listener, Telegram language detection. `telegram.ts` extended.

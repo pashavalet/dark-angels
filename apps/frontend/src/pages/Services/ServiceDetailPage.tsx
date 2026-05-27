@@ -6,6 +6,7 @@ import { useLocalized } from '../../hooks/useLocalized.js';
 import { useAuthStore } from '../../stores/auth.js';
 import { useBackButton } from '../../hooks/useBackButton.js';
 import { useMainButton } from '../../hooks/useMainButton.js';
+import { parseContactLink } from '../../lib/contact-link.js';
 
 export default function ServiceDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -19,10 +20,11 @@ export default function ServiceDetailPage() {
   const isLocked = service?.requires_subscription && !isSubscribed;
   const title = useLocalized(service?.title);
   const description = useLocalized(service?.description);
+  const contactLink = parseContactLink(service?.contacts);
   useBackButton(() => navigate(-1));
   useMainButton(t('contacts'), () => {
-    if (service?.contacts) window.open(`https://t.me/${service.contacts.replace('@', '')}`, '_blank');
-  }, !isLocked && !!service?.contacts);
+    if (contactLink?.href) window.open(contactLink.href, '_blank', 'noopener,noreferrer');
+  }, !isLocked && !!contactLink);
 
   if (isLoading) {
     return (
@@ -147,7 +149,18 @@ export default function ServiceDetailPage() {
               <p className="text-xs uppercase tracking-widest text-text-muted">
                 {t('contacts', 'Contacts')}
               </p>
-              <p className="mt-1 font-medium text-text-primary">{service.contacts}</p>
+              {contactLink ? (
+                <a
+                  href={contactLink.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 block font-medium text-accent hover:underline break-all"
+                >
+                  {contactLink.label}
+                </a>
+              ) : (
+                <p className="mt-1 font-medium text-text-primary break-all">{service.contacts}</p>
+              )}
             </div>
           )}
         </section>
