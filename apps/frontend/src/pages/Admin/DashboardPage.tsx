@@ -72,6 +72,18 @@ export default function AdminDashboard() {
         ))}
       </div>
 
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {navCards.map((item) => (
+          <button
+            key={item.path}
+            onClick={() => navigate(item.path)}
+            className="rounded-xl border border-border bg-bg-card px-4 py-3 text-left text-sm font-medium text-text-primary transition-colors hover:border-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
       {stats?.recent && (
         <>
           <h2 className="mt-4 font-serif text-xl font-bold text-text-primary">{t('new_tours')}</h2>
