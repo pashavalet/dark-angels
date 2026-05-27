@@ -107,6 +107,7 @@ Cards, detail pages, and Telegram `MainButton` use parsed href so same field can
 
 ## Changelog
 
+- **2026-05-27** — Contacts button moved back inside tour/service cards. Card navigation switched from outer `<Link>` to keyboard-accessible clickable container, contacts link stops propagation and opens external URL.
 - **2026-05-27** — Contacts in tour/service cards now render as clickable button-style links (same UX direction as Contacts page). Admin contact hint updated: primary flow is direct URL.
 - **2026-05-27** — Contacts link click fix: moved contacts outside outer card `Link`, so custom labels like `text | https://...` remain clickable inside cards.
 - **2026-05-27** — Contacts clickable links: `contacts` now supports `@username`, raw URLs, `label | url`, and `[label](url)`. Cards + detail pages + `MainButton` use parsed href.

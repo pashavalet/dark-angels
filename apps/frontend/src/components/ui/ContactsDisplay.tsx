@@ -25,6 +25,8 @@ export default function ContactsDisplay({ contacts, className }: ContactsDisplay
           href={link.href}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
           className="block rounded-xl border border-accent bg-bg-card px-4 py-2.5 text-center text-sm font-medium text-accent transition-colors hover:bg-bg-elevated active:opacity-80 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 min-h-[44px]"
         >
           {buttonText}

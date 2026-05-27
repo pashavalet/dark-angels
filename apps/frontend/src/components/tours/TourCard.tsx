@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useLocalized } from '../../hooks/useLocalized.js';
 import { cn } from '../../lib/cn.js';
 import VipBadge from '../ui/VipBadge.js';
@@ -14,6 +14,7 @@ interface TourCardProps {
 }
 
 export default function TourCard({ tour, to, compact }: TourCardProps) {
+  const navigate = useNavigate();
   const title = useLocalized(tour.title);
   const city = useLocalized(tour.city);
   const country = useLocalized(tour.country);
@@ -89,6 +90,8 @@ export default function TourCard({ tour, to, compact }: TourCardProps) {
             {tour.earnings}
           </p>
         )}
+
+        <ContactsDisplay contacts={tour.contacts} className={compact ? 'text-xs' : ''} />
       </div>
     </>
   );
@@ -101,34 +104,33 @@ export default function TourCard({ tour, to, compact }: TourCardProps) {
   );
 
   const cardShellNode = to ? (
-    <Link to={to} className={shellClassName}>
+    <div
+      className={cn(shellClassName, 'cursor-pointer')}
+      role="link"
+      tabIndex={0}
+      onClick={() => navigate(to)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          navigate(to);
+        }
+      }}
+    >
       {cardShell}
-    </Link>
+    </div>
   ) : (
     <div className={shellClassName}>
       {cardShell}
     </div>
   );
 
-  const contactsNode = tour.contacts ? (
-    <ContactsDisplay contacts={tour.contacts} className={compact ? 'text-xs px-3 pb-3' : 'px-4 pb-4'} />
-  ) : null;
-
   if (to && isLocked) {
     return (
       <SubscriptionModal isLocked>
-        <div className="flex flex-col gap-2">
-          {cardShellNode}
-          {contactsNode}
-        </div>
+        {cardShellNode}
       </SubscriptionModal>
     );
   }
 
-  return (
-    <div className="flex flex-col gap-2">
-      {cardShellNode}
-      {contactsNode}
-    </div>
-  );
+  return cardShellNode;
 }

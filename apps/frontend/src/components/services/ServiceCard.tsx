@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useLocalized } from '../../hooks/useLocalized.js';
 import { cn } from '../../lib/cn.js';
 import { useAuthStore } from '../../stores/auth.js';
@@ -13,6 +13,7 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ service, to, compact }: ServiceCardProps) {
+  const navigate = useNavigate();
   const title = useLocalized(service.title);
   const description = useLocalized(service.description);
   const isSubscribed = useAuthStore((s) => s.isSubscribed);
@@ -74,6 +75,8 @@ export default function ServiceCard({ service, to, compact }: ServiceCardProps) 
             {service.price}
           </p>
         )}
+
+        <ContactsDisplay contacts={service.contacts} className={compact ? 'text-xs' : ''} />
       </div>
     </>
   );
@@ -86,34 +89,33 @@ export default function ServiceCard({ service, to, compact }: ServiceCardProps) 
   );
 
   const cardShellNode = to ? (
-    <Link to={to} className={shellClassName}>
+    <div
+      className={cn(shellClassName, 'cursor-pointer')}
+      role="link"
+      tabIndex={0}
+      onClick={() => navigate(to)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          navigate(to);
+        }
+      }}
+    >
       {cardShell}
-    </Link>
+    </div>
   ) : (
     <div className={shellClassName}>
       {cardShell}
     </div>
   );
 
-  const contactsNode = service.contacts ? (
-    <ContactsDisplay contacts={service.contacts} className={compact ? 'text-xs px-3 pb-3' : 'px-4 pb-4'} />
-  ) : null;
-
   if (to && isLocked) {
     return (
       <SubscriptionModal isLocked>
-        <div className="flex flex-col gap-2">
-          {cardShellNode}
-          {contactsNode}
-        </div>
+        {cardShellNode}
       </SubscriptionModal>
     );
   }
 
-  return (
-    <div className="flex flex-col gap-2">
-      {cardShellNode}
-      {contactsNode}
-    </div>
-  );
+  return cardShellNode;
 }
