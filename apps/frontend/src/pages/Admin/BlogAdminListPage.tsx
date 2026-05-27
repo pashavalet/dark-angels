@@ -40,12 +40,21 @@ export default function BlogAdminListPage() {
     <div className="flex flex-col gap-6 px-4 py-8">
       <div className="flex items-center justify-between">
         <h1 className="font-serif text-3xl font-bold text-accent">{t('all_articles')}</h1>
-        <button
-          onClick={() => navigate('/admin/blog/new')}
-          className="min-h-[44px] min-w-[44px] rounded-lg px-6 py-2.5 text-sm font-medium bg-accent text-bg-primary hover:opacity-90 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
-        >
-          {t('create_article')}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="min-h-[44px] min-w-[44px] rounded-lg border border-border px-4 py-2.5 text-sm text-text-secondary hover:border-accent/30 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          >
+            {t('back')}
+          </button>
+          <button
+            onClick={() => navigate('/admin/blog/new')}
+            className="min-h-[44px] min-w-[44px] rounded-lg px-6 py-2.5 text-sm font-medium bg-accent text-bg-primary hover:opacity-90 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          >
+            {t('create_article')}
+          </button>
+        </div>
       </div>
 
       {isLoading ? (

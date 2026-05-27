@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useHomepageCollections, useReorderCollections, useSetCollections } from '../../api/homepage.js';
 import { useLocalized } from '../../hooks/useLocalized.js';
@@ -16,6 +17,7 @@ const sections: { key: SectionKey; labelKey: string }[] = [
 
 export default function CollectionsPage() {
   const { t } = useTranslation('common');
+  const navigate = useNavigate();
   const { data, isLoading } = useHomepageCollections();
   const reorderMutation = useReorderCollections();
   const setMutation = useSetCollections();
@@ -61,7 +63,16 @@ export default function CollectionsPage() {
     <div className="flex flex-col gap-6 px-4 py-8">
       <div className="flex items-center justify-between">
         <h1 className="font-serif text-3xl font-bold text-accent">{t('collections')}</h1>
-        <p className="text-sm text-text-muted">{t('drag_to_reorder')}</p>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="min-h-[44px] min-w-[44px] rounded-lg border border-border px-4 py-2.5 text-sm text-text-secondary hover:border-accent/30 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          >
+            {t('back')}
+          </button>
+          <p className="text-sm text-text-muted">{t('drag_to_reorder')}</p>
+        </div>
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-2">

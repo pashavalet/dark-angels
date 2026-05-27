@@ -35,19 +35,23 @@ export default function AdminDashboard() {
   ];
 
   const navCards = [
-    { label: 'Stats', path: '/admin' },
     { label: t('settings'), path: '/admin/settings' },
     { label: t('two_factor_auth'), path: '/admin/two-factor' },
     { label: 'Telegram Users', path: '/admin/telegram-users' },
-    { label: t('tours'), path: '/admin/tours' },
-    { label: t('services'), path: '/admin/services' },
-    { label: t('blog'), path: '/admin/blog' },
     { label: t('collections'), path: '/admin/collections' },
   ];
 
   return (
     <div className="flex flex-col gap-6 px-4 py-8">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+          className="rounded-lg border border-border px-4 py-2 text-sm text-text-secondary transition-colors hover:bg-bg-elevated active:opacity-80 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+          style={{ minHeight: '44px' }}
+        >
+          {t('back')}
+        </button>
         <h1 className="font-serif text-3xl font-bold text-accent">{t('admin')}</h1>
         <button
           onClick={handleLogout}

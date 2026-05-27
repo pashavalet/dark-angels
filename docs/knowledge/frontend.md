@@ -84,6 +84,14 @@ src/
 
 Bottom tab bar with 5 tabs: Home → Tours → Services → Blog → Contacts.
 
+### Admin Collections
+
+`/admin/collections` controls homepage featured ordering only (not full content CRUD):
+- sections: `featured_tours`, `featured_services`, `featured_blog`
+- drag-and-drop changes `sort_order`
+- pin toggles `is_pinned`
+- remove excludes item from homepage section, but does not delete the original tour/service/article
+
 ## Bot Integration
 
 Admin Telegram linking flow:
@@ -107,6 +115,7 @@ Cards, detail pages, and Telegram `MainButton` use parsed href so same field can
 
 ## Changelog
 
+- **2026-05-27** — Admin dashboard cleanup: removed duplicate Tours/Services/Blog quick links (they already exist in stats cards). Added explicit Back buttons on Dashboard, Tours list, Services list, Blog list, Collections, and 2FA views.
 - **2026-05-27** — Telegram admin session fix: on Telegram auth, admin users now also receive `access_token` session state used by protected admin routes/API calls. Added explicit `Stats` quick button labels on dashboard/admin forms and quick nav strip on 2FA page.
 - **2026-05-27** — Admin UX: dashboard now renders quick navigation buttons (including Settings/2FA/Telegram Users), and `AdminFormLayout` now includes persistent quick links to Dashboard, Settings, 2FA, and Telegram Users.
 - **2026-05-27** — Contacts button moved back inside tour/service cards. Card navigation switched from outer `<Link>` to keyboard-accessible clickable container, contacts link stops propagation and opens external URL.
