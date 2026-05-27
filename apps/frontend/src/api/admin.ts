@@ -110,3 +110,22 @@ export function useDownloadTelegramUsers() {
     },
   });
 }
+
+export function useGenerateTelegramLinkCode() {
+  return useMutation({
+    mutationFn: async () => {
+      const { data } = await apiClient.post('/admin/telegram-link-code');
+      return data.data as { code: string; expires_in_minutes: number };
+    },
+  });
+}
+
+export function useTelegramLinkStatus() {
+  return useQuery({
+    queryKey: ['admin', 'telegram-link-status'],
+    queryFn: async () => {
+      const { data } = await apiClient.get('/admin/telegram-link-status');
+      return data.data as { linked: boolean; telegram_id: number | null };
+    },
+  });
+}

@@ -30,7 +30,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   login: (token, admin) => {
     localStorage.setItem('access_token', token);
-    set({ accessToken: token, admin, isAuthenticated: true });
+    set({ accessToken: token, admin, isAuthenticated: true, isAdmin: true });
   },
 
   logout: () => {

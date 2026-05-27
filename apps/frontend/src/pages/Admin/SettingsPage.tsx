@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import AdminFormLayout from '../../components/admin/AdminFormLayout.js';
 import { getProfile, updateEmail, changePassword } from '../../api/auth.js';
 import { useAuthStore } from '../../stores/auth.js';
+import { useGenerateTelegramLinkCode, useTelegramLinkStatus } from '../../api/admin.js';
 
 interface ProfileData {
   id: string;
@@ -244,6 +245,61 @@ export default function SettingsPage() {
           </button>
         </div>
       </section>
+
+      <section className="rounded-xl border border-border bg-bg-card p-6 space-y-4">
+        <h2 className="text-lg font-semibold text-text-primary">{'Telegram'}</h2>
+        <TelegramLinkSection />
+      </section>
     </AdminFormLayout>
+  );
+}
+
+function TelegramLinkSection() {
+  const { t } = useTranslation('common');
+  const { data: status, isLoading, refetch } = useTelegramLinkStatus();
+  const generate = useGenerateTelegramLinkCode();
+  const [code, setCode] = useState<string | null>(null);
+
+  if (isLoading) return <p className="text-sm text-text-muted">{'...'}</p>;
+
+  if (status?.linked) {
+    return (
+      <div className="text-sm text-green-400">
+        {'Telegram привязан (ID: ' + status.telegram_id + ')'}
+      </div>
+    );
+  }
+
+  async function handleGenerate() {
+    const result = await generate.mutateAsync();
+    setCode(result.code);
+  }
+
+  return (
+    <div className="space-y-3">
+      <p className="text-sm text-text-secondary">
+        {'Привяжите Telegram, чтобы входить в панель администратора через бота.'}
+      </p>
+      {code ? (
+        <div className="space-y-2">
+          <div className="rounded-lg border border-accent/30 bg-accent/5 px-4 py-3 text-center">
+            <p className="text-xs text-text-muted">{'Код действителен 10 минут'}</p>
+            <p className="mt-1 text-2xl font-mono font-bold tracking-widest text-accent">{code}</p>
+          </div>
+          <p className="text-xs text-text-muted">
+            {'Отправьте этот код боту: @mark_make_money_bot → /link ' + code}
+          </p>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={handleGenerate}
+          disabled={generate.isPending}
+          className="min-h-[44px] rounded-lg bg-accent px-6 py-2.5 text-sm font-medium text-bg-primary hover:opacity-90 disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+        >
+          {generate.isPending ? '...' : 'Привязать Telegram'}
+        </button>
+      )}
+    </div>
   );
 }
