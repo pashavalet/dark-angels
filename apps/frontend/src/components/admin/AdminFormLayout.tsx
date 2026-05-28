@@ -16,7 +16,7 @@ export default function AdminFormLayout({ title, children, loading, error }: Adm
   const location = useLocation();
 
   const quickLinks = [
-    { label: 'Stats', path: '/admin' },
+    { label: 'Stats', path: '/admin/stats' },
     { label: t('settings'), path: '/admin/settings' },
     { label: t('two_factor_auth'), path: '/admin/two-factor' },
     { label: 'Telegram Users', path: '/admin/telegram-users' },

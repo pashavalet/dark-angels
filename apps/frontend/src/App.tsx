@@ -12,6 +12,7 @@ import BlogDetailPage from './pages/Blog/BlogDetailPage.js';
 import ContactsPage from './pages/Contacts/ContactsPage.js';
 import LoginPage from './pages/Admin/LoginPage.js';
 import DashboardPage from './pages/Admin/DashboardPage.js';
+import StatsPage from './pages/Admin/StatsPage.js';
 import TwoFactorPage from './pages/Admin/TwoFactorPage.js';
 import CollectionsPage from './pages/Admin/CollectionsPage.js';
 import SettingsPage from './pages/Admin/SettingsPage.js';
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="admin/login" element={<LoginPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="admin" element={<DashboardPage />} />
+              <Route path="admin/stats" element={<StatsPage />} />
               <Route path="admin/two-factor" element={<TwoFactorPage />} />
               <Route path="admin/collections" element={<CollectionsPage />} />
               <Route path="admin/settings" element={<SettingsPage />} />

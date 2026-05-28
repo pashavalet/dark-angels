@@ -115,6 +115,7 @@ Cards, detail pages, and Telegram `MainButton` use parsed href so same field can
 
 ## Changelog
 
+- **2026-05-28** — Added dedicated admin analytics route `/admin/stats`; `Stats` quick links now point there (instead of `/admin` dashboard). Dashboard remains overview/navigation.
 - **2026-05-27** — Added route-level interaction tracking in `AppLayout` via `/track` (Telegram initData required). Dashboard now shows real interaction analytics (interactions/users/top pages), not only content counters.
 - **2026-05-27** — Admin dashboard cleanup: removed duplicate Tours/Services/Blog quick links (they already exist in stats cards). Added explicit Back buttons on Dashboard, Tours list, Services list, Blog list, Collections, and 2FA views.
 - **2026-05-27** — Telegram admin session fix: on Telegram auth, admin users now also receive `access_token` session state used by protected admin routes/API calls. Added explicit `Stats` quick button labels on dashboard/admin forms and quick nav strip on 2FA page.

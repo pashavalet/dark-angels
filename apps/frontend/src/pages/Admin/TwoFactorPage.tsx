@@ -19,7 +19,7 @@ export default function TwoFactorPage() {
   const quickNav = (
     <div className="grid w-full max-w-sm grid-cols-2 gap-2">
       <button type="button" onClick={() => navigate(-1)} className="min-h-[44px] rounded-lg border border-border bg-bg-card px-3 text-sm text-text-secondary">{t('back')}</button>
-      <button type="button" onClick={() => navigate('/admin')} className="min-h-[44px] rounded-lg border border-border bg-bg-card px-3 text-sm text-text-secondary">Stats</button>
+      <button type="button" onClick={() => navigate('/admin/stats')} className="min-h-[44px] rounded-lg border border-border bg-bg-card px-3 text-sm text-text-secondary">Stats</button>
       <button type="button" onClick={() => navigate('/admin/settings')} className="min-h-[44px] rounded-lg border border-border bg-bg-card px-3 text-sm text-text-secondary">{t('settings')}</button>
       <button type="button" onClick={() => navigate('/admin/telegram-users')} className="min-h-[44px] rounded-lg border border-border bg-bg-card px-3 text-sm text-text-secondary">Telegram</button>
     </div>
